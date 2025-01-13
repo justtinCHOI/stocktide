@@ -19,7 +19,7 @@ const Welcome = () => {
     return (
         <>
             <StockInfoHomeDiv>
-                <WelcomeMessage>반가워요! StockFish 입니다.</WelcomeMessage>
+                <WelcomeMessage>반가워요! StockTide 입니다.</WelcomeMessage>
                     { loginState?.email ?
                       <WelcomeLogin
                         onClick={handleClickLogout}>
