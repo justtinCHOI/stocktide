@@ -1,0 +1,3 @@
+interface SettingProps{
+  tno: number;
+}

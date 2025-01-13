@@ -1,0 +1,2 @@
+import{u as m,b as a}from"./vendor-BJTqHD0O.js";function f(){const e=m(),[t,s]=a.useState(!1);return{moveToList:()=>{s(!t),e({pathname:"/stock/domestic/item/entire"})},moveToModify:o=>{e({pathname:`/stock/domestic/detail/modify/${o}`})},moveToRead:o=>{e({pathname:`/stock/domestic/detail/read/${o}`})},moveToMemberModify:()=>{e({pathname:"/my/modify/"})},refresh:t}}export{f as u};
+//# sourceMappingURL=useCustomMove-DGgclnXv.js.map

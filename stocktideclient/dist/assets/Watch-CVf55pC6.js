@@ -1,0 +1,2 @@
+import{j as e}from"./index-BYRxBMX6.js";import"./vendor-BJTqHD0O.js";import"./utils-CJA6l5lt.js";function t(){return e.jsx("div",{className:"border-2 border-blue-100 mt-10 mr-2 ml-2",children:e.jsx("div",{className:"flex flex-wrap mx-auto justify-center p-1",children:"WatchComponent"})})}function s(){return e.jsxs("div",{className:"p-4 w-full bg-white  ",children:[e.jsx("div",{className:"text-3xl font-extrabold",children:"Todo WatchPage"}),e.jsx(t,{})]})}export{s as default};
+//# sourceMappingURL=Watch-CVf55pC6.js.map

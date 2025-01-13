@@ -1,0 +1,10 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Sign In",
+    "signupButton": "Sign Up",
+    "kakaoLogin": "Login with Kakao"
+  }
+}

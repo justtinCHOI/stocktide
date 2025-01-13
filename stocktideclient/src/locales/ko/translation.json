@@ -1,0 +1,10 @@
+{
+  "login": {
+    "title": "로그인",
+    "email": "이메일",
+    "password": "비밀번호",
+    "loginButton": "로그인",
+    "signupButton": "회원가입",
+    "kakaoLogin": "카카오 계정으로 로그인"
+  }
+}
