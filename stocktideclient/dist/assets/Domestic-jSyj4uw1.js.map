@@ -1,1 +1,0 @@
-{"version":3,"file":"Domestic-jSyj4uw1.js","sources":["../../src/pages/stock/domestic/Domestic.tsx"],"sourcesContent":["import {Outlet} from \"react-router-dom\";\r\n\r\nconst Domestic = () => {\r\n    return (\r\n         <Outlet />\r\n    );\r\n}\r\n\r\nexport default Domestic;\r\n"],"names":["Domestic","Outlet"],"mappings":"6GAEA,MAAMA,EAAW,UAEPC,EAAO,EAAA"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"Account-FnmutS-c.js","sources":["../../src/pages/my/account/Account.tsx"],"sourcesContent":["import {Outlet} from \"react-router-dom\";\r\n\r\nconst Account = () => {\r\n    return (\r\n         <Outlet/>\r\n    );\r\n};\r\n\r\nexport default Account;"],"names":["Account","Outlet"],"mappings":"6GAEA,MAAMA,EAAU,UAENC,EAAM,EAAA"}
