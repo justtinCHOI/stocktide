@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Node.js
-node_modules
-dist
+/stocktideclient/node_modules
+/stocktideclient/dist
 dist-ssr
 *.local
 
@@ -28,7 +28,7 @@ dist-ssr
 # Java
 HELP.md
 .gradle
-build/
+/stocktideserver/build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
