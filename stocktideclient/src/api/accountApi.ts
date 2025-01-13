@@ -33,3 +33,4 @@ export const updateCash = async (cashId: number, money: number, dollar: number) 
 
     return res.data;
 }
+
