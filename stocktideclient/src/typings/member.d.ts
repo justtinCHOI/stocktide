@@ -21,7 +21,7 @@ export interface MemberState {
 export interface MemberSliceState {
   member: Member | null;
   loading: boolean;
-  error: null | any;
+  error: any;
 }
 
 export interface LoginResponse {

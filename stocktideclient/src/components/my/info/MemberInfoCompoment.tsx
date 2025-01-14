@@ -13,15 +13,8 @@ import {
     Label
 } from "@assets/css/content";
 import { MemberState } from '@typings/member';
-import useCustomMember from '@hooks/useCustomMember';
 
-const initState = {
-    memberId : 0,
-    name : '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-}
+import useCustomMember from '@hooks/useCustomMember';
 
 const MemberInfoComponent: FC = () => {
 
@@ -29,8 +22,8 @@ const MemberInfoComponent: FC = () => {
     const {moveToMemberModify} = useCustomMove()
     const [showPassword, setShowPassword] = useState(false)
 
-    const [member, setMember] = useState<MemberState>(initState)
     const { loginState: loginInfo } = useCustomMember();
+    const [member, setMember] = useState<MemberState>(loginInfo)
 
     useEffect(() => {
         setMember({...loginInfo})
@@ -39,7 +32,6 @@ const MemberInfoComponent: FC = () => {
     const toggleShowPassword = () => {
         setShowPassword(!showPassword)
     }
-
 
     return (
 

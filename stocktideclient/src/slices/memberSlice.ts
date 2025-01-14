@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getLocalStorage, removeLocalStorage, setLocalStorage } from '@utils/localStorageUtil';
 import { LoginParam, MemberSliceState } from '@typings/member';
+import { MemberModifyDTO } from '@typings/dto';
 
 const initState: MemberSliceState = {
     member: null,
@@ -34,6 +35,26 @@ const memberSlice = createSlice({
             state.member = null;
             state.loading = false;
             state.error = null;
+        },
+        modifyMemberRequest: (state, action: PayloadAction<MemberModifyDTO>) => {
+            console.log('modifyMemberRequest', action.payload);
+            state.loading = true;
+            state.error = null;
+        },
+        modifyMemberSuccess: (state, action: PayloadAction<MemberModifyDTO>) => {
+            state.member = {
+                ...state.member,
+                name: action.payload.name,
+                email: action.payload.email,
+                password: action.payload.password
+            };
+            setLocalStorage("member", state.member, 1);
+            state.loading = false;
+            state.error = null;
+        },
+        modifyMemberFailure: (state, action: PayloadAction<string>) => {
+            state.loading = false;
+            state.error = action.payload as any;
         }
     },
 });
@@ -50,5 +71,7 @@ function loadMemberLocalStorage() {
     }
 }
 
-export const { logout, loginSuccess, loginRequest, loginFailure } = memberSlice.actions;
+export const { logout, loginSuccess, loginRequest, loginFailure, modifyMemberRequest,
+    modifyMemberSuccess,
+    modifyMemberFailure } = memberSlice.actions;
 export const memberReducer =  memberSlice.reducer;

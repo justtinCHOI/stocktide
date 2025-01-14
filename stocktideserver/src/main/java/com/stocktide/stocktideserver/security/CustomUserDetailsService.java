@@ -27,6 +27,9 @@ public class CustomUserDetailsService implements UserDetailsService{
         if(member == null){
             throw new UsernameNotFoundException("Not Found");
         }
+        log.info("member.getEmail() {} ",member.getEmail());
+        log.info("member.getPassword() {} ",member.getPassword());
+
         return memberServiceImpl.entityToDTO(member);
 
     }

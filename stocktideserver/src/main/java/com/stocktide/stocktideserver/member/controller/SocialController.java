@@ -3,11 +3,16 @@ package com.stocktide.stocktideserver.member.controller;
 import com.stocktide.stocktideserver.member.dto.MemberDTO;
 import com.stocktide.stocktideserver.member.dto.MemberModifyDTO;
 import com.stocktide.stocktideserver.member.service.MemberService;
+import com.stocktide.stocktideserver.stock.dto.CompanyResponseDto;
+import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,11 +45,12 @@ public class SocialController {
     }
 
     @PutMapping("/api/member/modify")
-    public Map<String, String> modify(@RequestBody MemberModifyDTO memberModifyDTO) {
+    public ResponseEntity<MemberModifyDTO> modify(@RequestBody MemberModifyDTO memberModifyDTO) {
 
-        memberService.modifyMember(memberModifyDTO);
+        MemberModifyDTO savedMemberDTO = memberService.modifyMember(memberModifyDTO);
 
-        return Map.of("result", "modified");
+        return new ResponseEntity<>(savedMemberDTO, HttpStatus.OK);
+
     }
 
     @GetMapping("/api/member/checkEmail")

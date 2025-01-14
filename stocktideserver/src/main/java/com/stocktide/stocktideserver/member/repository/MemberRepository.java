@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    @Override
+    <S extends Member> S save(S member);
+
     Optional<Member> findByEmail(String email);
     Optional<Member> findByMemberId(Long memberId);
 

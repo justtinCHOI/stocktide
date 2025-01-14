@@ -4,6 +4,7 @@ import com.stocktide.stocktideserver.cash.entity.Cash;
 import com.stocktide.stocktideserver.cash.service.CashService;
 import com.stocktide.stocktideserver.member.dto.MemberDTO;
 import com.stocktide.stocktideserver.member.dto.MemberModifyDTO;
+import com.stocktide.stocktideserver.member.dto.MemberResponseDto;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.entity.MemberRole;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
@@ -127,7 +128,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void modifyMember(MemberModifyDTO memberModifyDTO) {
+    public MemberModifyDTO modifyMember(MemberModifyDTO memberModifyDTO) {
 
         Optional<Member> result = memberRepository.findById(memberModifyDTO.getMemberId());
 
@@ -138,7 +139,14 @@ public class MemberServiceImpl implements MemberService {
         member.setPassword(passwordEncoder.encode(memberModifyDTO.getPassword()));
         member.setSocial(false);
 
-        memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+        log.info("savedMember.getEmail() {}", savedMember.getEmail());
+
+        return MemberModifyDTO.builder()
+                .memberId(savedMember.getMemberId())
+                .name(savedMember.getName())
+                .email(savedMember.getEmail())
+                .password(savedMember.getPassword()).build();
     }
 
     @Override

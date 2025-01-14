@@ -3,7 +3,7 @@ import styled from "styled-components";
 const StockInfoComponent = () => {
     return (
         <StockInfoDiv>
-            <Logo>StockFish</Logo>
+            <Logo>StockTide</Logo>
         </StockInfoDiv>
     );
 };

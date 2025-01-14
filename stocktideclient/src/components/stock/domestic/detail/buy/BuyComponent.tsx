@@ -59,9 +59,9 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
                         </div>
                     </StockName>
                     <BuyingDiv>
-                    <StockOrder corpName={corpName}/>
-                    {/*<OrderResult />*/}
-                    {/*<WaitOrderIndicator />*/}
+                        <StockOrder corpName={corpName}/>
+                        {/*<OrderResult />*/}
+                        {/*<WaitOrderIndicator />*/}
                     </BuyingDiv>
                 </div>
             ) : (

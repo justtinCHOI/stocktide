@@ -10,7 +10,7 @@ public interface MemberService {
 
     MemberDTO getKakaoMember(String accessToken);
 
-    void modifyMember(MemberModifyDTO memberModifyDTO);
+    MemberModifyDTO modifyMember(MemberModifyDTO memberModifyDTO);
 
     MemberDTO entityToDTO(Member member);
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef, FC } from 'react';
-import {FaEye, FaEyeSlash} from 'react-icons/fa';
+// import {FaEye, FaEyeSlash} from 'react-icons/fa';
 import useCustomMember from "@hooks/useCustomMember";
-import { modifyMember, checkEmailDuplicate } from "@api/memberApi";
-import ResultModal from "@components/common/ResultModal";
+import { checkEmailDuplicate } from "@api/memberApi";
+// import ResultModal from "@components/common/ResultModal";
 import {
     Button,
     Container,
     ContentBottom,
     ErrorMessage,
     FormRow,
-    Icon,
+    // Icon,
     Input,
     InputWrapper,
     Label
@@ -17,25 +17,14 @@ import {
 import { MemberState } from '@typings/member';
 import { toast } from 'react-toastify';
 
-const initState = {
-    memberId : 0,
-    name : '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-}
-
 const MemberModifyComponent: FC = () => {
 
-    const [member, setMember] = useState<MemberState>(initState)
-    const { loginState: loginInfo } = useCustomMember();
+    const { loginState: loginInfo, doModifyMember } = useCustomMember();
+    const [member, setMember] = useState<MemberState>(loginInfo)
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
-    const [result, setResult] = useState<string | null>()
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
-    const {doLogout, moveToLogin} = useCustomMember()
+    // const [showPassword, setShowPassword] = useState(false)
+    // const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -55,27 +44,36 @@ const MemberModifyComponent: FC = () => {
 
         if (e.target.name === 'email') {
             handleEmailChange(e.target.value).then()
+        } else if (e.target.name === 'password') {
+            handlePasswordChange(e.target.value)
         } else if (e.target.name === 'confirmPassword') {
-            handlePasswordChange()
+            handleConfirmPasswordChange(e.target.value)
         }
     }
 
     const handleEmailChange = async (email: string) => {
         try {
             const isDuplicate = await checkEmailDuplicate(email)
-            if (isDuplicate) {
+            if (isDuplicate && (email !== loginInfo.email)) {
                 setEmailError('이미 사용 중인 이메일입니다.')
             } else {
                 setEmailError('')
             }
         } catch (error) {
-            console.error('이메일 중복 검사 중 오류가 발생했습니다.', error)
             setEmailError('이메일 중복 검사 중 오류가 발생했습니다.')
         }
     }
 
-    const handlePasswordChange = () => {
-        if (member.password !== member.confirmPassword) {
+    const handlePasswordChange = (password: string) => {
+        if (member.confirmPassword && password !== member.confirmPassword) {
+            setPasswordError('비밀번호가 일치하지 않습니다.')
+        } else {
+            setPasswordError('')
+        }
+    }
+
+    const handleConfirmPasswordChange = (confirmPassword: string) => {
+        if (member.password !== confirmPassword) {
             setPasswordError('비밀번호가 일치하지 않습니다.')
         } else {
             setPasswordError('')
@@ -84,73 +82,56 @@ const MemberModifyComponent: FC = () => {
 
     const handleClickModify = () => {
         if (!member.name) {
-            alert('이름을 입력해 주세요.')
+            toast.error("이름을 입력해 주세요");
             nameInputRef.current!.focus()
             return
         }
 
         if (!member.email) {
-            alert('이메일을 입력해 주세요.')
+            toast.error("이메일을 입력해 주세요");
             emailInputRef.current!.focus()
             return
         }
 
         if (!member.password) {
-            alert('비밀번호를 입력해 주세요.')
+            toast.error("비밀번호를 입력해 주세요");
             passwordInputRef.current!.focus()
             return
         }
 
         if (!member.confirmPassword) {
-            alert('비밀번호를 입력해 주세요.')
+            toast.error("재확인 비밀번호를 입력해 주세요");
             confirmPasswordInputRef.current!.focus()
             return
         }
 
         if (emailError) {
-            alert('이메일을 확인해 주세요.')
+            toast.error("이메일을 확인해 주세요");
             emailInputRef.current!.focus()
             return
         }
 
         if (passwordError) {
-            alert('비밀번호가 일치하지 않습니다.')
+            toast.error("비밀번호가 일치하지 않습니다");
             confirmPasswordInputRef.current!.focus()
             return
         }
 
-        const MemberModifyDTO = {
+        const memberModifyDTO = {
             memberId : member.memberId,
             name : member.name,
             email: member.email,
             password: member.password,
         }
 
-        modifyMember(MemberModifyDTO).then(() => {
-            setResult('Modified')
-        })
-    }
-
-    const closeModal = () => {
-        setResult(null)
-        doLogout()
-        toast.info("로그아웃되었습니다");
-        moveToLogin()
-    }
-
-    const toggleShowPassword = () => {
-        setShowPassword(!showPassword)
-    }
-
-    const toggleShowConfirmPassword = () => {
-        setShowConfirmPassword(!showConfirmPassword)
+        doModifyMember(memberModifyDTO).catch(() => {
+            toast.error("회원 정보 수정 중 오류가 발생했습니다");
+        });
     }
 
     return (
         <>
             <Container>
-                {result && <ResultModal title={'회원정보'} content={'정보수정완료'} callbackFn={closeModal}/>}
-
                 <FormRow>
                     <Label>이름</Label>
                     <Input
@@ -179,29 +160,31 @@ const MemberModifyComponent: FC = () => {
                     <InputWrapper>
                         <Input
                             name="password"
-                            type={showPassword ? "text" : "password"}
+                            // type={showPassword ? "text" : "password"}
+                            type="text"
                             value={member.password}
                             onChange={handleChange}
                             ref={passwordInputRef}
                         />
-                        <Icon onClick={toggleShowPassword}>
-                            {showPassword ? <FaEyeSlash /> : <FaEye />}
-                        </Icon>
+                        {/*<Icon onClick={toggleShowPassword}>*/}
+                        {/*    {showPassword ? <FaEyeSlash /> : <FaEye />}*/}
+                        {/*</Icon>*/}
                     </InputWrapper>
                 </FormRow>
 
                 <FormRow>
-                    <Label>비밀번호 재확인</Label>
+                    <Label>재확인 비밀번호</Label>
                     <InputWrapper>
                         <Input
                             name="confirmPassword"
-                            type={showConfirmPassword ? "text" : "password"}
+                            // type={showConfirmPassword ? "text" : "password"}
+                            type="text"
                             onChange={handleChange}
                             ref={confirmPasswordInputRef}
                         />
-                        <Icon onClick={toggleShowConfirmPassword}>
-                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                        </Icon>
+                        {/*<Icon onClick={toggleShowConfirmPassword}>*/}
+                        {/*    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}*/}
+                        {/*</Icon>*/}
                     </InputWrapper>
                     {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
                 </FormRow>

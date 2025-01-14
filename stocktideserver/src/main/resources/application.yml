@@ -2,7 +2,7 @@ spring:
   application:
     name: stocktideserver
   profiles:
-    active: prod
+    active: dev
   jpa:
     properties:
       hibernate:

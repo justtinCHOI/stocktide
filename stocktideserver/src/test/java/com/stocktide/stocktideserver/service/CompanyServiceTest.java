@@ -21,9 +21,6 @@ import org.springframework.web.client.RestTemplate;
 @ActiveProfiles("test")
 public class CompanyServiceTest {
 
-    @Mock
-    private RestTemplate restTemplate;
-
     @Autowired
     CompanyService companyService;
 

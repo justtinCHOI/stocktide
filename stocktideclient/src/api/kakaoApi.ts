@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const API_SERVER_HOST = import.meta.env.VITE_API_URL;
+const API_REDIRECT_URI = import.meta.env.VITE_CLIENT_URL;
 
 const rest_api_key =`8f46337bde852c2d39573c6c60acfd65` //REST키값
 
-const redirect_uri =`${API_SERVER_HOST}/member/kakao`
+const redirect_uri =`${API_REDIRECT_URI}/member/kakao`
 
 const auth_code_path = `https://kauth.kakao.com/oauth/authorize`
 
