@@ -151,7 +151,7 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
 export default StockOrder;
 
 const Container = styled.div`
-    height: 414px;
+    height: calc(100vh - 220px);
     display: flex;
     flex-direction: row;
 `;

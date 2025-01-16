@@ -51,8 +51,8 @@ public class ApiCallService {
     private String KOSPI_URL;
 
     @Getter
-    @Value("${stock-url.domesticCompanies}")
-    private String DOMESTIC_COMPANIES_URL;
+    @Value("${stock-url.codes}")
+    private String COMPANIES_URL;
 
 
     private final String FID_ETC_CLS_CODE = "";
@@ -66,16 +66,14 @@ public class ApiCallService {
     private final String FID_INPUT_ISCD = "2001"; // 입력 종목코드	(2001:코스피)
     private final String FID_COND_SCR_DIV_CODE = "20477"; //  조건 화면 분류 코드 (Unique key(20477))
 
-    private RestTemplate restTemplate = new RestTemplate();
-
-    public ApiCallService(TokenService tokenService, CompanyRepository companyRepository) {
-        this.tokenService = tokenService;
-        this.companyRepository = companyRepository;
-    }
-
+    private final RestTemplate restTemplate;
     private final TokenService tokenService;
 
-    private final CompanyRepository companyRepository;
+    public ApiCallService(RestTemplate restTemplate, TokenService tokenService) {
+        this.restTemplate = restTemplate;
+        this.tokenService = tokenService;
+    }
+
 
     public StockasbiDataDto getStockasbiDataFromApi(String stockCode){
         log.info("---------------getStockasbiDataFromApi  started----------------------------------------");
@@ -183,7 +181,7 @@ public class ApiCallService {
 
     }
 
-    public StockListResponseDto getDomesticCompaniesFromApi() {
+    public StockListResponseDto getCompaniesFromApi() {
         try {
             String token = tokenService.getAccessToken();
 
@@ -191,7 +189,7 @@ public class ApiCallService {
             headers.add("Authorization", "Bearer " + token);
             headers.add("appkey", APP_KEY);
             headers.add("appsecret", APP_SECRET);
-            headers.add("tr_id", "FHKUP03500100");
+            headers.add("tr_id", "FHPST04770000");
             headers.add("custtype", CUST_TYPE);
 
         // FID_RANK_SORT_CLS_CODE: 순위 정렬 구분 코드 (0:코드순, 1:이름순)
@@ -200,15 +198,13 @@ public class ApiCallService {
         // FID_COND_SCR_DIV_CODE: 조건 화면 분류 코드	(Unique key(20477))
         // FID_COND_MRKT_DIV_CODE: 조건 시장 분류 코드 (시장구분코드 (주식 J))
 
-            String uri = DOMESTIC_COMPANIES_URL
+            String uri = COMPANIES_URL
                     + "?"
                     + "fid_rank_sort_cls_code=" + FID_RANK_SORT_CLS_CODE
                     + "&fid_slct_yn=" + FID_SLCT_YN
                     + "&fid_input_iscd=" + FID_INPUT_ISCD
                     + "&fid_cond_scr_div_code=" + FID_COND_SCR_DIV_CODE
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE;
-
-
 
             HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
@@ -253,6 +249,44 @@ public class ApiCallService {
             log.error("Error parsing response: ", e);
             throw new RuntimeException("Error fetching domestic companies: " + e.getMessage());
         }
+    }
+
+    public StockMinDto getBalanceSheet(String stockCode, String strHour) {
+        log.info("---------------getBalanceSheet  started----------------------------------------");
+        String token = tokenService.getAccessToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        headers.add("appkey", APP_KEY);
+        headers.add("appsecret", APP_SECRET);
+        headers.add("tr_id", "FHKST03010200");
+
+        //FID_COND_MRKT_DIV_CODE : 시장 분류 코드 (J : 주식)
+        //FID_INPUT_ISCD : 종목번호
+        //FID_ETC_CLS_CODE : 기타 구분 코드("")
+        //FID_INPUT_HOUR_1 : "123000" 입력 시 12시 30분 이전부터 1분 간격으로 조회
+        //FID_PW_DATA_INCU_YN : N : 당일데이터만 조회  Y : 이후데이터도 조회
+
+        String uri = STOCKHOUR_URL + "?FID_COND_MRKT_DIV_CODE=" + FID_COND_MRKT_DIV_CODE + "&FID_INPUT_ISCD=" + stockCode +  "&FID_ETC_CLS_CODE=" + FID_ETC_CLS_CODE
+                + "&FID_INPUT_HOUR_1=" + strHour + "&FID_PW_DATA_INCU_YN=" +  FID_PW_DATA_INCU_YN;
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<StockMinDto> response = restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<StockMinDto>() {});
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            StockMinDto stockMinDto = response.getBody();
+            log.info("---------------getBalanceSheet  finished----------------------------------------");
+
+            return stockMinDto;
+
+        } else {
+            log.info("error");
+            log.info("---------------getBalanceSheet  err----------------------------------------");
+
+            return null;
+        }
+
     }
 
 }

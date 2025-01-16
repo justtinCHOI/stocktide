@@ -73,13 +73,13 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
 
 export default BuyComponent;
 
-const Container = styled.aside`
+const Container = styled.div`
     z-index: 1;
     transition: right 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
     width: calc(100vw - 20px);
-    height: 100%;
+    //height: 100vh;
     background-color: #ffffff;
 
     .mainContent {
@@ -192,5 +192,5 @@ const TransactionVolume = styled.div`
 
 const BuyingDiv = styled.div`
     margin-top: 64px;
-    padding-bottom: 130px;
+    //padding-bottom: 130px;
 `;
