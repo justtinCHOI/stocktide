@@ -1,5 +1,6 @@
 package com.stocktide.stocktideserver.stock.service;
 
+import com.stocktide.stocktideserver.stock.dto.StockListResponseDto;
 import com.stocktide.stocktideserver.stock.dto.StockMinDto;
 import com.stocktide.stocktideserver.stock.dto.StockasbiDataDto;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
@@ -47,11 +48,21 @@ public class ApiCallService {
     @Value("${stock-url.kospi}")
     private String KOSPI_URL;
 
+    @Getter
+    @Value("${stock-url.domesticCompanies}")
+    private String DOMESTIC_COMPANIES_URL;
+
 
     private final String FID_ETC_CLS_CODE = "";
-    private final String FID_COND_MRKT_DIV_CODE = "J";
+    private final String FID_COND_MRKT_DIV_CODE = "J"; // 시장구분코드 (주식 J)
     // private final String FID_INPUT_HOUR_1 = "153000";
     private final String FID_PW_DATA_INCU_YN = "Y";
+    private final String CUST_TYPE = "P";
+
+    private final String FID_RANK_SORT_CLS_CODE = "1"; // 순위 정렬 구분 코드 (0:코드순, 1:이름순)
+    private final String FID_SLCT_YN = "0"; // 선택 여부	(0:신용주문가능, 1: 신용주문불가)
+    private final String FID_INPUT_ISCD = "2001"; // 입력 종목코드	(2001:코스피)
+    private final String FID_COND_SCR_DIV_CODE = "20477"; //  조건 화면 분류 코드 (Unique key(20477))
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -165,6 +176,52 @@ public class ApiCallService {
             return response.getBody();
         } else {
             log.info("error");
+            return null;
+        }
+
+    }
+
+    public StockListResponseDto getDomesticCompaniesFromApi(){
+        String token = tokenService.getAccessToken();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        String strMonth = Time.strMonth(localDateTime);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        headers.add("appkey", APP_KEY);
+        headers.add("appsecret", APP_SECRET);
+        headers.add("tr_id", "FHKUP03500100");
+        headers.add("custtype", CUST_TYPE);
+
+        // FID_RANK_SORT_CLS_CODE: 순위 정렬 구분 코드 (0:코드순, 1:이름순)
+        // FID_SLCT_YN: 선택 여부	(0:신용주문가능, 1: 신용주문불가)
+        // FID_INPUT_ISCD: 입력 종목코드	(2001:코스피)
+        // FID_COND_SCR_DIV_CODE: 조건 화면 분류 코드	(Unique key(20477))
+        // FID_COND_MRKT_DIV_CODE: 조건 시장 분류 코드 (시장구분코드 (주식 J))
+
+        String uri = DOMESTIC_COMPANIES_URL
+                + "?" + "FID_RANK_SORT_CLS_CODE=" + FID_RANK_SORT_CLS_CODE
+                +"&" + "FID_SLCT_YN=" + FID_SLCT_YN
+                +"&" + "FID_INPUT_ISCD=" + FID_INPUT_ISCD
+                +"&" + "FID_COND_SCR_DIV_CODE=" + FID_COND_SCR_DIV_CODE
+                +"&" + "FID_COND_MRKT_DIV_CODE=" + FID_COND_MRKT_DIV_CODE;
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<StockListResponseDto> response = restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<StockListResponseDto>() {});
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            StockListResponseDto stockListResponseDto = response.getBody();
+            log.info("---------------getDomesticCompaniesFromApi  finished----------------------------------------");
+
+            return stockListResponseDto;
+
+        } else {
+            log.info("error");
+            log.info("---------------getDomesticCompaniesFromApi  err----------------------------------------");
+
             return null;
         }
 

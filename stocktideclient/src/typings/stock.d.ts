@@ -79,3 +79,12 @@ export interface MoveStockItemProps {
   showChangePrice: boolean;
   onclick: () => void;
 }
+
+export interface TestStockItemProps {
+  company: {
+    companyId: number;
+    code: string;
+    korName: string;
+  };
+  onclick: () => void;
+}

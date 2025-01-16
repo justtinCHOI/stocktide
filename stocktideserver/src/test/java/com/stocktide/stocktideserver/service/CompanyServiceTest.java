@@ -30,7 +30,7 @@ public class CompanyServiceTest {
     @Autowired
     private CompanyRepository companyRepository;
     // testRegister 회사 1개 추가 ->
-    // testFillCompaines  회사 2 ~ 15 Company + StockAsBi 추가 ->
+    // testfillDomesticCompanies  회사 2 ~ 15 Company + StockAsBi 추가 ->
     // testUpdateStockMin 회사 2 ~ 15 StockMin 추가
 
     // Create first company
@@ -51,8 +51,8 @@ public class CompanyServiceTest {
     // If you finished with updating, remove comment on @Transactional
     @Test
     @Transactional
-    public void testFillCompaines() throws InterruptedException {
-        companyService.fillCompaines();
+    public void testfillDomesticCompanies() throws InterruptedException {
+        companyService.fillDomesticCompanies();
     }
 
     // build.gradle 할 때 실행 되므로 만료되지 않는 accessToken 을 계속 요청

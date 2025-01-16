@@ -5,6 +5,7 @@ import {Loading} from "@router/root";
 const EntirePage = lazy(() => import("@pages/stock/domestic/item/entire/Entire"));
 const HoldPage = lazy(() => import("@pages/stock/domestic/item/hold/Hold"));
 const WatchPage = lazy(() => import("@pages/stock/domestic/item/watch/Watch"));
+const TestPage = lazy(() => import("@pages/stock/domestic/item/test/Test"));
 
 const itemRouter = () => {
     return[
@@ -20,6 +21,9 @@ const itemRouter = () => {
         },{
             path: 'watch',
             element: <Suspense fallback={Loading}><WatchPage/></Suspense>,
+        },{
+            path: 'test',
+            element: <Suspense fallback={Loading}><TestPage/></Suspense>,
         },
     ]
 }
