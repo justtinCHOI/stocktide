@@ -28,11 +28,11 @@ public class StockScheduler {
 
     @Scheduled(cron = "0 30 9-15 * * MON-FRI")
     public void myScheduledStockMinMethod() throws InterruptedException {
-        stockMinService.updateStockMin();
+        stockMinService.updateDomesticStockMin();
     }
     @Scheduled(cron = "0 0 10-15 * * MON-FRI")
     public void myScheduledStockMinMethod2() throws InterruptedException {
-        stockMinService.updateStockMin();
+        stockMinService.updateDomesticStockMin();
 
     }
 }
@@ -56,7 +56,7 @@ public class StockScheduler {
 //    @Scheduled(cron = "10 50 9-15 * * MON-FRI")
 //    public void min1() throws InterruptedException {
 //        log.info("---------------min1  started----------------------------------------");
-//        stockMinService.updateStockMin();
+//        stockMinService.updateDomesticStockMin();
 //        log.info("---------------min1  finished----------------------------------------");
 //    }
 
@@ -89,7 +89,7 @@ public class StockScheduler {
 //public void myScheduledStockMinMethod() throws InterruptedException {
 //    //매주 월요일부터 금요일까지 9:30부터 15:30까지 30분 간격으로 실행됩니다.
 ////        LocalDateTime start = LocalDateTime.now();
-//    stockMinService.updateStockMin();
+//    stockMinService.updateDomesticStockMin();
 ////        LocalDateTime end = LocalDateTime.now();
 ////        Duration duration = Duration.between(start, end);
 ////        System.out.println(duration.getSeconds());
@@ -99,7 +99,7 @@ public class StockScheduler {
 //public void myScheduledStockMinMethod2() throws InterruptedException {
 //    //매주 월요일부터 금요일까지 오전 10시부터 오후 3시까지 매 정각에 작업을 실행합니다.
 ////        LocalDateTime start = LocalDateTime.now();
-//    stockMinService.updateStockMin();
+//    stockMinService.updateDomesticStockMin();
 ////        LocalDateTime end = LocalDateTime.now();
 ////        Duration duration = Duration.between(start, end);
 ////        System.out.println(duration.getSeconds());
@@ -122,7 +122,7 @@ public class StockScheduler {
 //    public void secondSchedule() throws InterruptedException {
 //        LocalDateTime start = LocalDateTime.now();
 //        stockAsBiService.updateStockAsBi();
-//        stockMinService.updateStockMin();
+//        stockMinService.updateDomesticStockMin();
 //        LocalDateTime end = LocalDateTime.now();
 //        Duration duration = Duration.between(start, end);
 //        System.out.println(duration.getSeconds());
@@ -141,7 +141,7 @@ public class StockScheduler {
 //    @Scheduled(fixedRate = 10000000)
 //    public void secondSchedule() throws InterruptedException {
 //        LocalDateTime start = LocalDateTime.now();
-//        stockMinService.updateStockMin();
+//        stockMinService.updateDomesticStockMin();
 //        LocalDateTime end = LocalDateTime.now();
 //        Duration duration = Duration.between(start, end);
 //        System.out.println(duration.getSeconds());
@@ -152,7 +152,7 @@ public class StockScheduler {
 //    @Scheduled(fixedRate = 10000000)
 //    public void secondSchedule() throws InterruptedException {
 //        LocalDateTime start = LocalDateTime.now();
-//        stockMinService.updateStockMin();
+//        stockMinService.updateDomesticStockMin();
 //        LocalDateTime end = LocalDateTime.now();
 //        Duration duration = Duration.between(start, end);
 //        System.out.println(duration.getSeconds());
@@ -162,7 +162,7 @@ public class StockScheduler {
 //    public void secondSchedule() throws InterruptedException {
 //        LocalDateTime start = LocalDateTime.now();
 //        stockAsBiService.updateStockAsBi();
-//        stockMinService.updateStockMin();
+//        stockMinService.updateDomesticStockMin();
 //        LocalDateTime end = LocalDateTime.now();
 //        Duration duration = Duration.between(start, end);
 //        System.out.println(duration.getSeconds());

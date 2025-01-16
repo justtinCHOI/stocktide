@@ -1,5 +1,6 @@
 package com.stocktide.stocktideserver.stock.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stocktide.stocktideserver.stock.dto.StockListResponseDto;
 import com.stocktide.stocktideserver.stock.dto.StockMinDto;
 import com.stocktide.stocktideserver.stock.dto.StockasbiDataDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Service
@@ -181,19 +183,16 @@ public class ApiCallService {
 
     }
 
-    public StockListResponseDto getDomesticCompaniesFromApi(){
-        String token = tokenService.getAccessToken();
+    public StockListResponseDto getDomesticCompaniesFromApi() {
+        try {
+            String token = tokenService.getAccessToken();
 
-        LocalDateTime localDateTime = LocalDateTime.now();
-
-        String strMonth = Time.strMonth(localDateTime);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
-        headers.add("appkey", APP_KEY);
-        headers.add("appsecret", APP_SECRET);
-        headers.add("tr_id", "FHKUP03500100");
-        headers.add("custtype", CUST_TYPE);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            headers.add("appkey", APP_KEY);
+            headers.add("appsecret", APP_SECRET);
+            headers.add("tr_id", "FHKUP03500100");
+            headers.add("custtype", CUST_TYPE);
 
         // FID_RANK_SORT_CLS_CODE: 순위 정렬 구분 코드 (0:코드순, 1:이름순)
         // FID_SLCT_YN: 선택 여부	(0:신용주문가능, 1: 신용주문불가)
@@ -201,30 +200,59 @@ public class ApiCallService {
         // FID_COND_SCR_DIV_CODE: 조건 화면 분류 코드	(Unique key(20477))
         // FID_COND_MRKT_DIV_CODE: 조건 시장 분류 코드 (시장구분코드 (주식 J))
 
-        String uri = DOMESTIC_COMPANIES_URL
-                + "?" + "FID_RANK_SORT_CLS_CODE=" + FID_RANK_SORT_CLS_CODE
-                +"&" + "FID_SLCT_YN=" + FID_SLCT_YN
-                +"&" + "FID_INPUT_ISCD=" + FID_INPUT_ISCD
-                +"&" + "FID_COND_SCR_DIV_CODE=" + FID_COND_SCR_DIV_CODE
-                +"&" + "FID_COND_MRKT_DIV_CODE=" + FID_COND_MRKT_DIV_CODE;
+            String uri = DOMESTIC_COMPANIES_URL
+                    + "?"
+                    + "fid_rank_sort_cls_code=" + FID_RANK_SORT_CLS_CODE
+                    + "&fid_slct_yn=" + FID_SLCT_YN
+                    + "&fid_input_iscd=" + FID_INPUT_ISCD
+                    + "&fid_cond_scr_div_code=" + FID_COND_SCR_DIV_CODE
+                    + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE;
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        ResponseEntity<StockListResponseDto> response = restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<StockListResponseDto>() {});
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            StockListResponseDto stockListResponseDto = response.getBody();
-            log.info("---------------getDomesticCompaniesFromApi  finished----------------------------------------");
+            HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-            return stockListResponseDto;
+            ResponseEntity<StockListResponseDto> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    entity,
+                    StockListResponseDto.class
+            );
 
-        } else {
-            log.info("error");
-            log.info("---------------getDomesticCompaniesFromApi  err----------------------------------------");
+            // ObjectMapper를 사용하여 상세 로깅
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonResponse = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(response.getBody());
+            log.info("API Response Structure: \n{}", jsonResponse);
 
-            return null;
+            // 개별 필드 값들도 확인
+            StockListResponseDto responseBody = response.getBody();
+            if (responseBody != null) {
+                log.info("RT_CD: {}", responseBody.getRt_cd());
+                log.info("MSG_CD: {}", responseBody.getMsg_cd());
+                log.info("MSG1: {}", responseBody.getMsg1());
+
+                if (responseBody.getOutput() != null) {
+                    log.info("Output size: {}", responseBody.getOutput().size());
+                    // 첫 번째 아이템의 구조 확인
+                    if (!responseBody.getOutput().isEmpty()) {
+                        StockListResponseDto.StockItem firstItem = responseBody.getOutput().get(0);
+                        log.info("First item example: \nCode: {}\nName: {}\nRate: {}",
+                                firstItem.getStck_shrn_iscd(),
+                                firstItem.getHts_kor_isnm(),
+                                firstItem.getCrdt_rate()
+                        );
+                    }
+                } else {
+                    log.info("Output is null");
+                }
+            }
+
+            return response.getBody();
+        } catch (Exception e) {
+            log.error("Error parsing response: ", e);
+            throw new RuntimeException("Error fetching domestic companies: " + e.getMessage());
         }
-
     }
 
 }

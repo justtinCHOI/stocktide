@@ -7,6 +7,7 @@ import com.stocktide.stocktideserver.stock.entity.StockInf;
 import com.stocktide.stocktideserver.stock.entity.StockMin;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
+import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import com.stocktide.stocktideserver.stock.repository.StockInfRepository;
 import com.stocktide.stocktideserver.stock.repository.StockMinRepository;
 import com.stocktide.stocktideserver.util.Time;
@@ -33,17 +34,21 @@ public class StockMinService {
     private final StockMinRepository stockMinRepository;
     private final StockMapper stockMapper;
     private final StockInfRepository stockInfRepository;
+    private final CompanyRepository companyRepository;
 
     // 모든 회사의 정호, 주식(StockInf, StockMin) with API -> 데이터베이스에 저장
-    public void updateStockMin() throws InterruptedException {
-        log.info("---------------updateStockMin  started----------------------------------------");
+    public void updateDomesticStockMin() throws InterruptedException {
+        log.info("---------------updateDomesticStockMin  started----------------------------------------");
         List<Company> companyList = companyService.findCompanies();
         LocalDateTime now = LocalDateTime.now();
         String strHour = Time.strHour(now);
 
+        int count = 0;
+
         //Company -> code + strHour -> StockMinDto ->  List<StockMinOutput2> -> List<StockMin> -> 정렬 -> 저장
         //Company -> code + strHour -> StockMinDto ->  StockMinOutput1 -> StockInf 저장 -> Company
         for(int i = 0; i < companyList.size(); i++) {
+
             // 주식 코드로 회사 불러오기
             Company company = companyService.findCompanyByCode(companyList.get(i).getCode());
             // 분봉 api 호출하기
@@ -71,9 +76,8 @@ public class StockMinService {
             stockMinRepository.saveAll(stockMinList);
             companyService.saveCompany(company);
 
-//            Thread.sleep(500);
-            log.info("---------------updateStockMin  finished----------------------------------------");
-
+            Thread.sleep(500);
+            log.info("---------------updateDomesticStockMin  finished----------------------------------------");
         }
     }
 

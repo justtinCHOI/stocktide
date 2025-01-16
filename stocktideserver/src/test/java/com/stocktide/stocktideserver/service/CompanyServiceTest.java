@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @Log4j2
 @TestPropertySource("classpath:application-test.yml")
 @ActiveProfiles("test")
+//@ActiveProfiles("dev")
 public class CompanyServiceTest {
 
     @Autowired
@@ -31,7 +32,7 @@ public class CompanyServiceTest {
     private CompanyRepository companyRepository;
     // testRegister 회사 1개 추가 ->
     // testfillDomesticCompanies  회사 2 ~ 15 Company + StockAsBi 추가 ->
-    // testUpdateStockMin 회사 2 ~ 15 StockMin 추가
+    // testupdateDomesticStockMin 회사 2 ~ 15 StockMin 추가
 
     // Create first company
     // If you finished with updating, remove comment on @Transactional
@@ -51,8 +52,14 @@ public class CompanyServiceTest {
     // If you finished with updating, remove comment on @Transactional
     @Test
     @Transactional
-    public void testfillDomesticCompanies() throws InterruptedException {
+    public void testFillDomesticCompanies() throws InterruptedException {
         companyService.fillDomesticCompanies();
+    }
+
+    @Test
+    @Transactional
+    public void testFillEveryDomesticCompanies() throws InterruptedException {
+        companyService.fillEveryDomesticCompanies();
     }
 
     // build.gradle 할 때 실행 되므로 만료되지 않는 accessToken 을 계속 요청
@@ -61,13 +68,18 @@ public class CompanyServiceTest {
     // If you finished with updating, remove comment on @Transactional
 //    @Test
 //    @Transactional
-////    @DisplayName("testUpdateStockMin() 테스트")
-//    public void testUpdateStockMin() throws InterruptedException {
-//        stockMinService.updateStockMin();
+//    public void testupdateDomesticStockMin() throws InterruptedException {
+//        stockMinService.updateDomesticStockMin();
 //    }
 
     @Test
-    @Transactional
+//    @Transactional
+    public void testUpdateDomesticStockMin() throws InterruptedException {
+        stockMinService.updateDomesticStockMin();
+    }
+
+    @Test
+//    @Transactional
     public void testFindCompanies()  {
         companyService.findCompanies();
     }

@@ -1,6 +1,6 @@
 // import React from "react";
 // import styled from "styled-components";
-// import StockHolmLogo from "@asset/images/StockHolmLogo.png";
+// import StockTideLogo from "@asset/images/StockTideLogo.jpg";
 //
 // const LoginConfirmationModal: React.FC<LoginConfirmationProps> = ({ onClose }) => {
 //   const messageText = "로그인이 성공적으로 완료되었습니다!";
@@ -16,7 +16,7 @@
 //     <ModalBackground onKeyDown={handleKeyDown} tabIndex={0}>
 //       <ModalContainer>
 //         <Message>{messageText}</Message>
-//         <Logo src={StockHolmLogo} alt="StockHolm Logo"/>
+//         <Logo src={StockTideLogo} alt="StockHolm Logo"/>
 //         <ConfirmButton onClick={onClose}>{confirmText}</ConfirmButton>
 //       </ModalContainer>
 //     </ModalBackground>

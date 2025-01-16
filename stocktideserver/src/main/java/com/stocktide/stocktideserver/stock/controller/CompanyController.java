@@ -2,10 +2,12 @@ package com.stocktide.stocktideserver.stock.controller;
 
 import com.stocktide.stocktideserver.stock.dto.CompanyModifyDTO;
 import com.stocktide.stocktideserver.stock.dto.CompanyResponseDto;
+import com.stocktide.stocktideserver.stock.dto.StockListResponseDto;
 import com.stocktide.stocktideserver.stock.dto.StockMinResponseDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
+import com.stocktide.stocktideserver.stock.service.ApiCallService;
 import com.stocktide.stocktideserver.stock.service.CompanyService;
 import com.stocktide.stocktideserver.stock.service.StockMinService;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,27 @@ public class CompanyController {
     private final StockMapper stockMapper;
     private final CompanyRepository companyRepository;
     private StockMinService stockMinService;
+    private ApiCallService apiCallService;
+
+    @GetMapping("/domestic/all")
+    public ResponseEntity<?> getAllDomesticCompanies() {
+        try {
+            StockListResponseDto response = apiCallService.getDomesticCompaniesFromApi();
+
+            if (response == null || response.getOutput() == null) {
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Failed to fetch company data");
+            }
+
+            return ResponseEntity.ok(response.getOutput());
+        } catch (Exception e) {
+            log.error("Error fetching domestic companies: ", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
 
     // 전체 회사 리스트
     @GetMapping("/list")

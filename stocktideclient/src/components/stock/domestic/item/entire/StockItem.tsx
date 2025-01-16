@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import logo from '@assets/images/StockHolmImage.png';
+import logo from '@assets/images/StockTideImage.jpg';
 import useCustomMove from '@hooks/useCustomMove';
 import { logoList } from '@utils/companyLogos';
 import { MoveStockItemProps } from '@typings/stock';

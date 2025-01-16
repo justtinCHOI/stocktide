@@ -31,8 +31,13 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/stock")) {
+            return true;
+        }
 
-        return path.startsWith("/stock/item/entire/");
+        return false;
+
+
     }
 
     @Override
