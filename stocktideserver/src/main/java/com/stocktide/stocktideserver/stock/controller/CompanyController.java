@@ -34,7 +34,7 @@ public class CompanyController {
     @GetMapping("/domestic/all")
     public ResponseEntity<?> getAllDomesticCompanies() {
         try {
-            StockListResponseDto response = apiCallService.getCompaniesFromApi();
+            StockListResponseDto response = apiCallService.getCodesFromApi();
 
             if (response == null || response.getOutput() == null) {
                 return ResponseEntity

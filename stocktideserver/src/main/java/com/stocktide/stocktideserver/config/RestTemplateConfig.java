@@ -25,33 +25,40 @@ public class RestTemplateConfig {
 
     @Bean
     public RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        // SSL 컨텍스트 생성 (모든 인증서 신뢰)
         SSLContext sslContext = new SSLContextBuilder()
-                .loadTrustMaterial(null, (x509Certificates, s) -> true)
+                .loadTrustMaterial(null, (certificate, authType) -> true)
                 .build();
 
-        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext,
-                new NoopHostnameVerifier());
+        // SSL 소켓 팩토리 생성 (호스트 검증 비활성화)
+        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
+                sslContext,
+                NoopHostnameVerifier.INSTANCE
+        );
 
-        Registry<ConnectionSocketFactory> socketFactoryRegistry =
-                RegistryBuilder.<ConnectionSocketFactory>create()
-                        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                        .register("https", csf)
-                        .build();
+        // 소켓 팩토리 레지스트리 생성
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", sslConnectionSocketFactory)
+                .build();
 
+        // 연결 풀 생성
         PoolingHttpClientConnectionManager connectionManager =
                 new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(20);
 
+        // HTTP 클라이언트 생성
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setConnectionManager(connectionManager)
                 .build();
 
+        // RequestFactory 생성
         HttpComponentsClientHttpRequestFactory requestFactory =
                 new HttpComponentsClientHttpRequestFactory();
         requestFactory.setHttpClient(httpClient);
-        requestFactory.setConnectTimeout(30000); // 30초
-        requestFactory.setConnectionRequestTimeout(30000); // 30초 
+        requestFactory.setConnectTimeout(30000);
+        requestFactory.setConnectionRequestTimeout(30000);
 
         return new RestTemplate(requestFactory);
     }
