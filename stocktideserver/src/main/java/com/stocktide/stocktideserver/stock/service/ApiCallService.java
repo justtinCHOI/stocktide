@@ -238,8 +238,7 @@ public class ApiCallService {
 
             return response.getBody();
         } catch (Exception e) {
-            log.error("Error fetching stockBasic: ", e);
-            log.error("Error details: ", e);
+            log.error("Error fetching stock basic data: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }

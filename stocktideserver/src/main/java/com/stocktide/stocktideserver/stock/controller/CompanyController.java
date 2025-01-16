@@ -1,9 +1,6 @@
 package com.stocktide.stocktideserver.stock.controller;
 
-import com.stocktide.stocktideserver.stock.dto.CompanyModifyDTO;
-import com.stocktide.stocktideserver.stock.dto.CompanyResponseDto;
-import com.stocktide.stocktideserver.stock.dto.StockListResponseDto;
-import com.stocktide.stocktideserver.stock.dto.StockMinResponseDto;
+import com.stocktide.stocktideserver.stock.dto.*;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
@@ -30,6 +27,17 @@ public class CompanyController {
     private final CompanyRepository companyRepository;
     private StockMinService stockMinService;
     private ApiCallService apiCallService;
+
+    @GetMapping("/basic/{stockCode}")
+    public ResponseEntity<StockBasicDto> getStockBasic(@PathVariable String stockCode) {
+        try {
+            StockBasicDto response = apiCallService.getStockBasicFromApi(stockCode);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error fetching stock basic data: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
     @GetMapping("/domestic/all")
     public ResponseEntity<?> getAllDomesticCompanies() {

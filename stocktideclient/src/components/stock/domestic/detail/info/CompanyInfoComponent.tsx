@@ -2,13 +2,13 @@ import { FC } from 'react';
 
 import styled from 'styled-components';
 import StockBasicComponent from '@components/stock/domestic/detail/info/StockBasicComponent';
-import StockBalanceComponent from '@components/stock/domestic/detail/info/StockBalanceComponent';
-import StockIncomeComponent from '@components/stock/domestic/detail/info/StockIncomeComponent';
-import StockFinancialComponent from '@components/stock/domestic/detail/info/StockFinancialComponent';
-import StockProfitComponent from '@components/stock/domestic/detail/info/StockProfitComponent';
-import StockOtherComponent from '@components/stock/domestic/detail/info/StockOtherComponent';
-import StockStabilityComponent from '@components/stock/domestic/detail/info/StockStabilityComponent';
-import StockGrowthComponent from '@components/stock/domestic/detail/info/StockGrowthComponent';
+// import StockBalanceComponent from '@components/stock/domestic/detail/info/StockBalanceComponent';
+// import StockIncomeComponent from '@components/stock/domestic/detail/info/StockIncomeComponent';
+// import StockFinancialComponent from '@components/stock/domestic/detail/info/StockFinancialComponent';
+// import StockProfitComponent from '@components/stock/domestic/detail/info/StockProfitComponent';
+// import StockOtherComponent from '@components/stock/domestic/detail/info/StockOtherComponent';
+// import StockStabilityComponent from '@components/stock/domestic/detail/info/StockStabilityComponent';
+// import StockGrowthComponent from '@components/stock/domestic/detail/info/StockGrowthComponent';
 
 interface CompanyInfoComponentProps {
   companyId: number;
@@ -22,33 +22,33 @@ const CompanyInfoComponent: FC<CompanyInfoComponentProps> = ({companyId}) => {
         <StockBasicComponent companyId={companyId}/>
       </Section>
       <Divider />
-      <Section>
-        <StockBalanceComponent companyId={companyId}/>
-      </Section>
-      <Divider />
-      <Section>
-        <StockIncomeComponent companyId={companyId}/>
-      </Section>
-      <Divider />
-      <Section>
-        <StockFinancialComponent companyId={companyId}/>
-      </Section>
-      <Divider />
-      <Section>
-        <StockProfitComponent companyId={companyId}/>
-      </Section>
-      <Divider />
-      <Section>
-        <StockOtherComponent companyId={companyId}/>
-      </Section>
-      <Divider />
-      <Section>
-        <StockStabilityComponent companyId={companyId}/>
-      </Section>
-      <Divider />
-      <Section>
-        <StockGrowthComponent companyId={companyId}/>
-      </Section>
+      {/*<Section>*/}
+      {/*  <StockBalanceComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
+      {/*<Divider />*/}
+      {/*<Section>*/}
+      {/*  <StockIncomeComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
+      {/*<Divider />*/}
+      {/*<Section>*/}
+      {/*  <StockFinancialComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
+      {/*<Divider />*/}
+      {/*<Section>*/}
+      {/*  <StockProfitComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
+      {/*<Divider />*/}
+      {/*<Section>*/}
+      {/*  <StockOtherComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
+      {/*<Divider />*/}
+      {/*<Section>*/}
+      {/*  <StockStabilityComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
+      {/*<Divider />*/}
+      {/*<Section>*/}
+      {/*  <StockGrowthComponent companyId={companyId}/>*/}
+      {/*</Section>*/}
     </MainContainer>
   );
 }
