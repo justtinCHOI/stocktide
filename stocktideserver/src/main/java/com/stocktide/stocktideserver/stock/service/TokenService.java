@@ -23,11 +23,15 @@ import java.util.Optional;
 @Slf4j
 public class TokenService {
 
-    public TokenService(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }
+    // postman 로 새로운 발급시 (요청시 X) database의 expired에 갱신이 안되기 때문에 오류가 난다.
 
     private final TokenRepository tokenRepository;
+    private final RestTemplate restTemplate;
+
+    public TokenService(RestTemplate restTemplate, TokenRepository tokenRepository) {
+        this.restTemplate = restTemplate;
+        this.tokenRepository = tokenRepository;
+    }
 
     @Getter
     @Value("${token.app-key}")
@@ -41,7 +45,7 @@ public class TokenService {
     @Value("${stock-url.token}")
     private String TOKEN_URL;
 
-    private RestTemplate restTemplate = new RestTemplate();
+
 
     public String getAccessToken() {
         log.info("---------------getAccessToken  started----------------------------------------");

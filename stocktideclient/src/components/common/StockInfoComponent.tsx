@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 
 const StockInfoComponent = () => {
     return (
         <StockInfoDiv>
-            <Logo>StockTide</Logo>
+            <Logo to={'/welcome'}>StockTide</Logo>
         </StockInfoDiv>
     );
 };
@@ -24,8 +25,13 @@ const StockInfoDiv = styled.div`
     z-index: 10;
 `;
 
-const Logo = styled.p`
+const Logo = styled(Link)`
     font-weight: bold;
     font-size: 1.5rem;
     color: #2d3748;
+
+    &:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: none;
+        color: inherit;
+    }
 `;
