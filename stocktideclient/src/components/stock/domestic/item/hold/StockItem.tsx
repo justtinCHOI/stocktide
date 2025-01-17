@@ -15,10 +15,10 @@ const StockItem: FC<StockItemProps> = ({ company }) => {
     const priceColor2 = isPositiveChange ? "#e22926" : "#2679ed";
 
     const [showChangePrice] = useState(false);
-    const {moveToRead} = useCustomMove();
+    const {moveToChart} = useCustomMove();
 
     const handleItemClick = () => {
-        moveToRead(company.companyId);
+        moveToChart(company.companyId);
     };
 
     const price = parseInt(company.stockPrice).toLocaleString();

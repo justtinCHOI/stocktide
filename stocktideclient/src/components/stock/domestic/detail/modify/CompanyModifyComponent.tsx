@@ -30,7 +30,7 @@ const CompanyModifyComponent: FC<CompanyModifyComponentProps> = ({companyId}) =>
     //나중에 값이 바뀐다는 것은 상태처리라는 뜻
     const [company, setCompany] = useState<CompanyUpdateDto>(initState)
 
-    const {moveToList, moveToRead} = useCustomMove();
+    const {moveToList, moveToChart} = useCustomMove();
 
     const [result, setResult] = useState<string | null>(null)
 
@@ -70,7 +70,7 @@ const CompanyModifyComponent: FC<CompanyModifyComponentProps> = ({companyId}) =>
         if (result === 'Deleted') {
             moveToList()
         } else if (result === 'Modified') {
-            moveToRead(companyId)
+            moveToChart(companyId)
         }
         setResult(null)
     }

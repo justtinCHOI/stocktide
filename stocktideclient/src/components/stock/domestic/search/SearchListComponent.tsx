@@ -19,7 +19,7 @@
 function SearchListComponent() {
     //navigate -> router -> useCustomMove -> page,size, refresh 변경 -> useEffect -> setServerData
 
-    // const {page, size, refresh, moveToList, moveToRead} = useCustomMove();
+    // const {page, size, refresh, moveToList, moveToChart} = useCustomMove();
     //
     // const [serverData, setServerData] = useState(initState);
     //
@@ -36,7 +36,7 @@ function SearchListComponent() {
             {/*<div className="flex flex-wrap mx-auto justify-center p-1">*/}
             {/*    {serverData.dtoList.map(company =>*/}
             {/*        <div key={company.companyId} className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"*/}
-            {/*             onClick={() => moveToRead(company.companyId)}*/}
+            {/*             onClick={() => moveToChart(company.companyId)}*/}
             {/*        >*/}
             {/*            <div className="flex w-full">*/}
             {/*                <div className="font-extrabold text-2xl p-2 flex-grow">{company.companyId}</div>*/}

@@ -8,7 +8,7 @@ import {ContentBottom} from "@assets/css/content";
 function EntireComponent() {
 
     const [showChangePrice, setShowChangePrice] = useState(false);
-    const {moveToRead} = useCustomMove();
+    const {moveToChart} = useCustomMove();
 
     const {data: companies, isLoading, isError} = useCompanyData(2, 87);
 
@@ -28,7 +28,7 @@ function EntireComponent() {
                             company={company}
                             setShowChangePrice={setShowChangePrice}
                             showChangePrice={showChangePrice}
-                            onclick={() => moveToRead(company.companyId)}
+                            onclick={() => moveToChart(company.companyId)}
                         />
                     ))
                 )}

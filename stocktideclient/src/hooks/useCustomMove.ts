@@ -25,11 +25,11 @@ function useCustomMove(): CustomMoveHook {
         navigate({pathname:`/my/modify/`})
     }
 
-    const moveToRead = (num: number) => {
-        navigate({pathname:`/stock/domestic/detail/read/${num}`})
+    const moveToChart = (num: number) => {
+        navigate({pathname:`/stock/domestic/detail/chart/${num}`})
     }
 
-    return {moveToList, moveToModify, moveToRead, moveToMemberModify, refresh}
+    return {moveToList, moveToModify, moveToChart, moveToMemberModify, refresh}
 
 }
 

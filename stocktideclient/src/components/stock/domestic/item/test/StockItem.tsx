@@ -5,10 +5,10 @@ import { TestStockItemProps } from '@typings/stock';
 
 const StockItem: FC<TestStockItemProps> = ({ company }) => {
 
-    const {moveToRead} = useCustomMove();
+    const {moveToChart} = useCustomMove();
 
     const handleItemClick = () => {
-        moveToRead(company.companyId);
+        moveToChart(company.companyId);
     };
 
     return (

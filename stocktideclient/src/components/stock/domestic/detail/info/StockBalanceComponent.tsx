@@ -9,10 +9,12 @@ import {
 } from 'recharts';
 import {
   Section, TitleRow, Title, InfoContainer, InfoRow,
-  Label, Value, ErrorContainer, ErrorMessage, RefreshButton
+  Label, Value, ErrorContainer, ErrorMessage, RefreshButton,
+  AnalysisContainer, AnalysisItem, AnalysisGrid, AnalysisTitle,
+  RecommendationItem, RecommendationList, ChartContainer,
+  StatusBadge, LoadingContainer, NoDataMessage
 } from '@assets/css/SkeletonStyles';
 import { analyzeBalanceData, formatBalanceChartData, formatBalanceData } from '@utils/balanceAnalyzer';
-import styled from 'styled-components';
 
 interface StockBalanceComponentProps {
   companyId: number;
@@ -189,80 +191,6 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
   );
 };
 
-const ChartContainer = styled.div`
-  margin: 20px 0;
-  padding: 10px;
-  background: #f8f9fa;
-  border-radius: 8px;
-`;
 
-const LoadingContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-`;
-
-const AnalysisContainer = styled.div`
-  margin-top: 20px;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 8px;
-`;
-
-const AnalysisTitle = styled.h3`
-  font-size: 1.1rem;
-  color: #333;
-  margin-bottom: 12px;
-`;
-
-const AnalysisGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
-`;
-
-const AnalysisItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const StatusBadge = styled.span<{ $status: string }>`
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-align: center;
-  background-color: ${({ $status }) =>
-  $status === 'high' ? '#e6ffe6' :
-    $status === 'medium' ? '#fff3e6' :
-      $status === 'low' ? '#ffe6e6' : '#f8f9fa'};
-  color: ${({ $status }) =>
-  $status === 'high' ? '#2e7d32' :
-    $status === 'medium' ? '#ed6c02' :
-      $status === 'low' ? '#d32f2f' : '#666'};
-`;
-
-const RecommendationList = styled.div`
-  margin-top: 16px;
-`;
-
-const RecommendationItem = styled.div`
-  padding: 8px 0;
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.4;
-`;
-
-const NoDataMessage = styled.div`
-  text-align: center;
-  padding: 20px;
-  color: #666;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin: 20px 0;
-`;
 
 export default StockBalanceComponent;

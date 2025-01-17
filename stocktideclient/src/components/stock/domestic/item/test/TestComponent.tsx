@@ -6,7 +6,7 @@ import { ContentBottom } from "@assets/css/content";
 import useTestCompanyListData from '@hooks/useTestCompanyListData';
 
 const TestComponent: FC = () => {
-  const { moveToRead } = useCustomMove();
+  const { moveToChart } = useCustomMove();
   const { data: companies, isLoading, isError } = useTestCompanyListData();
 
   if (isLoading) {
@@ -24,7 +24,7 @@ const TestComponent: FC = () => {
           <StockItem
             key={company.companyId}
             company={company}
-            onclick={() => moveToRead(company.companyId)}
+            onclick={() => moveToChart(company.companyId)}
           />
         ))}
       </StockList>

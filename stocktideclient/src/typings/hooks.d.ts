@@ -52,7 +52,7 @@ export interface CustomLoginHook {
 export interface CustomMoveHook {
   moveToList: () => void;
   moveToModify: (num: number) => void;
-  moveToRead: (num: number) => void;
+  moveToChart: (num: number) => void;
   moveToMemberModify: () => void;
   refresh: boolean;
 }
