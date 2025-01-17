@@ -304,7 +304,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching stockIncome: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -337,7 +336,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching stockFinancial: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -370,7 +368,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching stockProfit: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -403,7 +400,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching StockOther: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -436,7 +432,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching StockStability: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -469,7 +464,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching domestic companies: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -504,7 +498,40 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching domestic companies: ", e);
-            log.error("Error details: ", e);
+            throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
+        }
+    }
+
+    public StockListResponseDto getNewsFromApi() {
+        try {
+            String token = tokenService.getAccessToken();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            headers.add("appkey", APP_KEY);
+            headers.add("appsecret", APP_SECRET);
+            headers.add("tr_id", "FHPST04770000");
+            headers.add("custtype", CUST_TYPE);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            String uri = STOCKCREDIT_URL
+                    + "?"
+                    + "fid_rank_sort_cls_code=" + FID_RANK_SORT_CLS_CODE
+                    + "&fid_slct_yn=" + FID_SLCT_YN
+                    + "&fid_input_iscd=" + FID_INPUT_ISCD
+                    + "&fid_cond_scr_div_code=" + FID_COND_SCR_DIV_CODE
+                    + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE;
+
+            ResponseEntity<StockListResponseDto> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    StockListResponseDto.class
+            );
+
+            return response.getBody();
+        } catch (Exception e) {
+            log.error("Error fetching domestic companies: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }

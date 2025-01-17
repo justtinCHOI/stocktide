@@ -13,7 +13,7 @@ import {
   AnalysisContainer, AnalysisItem, AnalysisGrid, AnalysisTitle,
   RecommendationItem, RecommendationList, ChartContainer,
   StatusBadge, LoadingContainer, NoDataMessage
-} from '@assets/css/SkeletonStyles';
+} from '@assets/css/CustomStockTideStyles';
 import { analyzeBalanceData, formatBalanceChartData, formatBalanceData } from '@utils/balanceAnalyzer';
 
 interface StockBalanceComponentProps {

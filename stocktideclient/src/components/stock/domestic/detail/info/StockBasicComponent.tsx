@@ -3,7 +3,7 @@ import useStockBasic from '@hooks/companyInfo/useStockBasic'
 import { SkeletonBox } from '@components/common/Skeleton';
 import { RefreshCw } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
-import {Section, TitleRow, Title, InfoContainer, InfoRow, Label, Value, ErrorContainer, ErrorMessage, RefreshButton } from '@assets/css/SkeletonStyles';
+import {Section, TitleRow, Title, InfoContainer, InfoRow, Label, Value, ErrorContainer, ErrorMessage, RefreshButton } from '@assets/css/CustomStockTideStyles';
 
 interface StockBasicComponentProps {
   companyId: number;
@@ -27,7 +27,8 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
           <Title>기업 기본 정보</Title>
         </TitleRow>
         <InfoContainer>
-          {[...Array(6)].map((_, index) => (
+          {/*{[...Array(6)].map((_, index) => (*/}
+          {[...Array(5)].map((_, index) => (
             <InfoRow key={index}>
               <SkeletonBox $height="24px" $width="30%" />
               <SkeletonBox $height="24px" $width="60%" />
@@ -57,7 +58,7 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
     pdno = '-',
     prdt_name = '-',
     lstg_stqt = '0',
-    lstg_cptl_amt = '0',
+    // lstg_cptl_amt = '0',
     cpta = '0',
     papr = '0'
   } = data.output || {};
@@ -66,7 +67,7 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
     { label: '종목번호', value: pdno },
     { label: '상품명', value: prdt_name },
     { label: '상장주식수', value: `${Number(lstg_stqt).toLocaleString()} 주` },
-    { label: '상장자본금', value: `${Number(lstg_cptl_amt).toLocaleString()} 원` },
+    // { label: '상장자본금', value: `${Number(lstg_cptl_amt).toLocaleString()} 원` },
     { label: '자본금', value: `${Number(cpta).toLocaleString()} 원` },
     { label: '액면가', value: `${Number(papr).toLocaleString()} 원` },
   ];
