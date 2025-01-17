@@ -58,3 +58,16 @@ export interface BalanceOutput {
   bram_depn: string;     // 차입금의존도
   quck_rate: string;     // 당좌비율
 }
+
+export interface StockNewsDto {
+  output: NewsOutput[];
+  rt_cd: string;
+  msg_cd: string;
+  msg1: string;
+}
+
+export interface NewsOutput {
+  data_dt: string;     // 뉴스 날짜
+  hts_pbnt_titl_cntt: string;   // 뉴스 제목
+  dorg: string;  // 언론사
+}

@@ -82,6 +82,10 @@ public class ApiCallService {
     @Value("${stock-url.stockCredit}")
     private String STOCKCREDIT_URL;
 
+    @Getter
+    @Value("${stock-url.stockNews}")
+    private String STOCKNEWS_URL;
+
     private final String FID_ETC_CLS_CODE = "";
     private final String FID_COND_MRKT_DIV_CODE = "J"; // 시장구분코드 (주식 J)
     // private final String FID_INPUT_HOUR_1 = "153000";
@@ -502,7 +506,7 @@ public class ApiCallService {
         }
     }
 
-    public StockListResponseDto getNewsFromApi() {
+    public StockNewsDto getNewsFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -510,28 +514,35 @@ public class ApiCallService {
             headers.add("Authorization", "Bearer " + token);
             headers.add("appkey", APP_KEY);
             headers.add("appsecret", APP_SECRET);
-            headers.add("tr_id", "FHPST04770000");
+            headers.add("tr_id", "FHKST01011800");
             headers.add("custtype", CUST_TYPE);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            String uri = STOCKCREDIT_URL
+            String uri = STOCKNEWS_URL
                     + "?"
-                    + "fid_rank_sort_cls_code=" + FID_RANK_SORT_CLS_CODE
-                    + "&fid_slct_yn=" + FID_SLCT_YN
-                    + "&fid_input_iscd=" + FID_INPUT_ISCD
-                    + "&fid_cond_scr_div_code=" + FID_COND_SCR_DIV_CODE
-                    + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE;
+                    + "FID_NEWS_OFER_ENTP_CODE="
+                    + "&FID_COND_MRKT_CLS_CODE="
+                    + "&FID_INPUT_ISCD=" + stockCode
+                    + "&FID_TITL_CNTT="
+                    + "&FID_INPUT_DATE_1="
+                    + "&FID_INPUT_HOUR_1="
+                    + "&FID_RANK_SORT_CLS_CODE="
+                    + "&FID_INPUT_SRNO=";
 
-            ResponseEntity<StockListResponseDto> response = restTemplate.exchange(
+            ResponseEntity<StockNewsDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockListResponseDto.class
+                    StockNewsDto.class
             );
-
+            if(response.getBody() != null) {
+                log.info("response.getBody().getRt_cd(): {}", response.getBody().getRt_cd());
+                log.info("response.getBody().getMsg_cd(): {}", response.getBody().getMsg_cd());
+                log.info("response.getBody().getMsg1(): {}", response.getBody().getMsg1());
+            }
             return response.getBody();
         } catch (Exception e) {
-            log.error("Error fetching domestic companies: ", e);
+            log.error("Error fetching news: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }

@@ -92,6 +92,31 @@ public class CompanyController {
         }
     }
 
+    @GetMapping("/news/{companyId}")
+    public ResponseEntity<StockNewsDto> getStockNews(@PathVariable Long companyId) {
+        try {
+            Company company = companyService.findCompanyById(companyId);
+
+            if (company == null) {
+                return ResponseEntity.notFound().build();
+            }
+            log.info("Company code: {}", company.getCode());
+
+            StockNewsDto response = apiCallService.getNewsFromApi(company.getCode());
+            if (response == null) {
+                return ResponseEntity.noContent().build();
+            }
+
+//            log.info("News from API for news size: {}", response.getOutput().size());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Error fetching stock news for company id: {}, error: {}", companyId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @GetMapping("/domestic/all")
     public ResponseEntity<?> getAllDomesticCompanies() {
         try {
