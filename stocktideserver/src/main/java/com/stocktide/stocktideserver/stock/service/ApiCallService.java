@@ -271,7 +271,6 @@ public class ApiCallService {
             return response.getBody();
         } catch (Exception e) {
             log.error("Error fetching stockBalance: ", e);
-            log.error("Error details: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }

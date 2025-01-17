@@ -18,7 +18,7 @@ const fetchStockBasic = async (companyId: number): Promise<StockBasicDto> => {
   }
 };
 
-const useGetStockBasic = (companyId: number) => {
+const useStockBasic = (companyId: number) => {
   const query = useQuery({
     queryKey: ['stockBasic', companyId],
     queryFn: () => fetchStockBasic(companyId),
@@ -36,4 +36,4 @@ const useGetStockBasic = (companyId: number) => {
   return query;
 };
 
-export default useGetStockBasic;
+export default useStockBasic;

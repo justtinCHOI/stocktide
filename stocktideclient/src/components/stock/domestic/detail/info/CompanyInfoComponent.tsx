@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import styled from 'styled-components';
 import StockBasicComponent from '@components/stock/domestic/detail/info/StockBasicComponent';
-// import StockBalanceComponent from '@components/stock/domestic/detail/info/StockBalanceComponent';
+import StockBalanceComponent from '@components/stock/domestic/detail/info/StockBalanceComponent';
 // import StockIncomeComponent from '@components/stock/domestic/detail/info/StockIncomeComponent';
 // import StockFinancialComponent from '@components/stock/domestic/detail/info/StockFinancialComponent';
 // import StockProfitComponent from '@components/stock/domestic/detail/info/StockProfitComponent';
@@ -22,9 +22,9 @@ const CompanyInfoComponent: FC<CompanyInfoComponentProps> = ({companyId}) => {
         <StockBasicComponent companyId={companyId}/>
       </Section>
       <Divider />
-      {/*<Section>*/}
-      {/*  <StockBalanceComponent companyId={companyId}/>*/}
-      {/*</Section>*/}
+      <Section>
+        <StockBalanceComponent companyId={companyId}/>
+      </Section>
       {/*<Divider />*/}
       {/*<Section>*/}
       {/*  <StockIncomeComponent companyId={companyId}/>*/}
@@ -56,7 +56,7 @@ const CompanyInfoComponent: FC<CompanyInfoComponentProps> = ({companyId}) => {
 export default CompanyInfoComponent;
 
 const MainContainer = styled.main`
-    padding: 20px;
+    //padding: 20px;
     height: calc(100vh - 200px);
     overflow-y: scroll;
 

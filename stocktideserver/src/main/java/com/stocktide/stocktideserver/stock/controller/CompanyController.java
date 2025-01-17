@@ -60,6 +60,38 @@ public class CompanyController {
         }
     }
 
+    @GetMapping("/balance/{companyId}")
+    public ResponseEntity<StockBalanceDto> getStockBalance(@PathVariable Long companyId) {
+        try {
+            // 1. companyId로 Company 엔티티 조회
+            Company company = companyService.findCompanyById(companyId);
+            if (company == null) {
+                log.error("Company not found with id: {}", companyId);
+                return ResponseEntity.notFound().build();
+            }
+
+            // 2. Company 엔티티에서 stockCode 추출
+            String stockCode = company.getCode();
+            if (stockCode == null || stockCode.isEmpty()) {
+                log.error("Stock code is null or empty for company id: {}", companyId);
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 3. stockCode를 사용하여 API 호출
+            StockBalanceDto response = apiCallService.getStockBalanceFromApi(stockCode);
+            if (response == null) {
+                log.error("No response from API for stock code: {}", stockCode);
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Error fetching stock balance data for company id: {}, error: {}", companyId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @GetMapping("/domestic/all")
     public ResponseEntity<?> getAllDomesticCompanies() {
         try {
