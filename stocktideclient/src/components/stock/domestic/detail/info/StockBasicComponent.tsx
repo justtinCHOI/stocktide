@@ -52,14 +52,15 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
     );
   }
 
+  // 안전한 데이터 추출
   const {
-    pdno,
-    prdt_name,
-    lstg_stqt,
-    lstg_cptl_amt,
-    cpta,
-    papr,
-  } = data.output;
+    pdno = '-',
+    prdt_name = '-',
+    lstg_stqt = '0',
+    lstg_cptl_amt = '0',
+    cpta = '0',
+    papr = '0'
+  } = data.output || {};
 
   const infoItems = [
     { label: '종목번호', value: pdno },

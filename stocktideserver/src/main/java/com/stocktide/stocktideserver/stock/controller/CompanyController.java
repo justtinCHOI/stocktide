@@ -28,13 +28,34 @@ public class CompanyController {
     private StockMinService stockMinService;
     private ApiCallService apiCallService;
 
-    @GetMapping("/basic/{stockCode}")
-    public ResponseEntity<StockBasicDto> getStockBasic(@PathVariable String stockCode) {
+    @GetMapping("/basic/{companyId}")
+    public ResponseEntity<StockBasicDto> getStockBasic(@PathVariable Long companyId) {
         try {
+            // 1. companyId로 Company 엔티티 조회
+            Company company = companyService.findCompanyById(companyId);
+            if (company == null) {
+                log.error("Company not found with id: {}", companyId);
+                return ResponseEntity.notFound().build();
+            }
+
+            // 2. Company 엔티티에서 stockCode 추출
+            String stockCode = company.getCode();
+            if (stockCode == null || stockCode.isEmpty()) {
+                log.error("Stock code is null or empty for company id: {}", companyId);
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 3. stockCode를 사용하여 API 호출
             StockBasicDto response = apiCallService.getStockBasicFromApi(stockCode);
+            if (response == null) {
+                log.error("No response from API for stock code: {}", stockCode);
+                return ResponseEntity.noContent().build();
+            }
+
             return ResponseEntity.ok(response);
+
         } catch (Exception e) {
-            log.error("Error fetching stock basic data: ", e);
+            log.error("Error fetching stock basic data for company id: {}, error: {}", companyId, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
