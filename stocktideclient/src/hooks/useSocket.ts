@@ -5,7 +5,7 @@ import { ChatMessage } from '@typings/chat';
 import { UseSocketReturn } from '@typings/hooks';
 import {
     // addMessage,
-    setConnectionStatus,
+    setConnectionStatus, updateParticipants,
 } from '@slices/chatSlice';
 import { useDispatch } from 'react-redux';
 import useCustomMember from '@hooks/useCustomMember';
@@ -20,7 +20,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
     const [error] = useState<Error | null>(null);
     const [messages] = useState<ChatMessage[]>([]);
     const [connectedUsers] = useState<string[]>([]);
-    // const [reconnectAttempts, setReconnectAttempts] = useState<number>(0);
+    const [participants, setParticipants] = useState<string[]>([]);
 
     useEffect(() => {
         const client = new Client({
@@ -31,6 +31,18 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
             onConnect: () => {
                 console.log('Connected to WebSocket');
                 dispatch(setConnectionStatus('connected'));
+
+
+                // 참여자 목록 구독
+                client.subscribe(
+                  `/topic/chat/participants`,
+                  (message) => {
+                      const statusMessage = JSON.parse(message.body);
+                      console.log('Participants Message:', statusMessage);
+                      setParticipants(statusMessage.connectedUsers || []);
+                      dispatch(updateParticipants(participants));
+                  }
+                );
 
                 try {
                     client.publish({
@@ -48,14 +60,6 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
                     console.error('Failed to send join message', error);
                 }
 
-                // 연결 즉시 서버에 참여자 목록 요청
-                client.publish({
-                    destination: `/app/chat.getParticipants/${companyId}`,
-                    body: JSON.stringify({
-                        type: 'JOIN',
-                        room: `company-${companyId}`,
-                    })
-                });
             },
             onDisconnect: () => {
                 console.log('Disconnected from WebSocket');
@@ -77,6 +81,10 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
             client.deactivate();
         };
     }, [url, dispatch]);
+
+
+
+
 
     const sendMessage = useCallback((chatMessage: ChatMessage) => {
         if (stompClient && connected && chatMessage.type === 'CHAT') {
@@ -103,6 +111,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
         messages,
         connectedUsers,
         sendMessage,
-        joinRoom
+        joinRoom,
+        participants
     };
 }

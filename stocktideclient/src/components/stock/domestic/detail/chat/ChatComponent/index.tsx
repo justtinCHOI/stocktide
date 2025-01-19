@@ -107,7 +107,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
           <ChatHeader>
               <CompanyName>{company?.korName} 채팅방</CompanyName>
               <ParticipantCount>
-                  {/*{connectionStatus}*/}
                       {connectionStatus === 'connected'
                         ? `참여자 ${participants.length}명`
                         : connectionStatus === 'reconnecting'

@@ -30,17 +30,17 @@ public class CompanyService {
 
     //autoIncrement -> Company
     public Company findCompanyById(long companyId) {
-        log.info("----------------------------------findCompanyById started");
+//        log.info("----------------------------------findCompanyById started");
         Company company = companyRepository.findByCompanyId(companyId);
-        log.info("----------------------------------findCompanyById finished {}", company);
+//        log.info("----------------------------------findCompanyById finished {}", company);
         return company;
     }
 
     // 모든 회사 리턴
     public List<Company> findCompanies() {
-        log.info("---------------findCompanies  started----------------------------------------");
+//        log.info("---------------findCompanies  started----------------------------------------");
         List<Company> all = companyRepository.findAll();
-        log.info("---------------findCompanies  finished {}----------------------------------------", all);
+//        log.info("---------------findCompanies  finished {}----------------------------------------", all);
         return all;
     }
 

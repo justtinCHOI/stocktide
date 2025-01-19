@@ -83,10 +83,11 @@ public class ChatService {
             room.getParticipants().add(username);
             chatRoomRepository.save(room);
 
-            // 실시간 참여자 업데이트 이벤트 발행
-            messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/participants",
-                    new UserStatusMessage("JOIN", username, new ArrayList<>(room.getParticipants())));
         }
+        messagingTemplate.convertAndSend("/topic/chat/participants",
+                new UserStatusMessage("UPDATE", username, new ArrayList<>(room.getParticipants()))
+        );
+//        log.info("------------Added participant: {}-----------", room.getParticipants().size());
     }
 
     public void removeParticipant(String roomId, String username) {

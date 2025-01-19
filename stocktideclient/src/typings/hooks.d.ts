@@ -86,6 +86,7 @@ export interface UseSocketReturn {
   connectedUsers: string[];
   sendMessage: (chatMessage: ChatMessage) => void;
   joinRoom: (chatMessage: ChatMessage) => void;
+  participants: string[];
 }
 
 interface TradeStockParams {
