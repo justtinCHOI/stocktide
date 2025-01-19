@@ -9,6 +9,7 @@ import {
 } from '@slices/chatSlice';
 import { useDispatch } from 'react-redux';
 import useCustomMember from '@hooks/useCustomMember';
+import { toast } from 'react-toastify';
 
 
 export function useSocket(url: string, companyId: number): UseSocketReturn {
@@ -16,7 +17,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
     const { loginState } = useCustomMember();
 
     const [stompClient, setStompClient] = useState<Client | null>(null);
-    const [connected] = useState(false);
+    const [connected, setConnected] = useState(false);
     const [error] = useState<Error | null>(null);
     const [messages] = useState<ChatMessage[]>([]);
     const [connectedUsers] = useState<string[]>([]);
@@ -30,15 +31,15 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
             heartbeatOutgoing: 4000,
             onConnect: () => {
                 console.log('Connected to WebSocket');
+                setConnected(true);
                 dispatch(setConnectionStatus('connected'));
-
 
                 // 참여자 목록 구독
                 client.subscribe(
                   `/topic/chat/participants`,
                   (message) => {
                       const statusMessage = JSON.parse(message.body);
-                      console.log('Participants Message:', statusMessage);
+                      // console.log('Participants Message:', statusMessage);
                       setParticipants(statusMessage.connectedUsers || []);
                       dispatch(updateParticipants(participants));
                   }
@@ -64,6 +65,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
             onDisconnect: () => {
                 console.log('Disconnected from WebSocket');
                 dispatch(setConnectionStatus('disconnected'));
+                setConnected(false);
 
                 // 재연결 시도
                 setTimeout(() => {
@@ -82,18 +84,22 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
         };
     }, [url, dispatch]);
 
-
-
-
-
     const sendMessage = useCallback((chatMessage: ChatMessage) => {
         if (stompClient && connected && chatMessage.type === 'CHAT') {
-            stompClient.publish({
-                destination: `/app/chat.sendMessage/${companyId}`,
-                body: JSON.stringify(chatMessage)
-            });
+            try {
+                stompClient.publish({
+                    destination: `/app/chat.sendMessage/${companyId}`,
+                    body: JSON.stringify(chatMessage)
+                });
+                console.log('Message sent successfully');
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                // 추가적인 에러 처리 로직 (예: 사용자에게 알림)
+                toast.error('메시지 전송에 실패했습니다.');
+            }
         }
-    }, [stompClient, connected]);
+    }, [stompClient, connected, companyId]);
+
 
     const joinRoom = useCallback((chatMessage: ChatMessage) => {
         if (stompClient && connected) {

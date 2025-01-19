@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     background: #f5f5f5;
 `;
 
@@ -29,20 +26,22 @@ export const ParticipantCount = styled.span`
   margin-left: auto;
 `;
 
-
-
 export const ReconnectingIndicator = styled.div`
     color: #f44336;
     font-size: 0.8rem;
 `;
 
 export const MessagesContainer = styled.div`
+    height: calc(100vh - 380px);
     flex: 1;
-    overflow-y: auto;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 export const MessageItem = styled.div<{ $isMine: boolean; $isSystem: boolean }>`
@@ -65,7 +64,7 @@ export const ParticipantsList = styled.div`
     gap: 0.5rem;
     overflow-x: auto;
     &::-webkit-scrollbar {
-        height: 4px;
+        display: none;
     }
 `;
 
@@ -105,28 +104,43 @@ export const MessageTime = styled.div`
     color: #999;
 `;
 
-export const ChatInput = styled.div`
+export const ChatInput = styled.form`
     display: flex;
-    gap: 10px;
+    padding: 1rem;
+    gap: 0.5rem;
+    background: #fff;
+    border-top: 1px solid #ddd;
 
     input {
         flex: 1;
-        padding: 10px;
+        padding: 0.5rem;
         border: 1px solid #ddd;
         border-radius: 4px;
+        font-size: 0.9rem;
+
+        &:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
     }
 
     button {
-        padding: 10px 20px;
+        padding: 0.5rem 1rem;
         background: #007bff;
         color: white;
         border: none;
         border-radius: 4px;
+        font-weight: 500;
         cursor: pointer;
+        transition: background-color 0.2s;
 
-        &:hover {
+        &:hover:not(:disabled) {
             background: #0056b3;
+        }
+
+        &:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     }
 `;
-

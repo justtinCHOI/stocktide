@@ -36,12 +36,10 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
     const { loginState } = useCustomMember();
     const chatState = useSelector((state: RootState) => state.chatSlice);
     const [message, setMessage] = useState('');
-    const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const messageContainerRef = useRef<HTMLDivElement>(null);
-    const participants = useSelector((state: RootState) => state.chatSlice.participants);
     const connectionStatus = useSelector((state: RootState) => state.chatSlice.connectionStatus);
 
-    const { stompClient, connected, error, sendMessage } = useSocket(
+    const { stompClient, connected, sendMessage, participants } = useSocket(
       `${import.meta.env.VITE_WS_URL}/ws-stocktide`, companyId
     );
 
@@ -59,23 +57,12 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
                   }
               }
             );
-
             return () => {
                 chatSubscription.unsubscribe();
-            };
+            }
         }
     }, [connected, stompClient, companyId, loginState.name]);
 
-    // 에러 처리 및 재연결
-    useEffect(() => {
-        if (error && reconnectAttempts < 3) {
-            const timer = setTimeout(() => {
-                setReconnectAttempts(prev => prev + 1);
-                stompClient?.activate();
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [error, reconnectAttempts, stompClient]);
 
     // 메시지 스크롤 자동이동
     useEffect(() => {
@@ -87,7 +74,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
     // 메시지 전송 핸들러
     const handleSendMessage = (event: React.FormEvent) => {
         event.preventDefault();
-        if (message.trim() && chatState.isJoined) {
+        if (message.trim()) {
             const chatMessage: ChatMessage = {
                 type: 'CHAT',
                 content: message,
@@ -99,8 +86,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
             setMessage('');
         }
     };
-
-
 
     return (
       <Container>
@@ -114,6 +99,14 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
                           : '연결 끊김'}
               </ParticipantCount>
           </ChatHeader>
+
+          <ParticipantsList>
+              {participants.map((participant, index) => (
+                <ParticipantItem key={index}>
+                    {participant}
+                </ParticipantItem>
+              ))}
+          </ParticipantsList>
 
           <MessagesContainer ref={messageContainerRef}>
               {chatState.messages.map((msg, index) => (
@@ -130,14 +123,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
                 </MessageItem>
               ))}
           </MessagesContainer>
-
-          <ParticipantsList>
-              {chatState.participants.map((participant, index) => (
-                <ParticipantItem key={index}>
-                    {participant}
-                </ParticipantItem>
-              ))}
-          </ParticipantsList>
 
           <ChatInput onSubmit={handleSendMessage}>
               <input

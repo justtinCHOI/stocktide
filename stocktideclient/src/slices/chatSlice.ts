@@ -35,7 +35,14 @@ const chatSlice = createSlice({
       state.messages = [];
     },
     addMessage: (state, action) => {
-      state.messages.push(action.payload);
+      // 중복 메시지 체크
+      const exists = state.messages.some(msg =>
+        msg.time === action.payload.time &&
+        msg.sender === action.payload.sender
+      );
+      if (!exists) {
+        state.messages.push(action.payload);
+      }
     },
     setMessages: (state, action) => {
       state.messages = action.payload;

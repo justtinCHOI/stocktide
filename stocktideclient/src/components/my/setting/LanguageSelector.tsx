@@ -1,6 +1,7 @@
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FC } from 'react';
+import { Globe } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const LanguageSelector: FC = () => {
@@ -18,23 +19,71 @@ const LanguageSelector: FC = () => {
   };
 
   return (
-    <Container>
-      <Button onClick={() => changeLanguage('ko')}>한국어</Button>
-      <Button onClick={() => changeLanguage('en')}>English</Button>
-    </Container>
+    <LanguageContainer>
+      <LanguageHeader>
+        <Globe size={20} />
+        <HeaderText>언어 설정</HeaderText>
+      </LanguageHeader>
+      <LanguageButtonGroup>
+        <LanguageButton
+          $isActive={i18n.language === 'ko'}
+          onClick={() => changeLanguage('ko')}
+        >
+          한국어
+        </LanguageButton>
+        <LanguageButton
+          $isActive={i18n.language === 'en'}
+          onClick={() => changeLanguage('en')}
+        >
+          English
+        </LanguageButton>
+      </LanguageButtonGroup>
+    </LanguageContainer>
   );
 };
 
-const Container = styled.div`
-  display: flex;
-  gap: 10px;
+const LanguageContainer = styled.div`
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const Button = styled.button`
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+const LanguageHeader = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #333;
+`;
+
+const HeaderText = styled.h3`
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+`;
+
+const LanguageButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const LanguageButton = styled.button<{ $isActive: boolean }>`
+  flex: 1;
+  padding: 12px;
+  border: 2px solid ${props => props.$isActive ? '#4A90E2' : '#E0E0E0'};
+  border-radius: 8px;
+  background: ${props => props.$isActive ? '#4A90E2' : 'white'};
+  color: ${props => props.$isActive ? 'white' : '#333'};
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.$isActive ? '#357ABD' : '#F5F5F5'};
+    border-color: ${props => props.$isActive ? '#357ABD' : '#CCCCCC'};
+  }
 `;
 
 export default LanguageSelector;
