@@ -53,38 +53,15 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
               (message: any) => {
                   const chatMessage = JSON.parse(message.body);
                   dispatch(addMessage(chatMessage));
-              }
-            );
-
-            // 사용자 목록 구독
-            const usersSubscription = stompClient.subscribe(
-              `/topic/users`,
-              (message: any) => {
-                  const data = JSON.parse(message.body);
-                  dispatch(updateParticipants(data.connectedUsers));
-                  if (data.type === 'CONNECTED') {
+                  dispatch(updateParticipants(message.connectedUsers));
+                  if (message.type === 'CONNECTED') {
                       setConnectionStatus('connected');
                   }
               }
             );
 
-            // 채팅방 참여 메시지 전송
-            const joinMessage = {
-                type: 'JOIN',
-                content: `${loginState.name} joined the chat`,
-                sender: loginState.name,
-                time: new Date().toLocaleTimeString(),
-                room: `company-${companyId}`
-            };
-
-            stompClient.publish({
-                destination: '/app/chat.joinRoom',
-                body: JSON.stringify(joinMessage)
-            });
-
             return () => {
                 chatSubscription.unsubscribe();
-                usersSubscription.unsubscribe();
             };
         }
     }, [connected, stompClient, companyId, loginState.name]);
@@ -123,25 +100,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
         }
     };
 
-    // 구독 설정
-    useEffect(() => {
-        if (stompClient && connected) {
-            const subscription = stompClient.subscribe(`/topic/chat/${companyId}`, (message: any) => {
-                const chatMessage = JSON.parse(message.body);
-                dispatch(addMessage(chatMessage));
-            });
 
-            const participantsSub = stompClient.subscribe(`/topic/users`, (message: any) => {
-                const data = JSON.parse(message.body);
-                dispatch(updateParticipants(data.connectedUsers));
-            });
-
-            return () => {
-                subscription.unsubscribe();
-                participantsSub.unsubscribe();
-            };
-        }
-    }, [stompClient, connected, companyId, dispatch]);
 
     return (
       <Container>

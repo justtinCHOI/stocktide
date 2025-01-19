@@ -31,7 +31,7 @@ public class ChatController {
                                   @Payload ChatMessage message,
                                   SimpMessageHeaderAccessor headerAccessor) {
         // 채팅방 생성 또는 조회
-        ChatRoom chatRoom = chatService.getOrCreateRoom(companyId);
+        ChatRoom chatRoom = chatService.createOrGetChatRoom(companyId);
         String roomId = chatRoom.getRoomId();
         log.info("Creating new room {}", roomId);
 
@@ -49,25 +49,33 @@ public class ChatController {
 
     // 채팅방 참여
     @MessageMapping("/chat.joinRoom/{companyId}")
+    @SendTo("/topic/chat/{companyId}")
     public void joinRoom(@DestinationVariable Long companyId,
                          @Payload ChatMessage message,
                          SimpMessageHeaderAccessor headerAccessor) {
-        String roomId = "company-" + companyId;
+        log.info("User {} joining room for company {}", message.getSender(), companyId);
 
-        // 채팅방에 참여자 추가
+        ChatRoom chatRoom = chatService.createOrGetChatRoom(companyId);
+        String roomId = chatRoom.getRoomId();
+
+        // 세션 정보 저장
+        headerAccessor.getSessionAttributes().put("room", roomId);
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+
+        // 채팅방 참여자 업데이트
         chatService.addParticipant(roomId, message.getSender());
 
         // 채팅 히스토리 전송
-        List<ChatMessage> history = chatService.getChatHistory(roomId);
+        List<ChatMessage> history = chatService.getChatHistory(roomId, 50);
         messagingTemplate.convertAndSend(
                 String.format("/topic/chat/%d/history", companyId),
                 history
         );
 
-        // 참여자 목록 업데이트 및 브로드캐스트
-        List<String> participants = chatService.getParticipants(roomId);
-        messagingTemplate.convertAndSend("/topic/users",
-                new UserStatusMessage("CONNECTED", message.getSender(), participants)
+        // 참여 메시지 브로드캐스트
+        messagingTemplate.convertAndSend(
+                String.format("/topic/chat/%d", companyId),
+                message
         );
     }
 
@@ -78,6 +86,7 @@ public class ChatController {
                                    @Payload ChatMessage message) {
         message.setTime(LocalDateTime.now().toString());
         chatService.saveMessage(message);
+        messagingTemplate.convertAndSend("/topic/chat/" + companyId, message);
         return message;
     }
 

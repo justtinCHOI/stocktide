@@ -39,22 +39,29 @@ public class ChatService {
     }
 
 
-    public ChatRoom getOrCreateRoom(Long companyId) {
+    public ChatRoom createOrGetChatRoom(Long companyId) {
+        log.info("Creating or getting chat room for company: {}", companyId);
+
         return chatRoomRepository.findByCompanyCompanyId(companyId)
                 .orElseGet(() -> {
                     Company company = companyRepository.findById(companyId)
                             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMPANY_NOT_FOUND));
 
-                    ChatRoom newRoom = new ChatRoom();
-                    newRoom.setCompany(company);
-                    newRoom.setName(company.getKorName() + " 채팅방");
+                    ChatRoom newRoom = ChatRoom.builder()
+                            .roomId("company-" + companyId)
+                            .name(company.getKorName() + " 채팅방")
+                            .company(company)
+                            .build();
+
+                    log.info("Created new chat room: {}", newRoom.getRoomId());
                     return chatRoomRepository.save(newRoom);
                 });
     }
 
-    public List<ChatMessage> getChatHistory(String roomId) {
-        return chatMessageRepository.findTopByRoomOrderByTimeDesc(roomId,
-                PageRequest.of(0, messageHistoryLimit));
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getChatHistory(String roomId, int limit) {
+        log.info("Getting chat history for room: {}", roomId);
+        return chatMessageRepository.findTopByRoomOrderByTimeDesc(roomId, PageRequest.of(0, limit));
     }
 
     public void saveMessage(ChatMessage message) {
