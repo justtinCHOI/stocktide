@@ -78,29 +78,14 @@ export interface StockChartOptions {
   loading: boolean;
 }
 
-interface UseSocketReturn {
-  messages: ChatMessage[];
-  connectedUsers: string[];
-  sendMessage: (chatMessage: ChatMessage) => void;
-  addUser: (chatMessage: ChatMessage) => void;
-}
-
-// interface UseSocketReturn {
-//   stompClient: Client | null;
-//   messages: ChatMessage[];
-//   connectedUsers: string[];
-//   sendMessage: (chatMessage: ChatMessage) => void;
-//   addUser: (chatMessage: ChatMessage) => void;
-// }
-
 export interface UseSocketReturn {
-  socket: any; // 또는 더 구체적인 소켓 타입
+  stompClient: Client | null;
   connected: boolean;
   error: Error | null;
   messages: ChatMessage[];
   connectedUsers: string[];
   sendMessage: (chatMessage: ChatMessage) => void;
-  addUser: (chatMessage: ChatMessage) => void;
+  joinRoom: (chatMessage: ChatMessage) => void;
 }
 
 interface TradeStockParams {

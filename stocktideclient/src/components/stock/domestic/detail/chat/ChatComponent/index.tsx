@@ -1,22 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RootState } from '@/store';
 import {
-    Container, ChatHeader, CompanyName,
+    Container,
+    ChatHeader,
+    CompanyName,
     ParticipantCount,
     ReconnectingIndicator,
-    MessagesContainer, MessageItem, MessageContent,
-    SenderName, MessageText, MessageTime, ChatInput, ParticipantItem, ParticipantsList,
+    MessagesContainer,
+    MessageItem,
+    MessageContent,
+    SenderName,
+    MessageText,
+    MessageTime,
+    ChatInput,
+    ParticipantItem,
+    ParticipantsList,
 } from './styles';
-import {ChatMessage} from "@typings/chat";
+import { ChatMessage } from "@typings/chat";
 import { useDispatch, useSelector } from 'react-redux';
 import {
     joinChat,
-    // leaveChat,
+    addMessage,
+    updateParticipants,
 } from "@slices/chatSlice";
 import { useSocket } from '@hooks/useSocket';
 import useGetStockInfo from '@hooks/useGetStockInfo';
 import useCustomMember from '@hooks/useCustomMember';
-
 
 interface ChatComponentProps {
     companyId: number;
@@ -31,58 +40,47 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const messageContainerRef = useRef<HTMLDivElement>(null);
 
-    // const { socket, connected, error, messages, connectedUsers, sendMessage, addUser } = useSocket(
-    //   `${import.meta.env.VITE_WS_URL}/ws-stocktide`
-    // );
-    const { socket, connected, error} = useSocket(
+    const { stompClient, connected, error, sendMessage, joinRoom } = useSocket(
       `${import.meta.env.VITE_WS_URL}/ws-stocktide`
     );
 
+    // 채팅방 참여 효과
     useEffect(() => {
         if (connected && loginState?.name && !chatState.isJoined) {
-            handleJoinRoom();
+            const joinMessage: ChatMessage = {
+                type: 'JOIN',
+                content: `${loginState.name} joined the chat`,
+                sender: loginState.name,
+                time: new Date().toLocaleTimeString(),
+                room: `company-${companyId}`
+            };
+            joinRoom(joinMessage);
+            dispatch(joinChat({
+                room: `company-${companyId}`,
+                username: loginState.name
+            }));
         }
-    }, [connected, loginState, companyId]);
+    }, [connected, loginState, companyId, dispatch]);
 
+    // 에러 처리 및 재연결
     useEffect(() => {
         if (error && reconnectAttempts < 3) {
             const timer = setTimeout(() => {
                 setReconnectAttempts(prev => prev + 1);
-                socket.connect();
+                stompClient?.activate();
             }, 3000);
             return () => clearTimeout(timer);
         }
-    }, [error, reconnectAttempts]);
+    }, [error, reconnectAttempts, stompClient]);
 
-    const handleJoinRoom = () => {
-        const joinMessage: ChatMessage = {
-            type: 'JOIN',
-            content: `${loginState.name} joined the chat`,
-            sender: loginState.name,
-            time: new Date().toLocaleTimeString(),
-            room: `company-${companyId}`
-        };
+    // 메시지 스크롤 자동이동
+    useEffect(() => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    }, [chatState.messages]);
 
-        socket.emit('join', joinMessage);
-        dispatch(joinChat({
-            room: `company-${companyId}`,
-            username: loginState.name
-        }));
-    };
-
-    // const handleLeaveRoom = () => {
-    //     const leaveMessage: ChatMessage = {
-    //         type: 'LEAVE',
-    //         content: `${loginState.name} left the chat`,
-    //         sender: loginState.name,
-    //         time: new Date().toLocaleTimeString(),
-    //         room: `company-${companyId}`
-    //     };
-    //
-    //     socket.emit('leave', leaveMessage);
-    //     dispatch(leaveChat());
-    // };
-
+    // 메시지 전송 핸들러
     const handleSendMessage = (event: React.FormEvent) => {
         event.preventDefault();
         if (message.trim() && chatState.isJoined) {
@@ -93,17 +91,30 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
                 time: new Date().toLocaleTimeString(),
                 room: `company-${companyId}`
             };
-            socket.emit('sendMessage', chatMessage);
+            sendMessage(chatMessage);
             setMessage('');
         }
     };
 
+    // 구독 설정
     useEffect(() => {
-        if (messageContainerRef.current) {
-            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-        }
-    }, [chatState.messages]);
+        if (stompClient && connected) {
+            const subscription = stompClient.subscribe(`/topic/chat/${companyId}`, (message: any) => {
+                const chatMessage = JSON.parse(message.body);
+                dispatch(addMessage(chatMessage));
+            });
 
+            const participantsSub = stompClient.subscribe(`/topic/users`, (message: any) => {
+                const data = JSON.parse(message.body);
+                dispatch(updateParticipants(data.connectedUsers));
+            });
+
+            return () => {
+                subscription.unsubscribe();
+                participantsSub.unsubscribe();
+            };
+        }
+    }, [stompClient, connected, companyId, dispatch]);
 
     return (
       <Container>

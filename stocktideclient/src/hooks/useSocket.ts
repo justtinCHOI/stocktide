@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 import { ChatMessage } from '@typings/chat';
 import { UseSocketReturn } from '@typings/hooks';
 
-
 export function useSocket(url: string): UseSocketReturn {
-    const [socket, setSocket] = useState<any>(null);
+    const [stompClient, setStompClient] = useState<Client | null>(null);
     const [connected, setConnected] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [messages] = useState<ChatMessage[]>([]);
@@ -15,32 +14,23 @@ export function useSocket(url: string): UseSocketReturn {
     useEffect(() => {
         const client = new Client({
             webSocketFactory: () => new SockJS(url),
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            reconnectDelay: 5000,
-            debug: (str) => {
-                console.log(str);
-            },
             onConnect: () => {
+                console.log('Connected to WebSocket');
                 setConnected(true);
                 setError(null);
             },
             onDisconnect: () => {
+                console.log('Disconnected from WebSocket');
                 setConnected(false);
             },
             onStompError: (frame) => {
+                console.error('Stomp error:', frame);
                 setError(new Error(frame.body));
-                setConnected(false);
             }
         });
 
-        setSocket(client);
-
-        try {
-            client.activate();
-        } catch (err) {
-            setError(err instanceof Error ? err : new Error('Failed to connect'));
-        }
+        client.activate();
+        setStompClient(client);
 
         return () => {
             client.deactivate();
@@ -48,34 +38,30 @@ export function useSocket(url: string): UseSocketReturn {
     }, [url]);
 
     const sendMessage = useCallback((chatMessage: ChatMessage) => {
-        if (socket && connected && chatMessage.type === 'CHAT') {
-            try {
-                socket.publish({
-                    destination: '/app/chat.sendMessage',
-                    body: JSON.stringify(chatMessage)
-                });
-            } catch (err) {
-                setError(err instanceof Error ? err : new Error('Failed to send message'));
-            }
-        }
-    }, [socket, connected]);
-
-    const addUser = useCallback((chatMessage: ChatMessage) => {
-        if (socket && connected && chatMessage.type === 'JOIN') {
-            socket.publish({
-                destination: '/app/chat.addUser',
+        if (stompClient && connected && chatMessage.type === 'CHAT') {
+            stompClient.publish({
+                destination: '/app/chat.sendMessage',
                 body: JSON.stringify(chatMessage)
             });
         }
-    }, [socket, connected]);
+    }, [stompClient, connected]);
+
+    const joinRoom = useCallback((chatMessage: ChatMessage) => {
+        if (stompClient && connected) {
+            stompClient.publish({
+                destination: '/app/chat.joinRoom',
+                body: JSON.stringify(chatMessage)
+            });
+        }
+    }, [stompClient, connected]);
 
     return {
-        socket,
+        stompClient,
         connected,
         error,
         messages,
         connectedUsers,
         sendMessage,
-        addUser
+        joinRoom
     };
 }
