@@ -9,7 +9,7 @@ import {
 import { useDispatch } from 'react-redux';
 
 
-export function useSocket(url: string): UseSocketReturn {
+export function useSocket(url: string, companyId: number): UseSocketReturn {
     const dispatch = useDispatch();
 
     const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -17,22 +17,37 @@ export function useSocket(url: string): UseSocketReturn {
     const [error] = useState<Error | null>(null);
     const [messages] = useState<ChatMessage[]>([]);
     const [connectedUsers] = useState<string[]>([]);
-    const [reconnectAttempts, setReconnectAttempts] = useState<number>(0);
+    // const [reconnectAttempts, setReconnectAttempts] = useState<number>(0);
 
     useEffect(() => {
         const client = new Client({
             webSocketFactory: () => new SockJS(url),
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
             onConnect: () => {
                 console.log('Connected to WebSocket');
                 dispatch(setConnectionStatus('connected'));
+
+                // 연결 즉시 서버에 참여자 목록 요청
+                client.publish({
+                    destination: '/app/chat.getParticipants',
+                    body: JSON.stringify({
+                        type: 'GET_PARTICIPANTS',
+                        room: `company-${companyId}`
+                    })
+                });
             },
             onDisconnect: () => {
                 console.log('Disconnected from WebSocket');
                 dispatch(setConnectionStatus('disconnected'));
-            },
-            onStompError: (frame) => {
-                console.error('Stomp error:', frame);
-                dispatch(setConnectionStatus('reconnecting'));
+
+                // 재연결 시도
+                setTimeout(() => {
+                    if (stompClient) {
+                        stompClient.activate();
+                    }
+                }, 5000);
             }
         });
 
@@ -43,26 +58,6 @@ export function useSocket(url: string): UseSocketReturn {
             client.deactivate();
         };
     }, [url, dispatch]);
-
-    // 재연결 로직 개선
-// useSocket.ts
-    const reconnectDelay = 2000; // 2초
-    const maxReconnectAttempts = 3;
-
-    useEffect(() => {
-        if (!connected && reconnectAttempts < maxReconnectAttempts) {
-            const timer = setTimeout(() => {
-                try {
-                    stompClient?.activate();
-                    setReconnectAttempts(prev => prev + 1);
-                } catch (err) {
-                    console.error('Reconnection failed:', err);
-                }
-            }, reconnectDelay);
-
-            return () => clearTimeout(timer);
-        }
-    }, [connected, reconnectAttempts]);
 
     const sendMessage = useCallback((chatMessage: ChatMessage) => {
         if (stompClient && connected && chatMessage.type === 'CHAT') {

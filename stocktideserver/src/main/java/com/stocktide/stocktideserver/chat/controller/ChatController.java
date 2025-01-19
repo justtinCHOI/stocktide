@@ -6,7 +6,6 @@ import com.stocktide.stocktideserver.chat.entity.UserStatusMessage;
 import com.stocktide.stocktideserver.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -16,11 +15,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Controller
@@ -29,17 +24,37 @@ public class ChatController {
     private final SimpMessageSendingOperations messagingTemplate;
     private final ChatService chatService;
 
-    @MessageMapping("/chat.joinRoom/{companyId}")
+    // 채팅방 생성 또는 조회
+    @MessageMapping("/chat.createRoom/{companyId}")
     @SendTo("/topic/chat/{companyId}")
-    public ChatMessage joinRoom(@DestinationVariable Long companyId,
-                                @Payload ChatMessage message,
-                                SimpMessageHeaderAccessor headerAccessor) {
-        String roomId = "company-" + companyId;
-        message.setRoom(roomId);
+    public ChatMessage createRoom(@DestinationVariable Long companyId,
+                                  @Payload ChatMessage message,
+                                  SimpMessageHeaderAccessor headerAccessor) {
+        // 채팅방 생성 또는 조회
+        ChatRoom chatRoom = chatService.getOrCreateRoom(companyId);
+        String roomId = chatRoom.getRoomId();
+        log.info("Creating new room {}", roomId);
 
+        // 세션에 채팅방 정보 저장
         headerAccessor.getSessionAttributes().put("room", roomId);
         headerAccessor.getSessionAttributes().put("username", message.getSender());
 
+        // 시스템 메시지 생성
+        message.setType(ChatMessage.MessageType.CHAT);
+        message.setContent(message.getSender() + "님이 입장하셨습니다.");
+        message.setTime(LocalDateTime.now().toString());
+
+        return message;
+    }
+
+    // 채팅방 참여
+    @MessageMapping("/chat.joinRoom/{companyId}")
+    public void joinRoom(@DestinationVariable Long companyId,
+                         @Payload ChatMessage message,
+                         SimpMessageHeaderAccessor headerAccessor) {
+        String roomId = "company-" + companyId;
+
+        // 채팅방에 참여자 추가
         chatService.addParticipant(roomId, message.getSender());
 
         // 채팅 히스토리 전송
@@ -49,26 +64,51 @@ public class ChatController {
                 history
         );
 
-        return message;
+        // 참여자 목록 업데이트 및 브로드캐스트
+        List<String> participants = chatService.getParticipants(roomId);
+        messagingTemplate.convertAndSend("/topic/users",
+                new UserStatusMessage("CONNECTED", message.getSender(), participants)
+        );
     }
 
+    // 메시지 전송
     @MessageMapping("/chat.sendMessage/{companyId}")
     @SendTo("/topic/chat/{companyId}")
     public ChatMessage sendMessage(@DestinationVariable Long companyId,
                                    @Payload ChatMessage message) {
+        message.setTime(LocalDateTime.now().toString());
         chatService.saveMessage(message);
         return message;
     }
 
-    @MessageMapping("/chat.leave/{companyId}")
+    // 채팅방 나가기
+    @MessageMapping("/chat.leaveRoom/{companyId}")
     @SendTo("/topic/chat/{companyId}")
     public ChatMessage leaveRoom(@DestinationVariable Long companyId,
                                  @Payload ChatMessage message,
                                  SimpMessageHeaderAccessor headerAccessor) {
         String roomId = "company-" + companyId;
+
+        // 채팅방에서 참여자 제거
         chatService.removeParticipant(roomId, message.getSender());
-        headerAccessor.getSessionAttributes().remove("room");
-        headerAccessor.getSessionAttributes().remove("username");
+
+        // 세션 정보 삭제
+        if (headerAccessor.getSessionAttributes() != null) {
+            headerAccessor.getSessionAttributes().remove("room");
+            headerAccessor.getSessionAttributes().remove("username");
+        }
+
+        // 참여자 목록 업데이트 브로드캐스트
+        List<String> participants = chatService.getParticipants(roomId);
+        messagingTemplate.convertAndSend("/topic/users",
+                new UserStatusMessage("DISCONNECTED", message.getSender(), participants)
+        );
+
+        // 시스템 메시지 생성
+        message.setType(ChatMessage.MessageType.LEAVE);
+        message.setContent(message.getSender() + "님이 퇴장하셨습니다.");
+        message.setTime(LocalDateTime.now().toString());
+
         return message;
     }
 }

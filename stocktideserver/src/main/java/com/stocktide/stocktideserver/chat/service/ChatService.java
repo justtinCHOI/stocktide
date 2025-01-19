@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.stocktide.stocktideserver.exception.ExceptionCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,5 +73,22 @@ public class ChatService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_ROOM_NOT_FOUND));
         room.getParticipants().remove(username);
         chatRoomRepository.save(room);
+    }
+
+    // getParticipants 메서드 추가
+    public List<String> getParticipants(String roomId) {
+        ChatRoom room = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_ROOM_NOT_FOUND));
+
+        // Set을 List로 변환하여 반환
+        return new ArrayList<>(room.getParticipants());
+    }
+
+    // 필요한 경우 참여자 수를 반환하는 메서드도 추가
+    public int getParticipantsCount(String roomId) {
+        ChatRoom room = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_ROOM_NOT_FOUND));
+
+        return room.getParticipants().size();
     }
 }

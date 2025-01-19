@@ -15,6 +15,7 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
@@ -30,26 +31,28 @@ public class WebSocketEventListener {
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        // Principal에서 사용자 정보 추출
-        String username = headerAccessor.getUser() != null ?
-                headerAccessor.getUser().getName() : null;
+        log.info("Received a new session connect event: " + headerAccessor);
 
-        if (username != null) {
-            log.info("User connected: " + username);
-            connectedUsers.add(username);
-
-            // 세션 속성이 null인 경우 새로운 Map 생성
-            if (headerAccessor.getSessionAttributes() == null) {
-                headerAccessor.setSessionAttributes(new HashMap<>());
-            }
-
-            // 사용자 정보를 세션에 저장
-            headerAccessor.getSessionAttributes().put("username", username);
-
-            // 접속자 목록 업데이트 브로드캐스트
-            messagingTemplate.convertAndSend("/topic/users",
-                    new UserStatusMessage("CONNECTED", username, new ArrayList<>(connectedUsers)));
+        // 세션 속성이 null인 경우 새로운 Map으로 초기화
+        if (headerAccessor.getSessionAttributes() == null) {
+            headerAccessor.setSessionAttributes(new HashMap<>());
         }
+
+        String username = headerAccessor.getUser() != null ?
+                headerAccessor.getUser().getName() :
+                UUID.randomUUID().toString();
+
+        log.info("username: " + username);
+
+        // 세션 속성에 사용자 정보 저장
+        headerAccessor.getSessionAttributes().put("username", username);
+        connectedUsers.add(username);
+
+        log.info("connectedUsers: " + connectedUsers);
+
+        // 접속자 목록 업데이트 브로드캐스트
+        messagingTemplate.convertAndSend("/topic/users",
+                new UserStatusMessage("CONNECTED", username, new ArrayList<>(connectedUsers)));
     }
 
     @EventListener
@@ -64,9 +67,7 @@ public class WebSocketEventListener {
         }
 
         if (username != null) {
-            log.info("User Disconnected: " + username);
             connectedUsers.remove(username);
-
             messagingTemplate.convertAndSend("/topic/users",
                     new UserStatusMessage("DISCONNECTED", username, new ArrayList<>(connectedUsers)));
         }
