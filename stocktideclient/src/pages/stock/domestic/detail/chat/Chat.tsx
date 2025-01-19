@@ -1,9 +1,12 @@
 import ChatComponent from '@components/stock/domestic/detail/chat/ChatComponent';
+import { useParams } from 'react-router';
 
 function Chat() {
 
+    const {companyId} = useParams();
+
     return (
-          <ChatComponent/>
+          <ChatComponent companyId = {Number(companyId)}/>
     );
 }
 

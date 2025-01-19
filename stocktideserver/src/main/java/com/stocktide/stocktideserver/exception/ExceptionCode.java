@@ -4,6 +4,7 @@ import lombok.Getter;
 
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
+    COMPANY_NOT_FOUND(404, "회사를 찾을 수 없습니다"),
     INVALID_EMAIL(404, "유효하지 않은 이메일 형식입니다"),
     INVALID_NAME(400, "이름이 유효하지 않습니다"),
     INVALID_CASH(404, "금액을 조회할 수 없습니다."),
@@ -23,7 +24,10 @@ public enum ExceptionCode {
     AWS_CREDENTIALS_ERROR(401, "AWS 인증 오류"),
     S3_UPLOAD_ERROR(500, "S3 파일 업로드 중 오류 발생"),
     S3_DELETE_ERROR(500, "S3 파일 삭제 중 오류 발생"),
-    S3_URL_RETRIEVE_ERROR(500, "S3에서 파일 URL 검색 중 오류 발생");
+    S3_URL_RETRIEVE_ERROR(500, "S3에서 파일 URL 검색 중 오류 발생"),
+    CHAT_ROOM_NOT_FOUND(404, "채팅방을 찾을 수 없습니다"),
+    CHAT_MESSAGE_ERROR(500, "채팅 메시지 처리 중 오류가 발생했습니다");
+
 
     @Getter
     private int status;

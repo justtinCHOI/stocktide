@@ -1,32 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RootState } from '@/store';
 import {
-    Container,ChatHeader, CompanyName,
+    Container, ChatHeader, CompanyName,
     ParticipantCount,
     ReconnectingIndicator,
     MessagesContainer, MessageItem, MessageContent,
-    SenderName, MessageText, MessageTime, ChatInput,
+    SenderName, MessageText, MessageTime, ChatInput, ParticipantItem, ParticipantsList,
 } from './styles';
 import {ChatMessage} from "@typings/chat";
 import { useDispatch, useSelector } from 'react-redux';
 import {
     joinChat,
-    leaveChat,
+    // leaveChat,
 } from "@slices/chatSlice";
 import { useSocket } from '@hooks/useSocket';
 import useGetStockInfo from '@hooks/useGetStockInfo';
+import useCustomMember from '@hooks/useCustomMember';
 
 
-const ChatComponent: React.FC<{companyId: string}> = ({ companyId }) => {
+interface ChatComponentProps {
+    companyId: number;
+}
+
+const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
     const dispatch = useDispatch();
-    const {stockInfo: company} = useGetStockInfo();
-    const loginState = useSelector((state: RootState) => state.memberSlice.member);
+    const {stockInfo: company} = useGetStockInfo(companyId);
+    const { loginState } = useCustomMember();
     const chatState = useSelector((state: RootState) => state.chatSlice);
     const [message, setMessage] = useState('');
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const messageContainerRef = useRef<HTMLDivElement>(null);
 
-    const { socket, connected, error } = useSocket(
+    // const { socket, connected, error, messages, connectedUsers, sendMessage, addUser } = useSocket(
+    //   `${import.meta.env.VITE_WS_URL}/ws-stocktide`
+    // );
+    const { socket, connected, error} = useSocket(
       `${import.meta.env.VITE_WS_URL}/ws-stocktide`
     );
 
@@ -62,18 +70,40 @@ const ChatComponent: React.FC<{companyId: string}> = ({ companyId }) => {
         }));
     };
 
-    const handleLeaveRoom = () => {
-        const leaveMessage: ChatMessage = {
-            type: 'LEAVE',
-            content: `${loginState.name} left the chat`,
-            sender: loginState.name,
-            time: new Date().toLocaleTimeString(),
-            room: `company-${companyId}`
-        };
+    // const handleLeaveRoom = () => {
+    //     const leaveMessage: ChatMessage = {
+    //         type: 'LEAVE',
+    //         content: `${loginState.name} left the chat`,
+    //         sender: loginState.name,
+    //         time: new Date().toLocaleTimeString(),
+    //         room: `company-${companyId}`
+    //     };
+    //
+    //     socket.emit('leave', leaveMessage);
+    //     dispatch(leaveChat());
+    // };
 
-        socket.emit('leave', leaveMessage);
-        dispatch(leaveChat());
+    const handleSendMessage = (event: React.FormEvent) => {
+        event.preventDefault();
+        if (message.trim() && chatState.isJoined) {
+            const chatMessage: ChatMessage = {
+                type: 'CHAT',
+                content: message,
+                sender: loginState.name,
+                time: new Date().toLocaleTimeString(),
+                room: `company-${companyId}`
+            };
+            socket.emit('sendMessage', chatMessage);
+            setMessage('');
+        }
     };
+
+    useEffect(() => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    }, [chatState.messages]);
+
 
     return (
       <Container>

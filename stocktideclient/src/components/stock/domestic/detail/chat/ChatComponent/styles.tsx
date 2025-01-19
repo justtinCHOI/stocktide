@@ -16,6 +16,21 @@ export const ChatHeader = styled.div`
     align-items: center;
 `;
 
+export const CompanyName = styled.h1`
+  font-size: 1.2rem;  
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+`;
+
+export const ParticipantCount = styled.span`
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: auto;
+`;
+
+
+
 export const ReconnectingIndicator = styled.div`
     color: #f44336;
     font-size: 0.8rem;
@@ -114,3 +129,4 @@ export const ChatInput = styled.div`
         }
     }
 `;
+

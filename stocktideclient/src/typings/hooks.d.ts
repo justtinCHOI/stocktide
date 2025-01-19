@@ -85,18 +85,29 @@ interface UseSocketReturn {
   addUser: (chatMessage: ChatMessage) => void;
 }
 
+// interface UseSocketReturn {
+//   stompClient: Client | null;
+//   messages: ChatMessage[];
+//   connectedUsers: string[];
+//   sendMessage: (chatMessage: ChatMessage) => void;
+//   addUser: (chatMessage: ChatMessage) => void;
+// }
+
+export interface UseSocketReturn {
+  socket: any; // 또는 더 구체적인 소켓 타입
+  connected: boolean;
+  error: Error | null;
+  messages: ChatMessage[];
+  connectedUsers: string[];
+  sendMessage: (chatMessage: ChatMessage) => void;
+  addUser: (chatMessage: ChatMessage) => void;
+}
+
 interface TradeStockParams {
   companyId: number;
   price: number;
   stockCount: number;
   memberId: number;
-}
-
-export interface ChatMessage {
-  type: 'CHAT' | 'JOIN' | 'LEAVE';
-  content: string;
-  sender: string;
-  time: string;
 }
 
 

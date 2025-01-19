@@ -4,12 +4,13 @@ import rootSaga from '@/store/sagas/rootSaga';
 import { memberReducer } from '@slices/memberSlice';
 import { companyIdReducer } from '@slices/companyIdSlice';
 import { compareIdReducer } from '@slices/compareIdSlice';
-import { cashReducer } from '@slices/cashSlice';
+import { cashReducer, CashSliceState } from '@slices/cashSlice';
 import { stockOrderTypeReducer } from '@slices/stockOrderTypeSlice';
 import { stockOrderPriceReducer } from '@slices/stockOrderPriceSlice';
 import { stockOrderVolumeReducer } from '@slices/stockOrderVolumeSlice';
 import { decisionWindowReducer } from '@slices/decisionWindowSlice';
-import { chatReducer } from '@slices/chatSlice';
+import { chatReducer, ChatSliceState } from '@slices/chatSlice';
+import { MemberState } from '@typings/member';
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
@@ -33,7 +34,18 @@ export const store = configureStore({
 
 sagaMiddleware.run(rootSaga);
 
-export type RootState = ReturnType<typeof store.getState>;
+export interface RootState {
+  memberSlice: MemberState;
+  companyIdSlice: number;
+  compareIdSlice: number;
+  cashSlice: CashSliceState;
+  stockOrderTypeSlice: boolean;
+  stockOrderPriceSlice: number;
+  stockOrderVolumeSlice: number;
+  decisionWindowSlice: boolean;
+  chatSlice: ChatSliceState;
+}
+
 export type AppDispatch = typeof store.dispatch;
 
 

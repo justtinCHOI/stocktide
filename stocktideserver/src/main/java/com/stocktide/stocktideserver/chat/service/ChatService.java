@@ -8,9 +8,12 @@ import com.stocktide.stocktideserver.exception.BusinessLogicException;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.stocktide.stocktideserver.exception.ExceptionCode;
 
 import java.util.List;
 
@@ -22,14 +25,18 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final CompanyRepository companyRepository;
 
-    public ChatService(ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, CompanyRepository companyRepository) {
+    @Value("${chat.message.history.limit:100}")
+    private int messageHistoryLimit;
+
+    @Autowired
+    public ChatService(ChatRoomRepository chatRoomRepository,
+                       ChatMessageRepository chatMessageRepository,
+                       CompanyRepository companyRepository) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.companyRepository = companyRepository;
     }
 
-    @Value("${chat.message.history.limit:100}")
-    private int messageHistoryLimit;
 
     public ChatRoom getOrCreateRoom(Long companyId) {
         return chatRoomRepository.findByCompanyCompanyId(companyId)
@@ -45,7 +52,8 @@ public class ChatService {
     }
 
     public List<ChatMessage> getChatHistory(String roomId) {
-        return chatMessageRepository.findTopByRoomOrderByTimeDesc(roomId, messageHistoryLimit);
+        return chatMessageRepository.findTopByRoomOrderByTimeDesc(roomId,
+                PageRequest.of(0, messageHistoryLimit));
     }
 
     public void saveMessage(ChatMessage message) {

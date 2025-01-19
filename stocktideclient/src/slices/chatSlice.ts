@@ -1,12 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ChatMessage } from '@typings/chat';
 
-
 const initState: ChatSliceState = {
-
+  isJoined: false,
+  currentRoom: '',
+  username: '',
+  messages: [],
+  participants: [],
+  connectionStatus: 'disconnected'
 };
 
-interface ChatSliceState {
+export interface ChatSliceState {
   isJoined: boolean;
   currentRoom: string;
   username: string;
@@ -14,8 +18,6 @@ interface ChatSliceState {
   participants: string[];
   connectionStatus: 'connected' | 'disconnected' | 'reconnecting';
 }
-
-
 
 const chatSlice = createSlice({
   name: 'chat',
