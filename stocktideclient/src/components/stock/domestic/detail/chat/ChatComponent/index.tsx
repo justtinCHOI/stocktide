@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { RootState } from '@/store';
 import {
     Container,
     ChatHeader,
     CompanyName,
     ParticipantCount,
-    ReconnectingIndicator,
     MessagesContainer,
     MessageItem,
     MessageContent,
@@ -19,7 +18,7 @@ import {
 import { ChatMessage } from "@typings/chat";
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    joinChat,
+    // joinChat,
     addMessage,
     updateParticipants,
 } from "@slices/chatSlice";
@@ -46,7 +45,23 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
 
     // 채팅방 참여 효과
     useEffect(() => {
-        if (connected && loginState?.name && !chatState.isJoined) {
+        if (connected && loginState?.name) {
+            // 연결 성공 시 즉시 사용자 정보 전송
+            const connectMessage = {
+                type: 'CONNECT',
+                username: loginState.name,
+                time: new Date().toISOString()
+            };
+
+            stompClient?.publish({
+                destination: '/app/chat.connect',
+                body: JSON.stringify(connectMessage),
+                headers: {
+                    'username': loginState.name
+                }
+            });
+
+            // 채팅방 참여
             const joinMessage: ChatMessage = {
                 type: 'JOIN',
                 content: `${loginState.name} joined the chat`,
@@ -54,13 +69,21 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
                 time: new Date().toLocaleTimeString(),
                 room: `company-${companyId}`
             };
+
             joinRoom(joinMessage);
-            dispatch(joinChat({
-                room: `company-${companyId}`,
-                username: loginState.name
-            }));
         }
-    }, [connected, loginState, companyId, dispatch]);
+    }, [connected, loginState, companyId]);
+
+    // 상태 표시 로직 수정
+    const connectionStatus = useMemo(() => {
+        if (chatState.participants.length > 0) {
+            return `참여자 ${chatState.participants.length}명`;
+        } else if (chatState.connectionStatus === 'reconnecting') {
+            return `재연결 중... (${reconnectAttempts}/3)`;
+        } else {
+            return '연결 중...';
+        }
+    }, [chatState.participants.length, chatState.connectionStatus, reconnectAttempts]);
 
     // 에러 처리 및 재연결
     useEffect(() => {
@@ -121,13 +144,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
           <ChatHeader>
               <CompanyName>{company?.korName} 채팅방</CompanyName>
               <ParticipantCount>
-                  참여자 {chatState.participants.length}명
+                  {connectionStatus}
               </ParticipantCount>
-              {chatState.connectionStatus !== 'connected' && (
-                <ReconnectingIndicator>
-                    재연결 중... ({reconnectAttempts}/3)
-                </ReconnectingIndicator>
-              )}
           </ChatHeader>
 
           <MessagesContainer ref={messageContainerRef}>

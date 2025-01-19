@@ -13,7 +13,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,71 +26,66 @@ public class WebSocketEventListener {
     // 동시성을 고려한 연결된 사용자 목록 관리
     private final Set<String> connectedUsers = ConcurrentHashMap.newKeySet();
 
-    // WebSocket 연결이 성공했을 때 호출되는 이벤트 핸들러
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        log.info("connect 1111 attributes: {}", headerAccessor.getSessionAttributes());
 
-        // null 체크를 안전하게 수행
-        if (headerAccessor.getSessionAttributes() != null) {
-            String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
-
-            log.info("connect 2222 username: {}", username);
-            if (username != null) {
-                // 접속자 목록 업데이트 브로드캐스트
-                connectedUsers.add(username);
-                log.info("User connected: " + username);
-                log.info("Current users: " + connectedUsers);
-                messagingTemplate.convertAndSend("/topic/users",
-                        new UserStatusMessage("CONNECTED", username, new ArrayList<>(connectedUsers)));
-            }
-        }
-    }
-
-    // 메시지 수신 시
-    @EventListener
-    public void handleWebSocketSubscribeListener(SessionSubscribeEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        log.info("subscribe 1111 attributes: {}", headerAccessor.getSessionAttributes());
-
-        if (headerAccessor.getSessionAttributes() != null) {
-            String username = (String) headerAccessor.getSessionAttributes().get("username");
-
-            log.info("subscribe 2222 username: {}", username);
-            if (username != null) {
-                connectedUsers.add(username);
-                messagingTemplate.convertAndSend("/topic/users",
-                        new UserStatusMessage("CONNECTED", username, new ArrayList<>(connectedUsers)));
-            }
-        }
-    }
-
-    // 사용자 메시지 처리를 위한 새로운 이벤트 핸들러 추가
-    @EventListener
-    public void handleWebSocketMessageListener(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String username = headerAccessor.getFirstNativeHeader("username");
-        log.info("message 1111 attributes: {}", headerAccessor.getSessionAttributes());
+        // Principal에서 사용자 정보 추출
+        String username = headerAccessor.getUser() != null ?
+                headerAccessor.getUser().getName() : null;
 
         if (username != null) {
-            log.info("message 2222 username: {}", username);
-            headerAccessor.getSessionAttributes().put("username", username);
+            log.info("User connected: " + username);
             connectedUsers.add(username);
+
+            // 세션 속성이 null인 경우 새로운 Map 생성
+            if (headerAccessor.getSessionAttributes() == null) {
+                headerAccessor.setSessionAttributes(new HashMap<>());
+            }
+
+            // 사용자 정보를 세션에 저장
+            headerAccessor.getSessionAttributes().put("username", username);
+
+            // 접속자 목록 업데이트 브로드캐스트
+            messagingTemplate.convertAndSend("/topic/users",
+                    new UserStatusMessage("CONNECTED", username, new ArrayList<>(connectedUsers)));
         }
     }
 
-    // WebSocket 연결이 끊어졌을 때 호출되는 이벤트 핸들러
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
+        String username = null;
+
+        if (headerAccessor.getSessionAttributes() != null) {
+            username = (String) headerAccessor.getSessionAttributes().get("username");
+        } else if (headerAccessor.getUser() != null) {
+            username = headerAccessor.getUser().getName();
+        }
 
         if (username != null) {
-            // 사용자 목록에서 제거하고 모든 클라이언트에게 업데이트 브로드캐스트
+            log.info("User Disconnected: " + username);
             connectedUsers.remove(username);
+
             messagingTemplate.convertAndSend("/topic/users",
                     new UserStatusMessage("DISCONNECTED", username, new ArrayList<>(connectedUsers)));
         }
+    }
+
+    @EventListener
+    public void handleWebSocketConnect(SessionConnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        log.info("WebSocket Connection attempt - Session ID: {}",
+                headerAccessor.getSessionId());
+    }
+
+    @EventListener
+    public void handleSubscribe(SessionSubscribeEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionId = headerAccessor.getSessionId();
+        String destination = headerAccessor.getDestination();
+
+        log.info("New subscription - Session ID: {}, Destination: {}",
+                sessionId, destination);
     }
 }

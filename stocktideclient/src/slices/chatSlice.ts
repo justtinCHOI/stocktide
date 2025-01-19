@@ -40,12 +40,15 @@ const chatSlice = createSlice({
     setMessages: (state, action) => {
       state.messages = action.payload;
     },
-    updateParticipants: (state, action) => {
-      state.participants = action.payload;
-    },
     setConnectionStatus: (state, action) => {
       state.connectionStatus = action.payload;
-    }
+    },
+    updateParticipants: (state, action) => {
+      state.participants = action.payload;
+      if (action.payload.length > 0) {
+        state.connectionStatus = 'connected';
+      }
+    },
   }
 });
 export const {
