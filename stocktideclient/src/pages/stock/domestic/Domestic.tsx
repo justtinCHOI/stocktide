@@ -1,8 +1,14 @@
 import {Outlet} from "react-router-dom";
+import StockInfoComponent from '@components/common/StockInfoComponent';
+import SearchCompanyComponent from '@components/common/SearchCompanyComponent';
 
 const Domestic = () => {
     return (
-         <Outlet />
+        <>
+            <StockInfoComponent/>
+            <SearchCompanyComponent area={'domestic'}/>
+            <Outlet />
+        </>
     );
 }
 

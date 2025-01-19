@@ -5,14 +5,14 @@ import { FC } from 'react';
 
 
 interface SearchCompanyComponentProps {
-  onSearch?: (searchTerm: string) => void;
+  area: string;
 }
 
-const SearchCompanyComponent: FC<SearchCompanyComponentProps> = () => {
+const SearchCompanyComponent: FC<SearchCompanyComponentProps> = ({area}) => {
     const navigate = useNavigate();
 
     const handleInputFocus = () => {
-        navigate('/stock/search');
+        navigate(`/stock/${area}/search`);
     };
     return (
         <SearchInputDiv>
