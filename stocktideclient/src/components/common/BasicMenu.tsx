@@ -42,7 +42,7 @@ const FooterNav = styled.nav`
         left: 55px;
         width: 20%;
         height: 95%;
-        background: linear-gradient(to left, transparent, #000);
+        //background: linear-gradient(to left, transparent, #000);
         pointer-events: none;
     }
     &:after {
@@ -53,7 +53,7 @@ const FooterNav = styled.nav`
         height: 100%;
         pointer-events: none;
         flex: 1;
-        background: linear-gradient(to right, transparent, #000);
+        //background: linear-gradient(to right, transparent, #000);
     }
 `;
 

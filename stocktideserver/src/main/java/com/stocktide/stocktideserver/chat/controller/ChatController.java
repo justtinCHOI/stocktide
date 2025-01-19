@@ -1,9 +1,13 @@
 package com.stocktide.stocktideserver.chat.controller;
 
 import com.stocktide.stocktideserver.chat.entity.ChatMessage;
+import com.stocktide.stocktideserver.chat.entity.ChatRoom;
 import com.stocktide.stocktideserver.chat.entity.UserStatusMessage;
+import com.stocktide.stocktideserver.chat.service.ChatService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,44 +18,57 @@ import org.springframework.stereotype.Controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class ChatController {
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
-    private final Set<String> connectedUsers = ConcurrentHashMap.newKeySet();
+    private final SimpMessageSendingOperations messagingTemplate;
+    private final ChatService chatService;
 
+    @MessageMapping("/chat.joinRoom/{companyId}")
+    @SendTo("/topic/chat/{companyId}")
+    public ChatMessage joinRoom(@DestinationVariable Long companyId,
+                                @Payload ChatMessage message,
+                                SimpMessageHeaderAccessor headerAccessor) {
+        String roomId = "company-" + companyId;
+        message.setRoom(roomId);
 
-    // '/app/chat.addUser's 새 사용자 참여 메시지가 전송되면 처리
-    // 세션에 사용자 정보를 저장하고 참여 메시지를 브로드캐스트
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
-        log.info("addUser chatMessage: {}", chatMessage.toString());
-        // 웹소켓 세션에 유저 이름 추가
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        log.info("Adding user to session: {}", chatMessage.getSender());
-        // 사용자 목록에 추가하고 모든 클라이언트에게 업데이트된 목록 전송
-        connectedUsers.add(chatMessage.getSender());
-        messagingTemplate.convertAndSend("/topic/users",
-                new UserStatusMessage("CONNECTED",
-                        chatMessage.getSender(),
-                        new ArrayList<>(connectedUsers)));
-        return chatMessage;
+        headerAccessor.getSessionAttributes().put("room", roomId);
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+
+        chatService.addParticipant(roomId, message.getSender());
+
+        // 채팅 히스토리 전송
+        List<ChatMessage> history = chatService.getChatHistory(roomId);
+        messagingTemplate.convertAndSend(
+                String.format("/topic/chat/%d/history", companyId),
+                history
+        );
+
+        return message;
     }
 
-    // '/app/chat.sendMessage'로 메시지가 전송되면 처리하는 메서드
-    // @SendTo로 지정된 '/topic/public'으로 메시지를 브로드캐스트
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        // 현재 시간을 메시지에 추가
-        log.info("sendMessage chatMessage: {}", chatMessage.toString());
-        chatMessage.setTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
-        return chatMessage;
+    @MessageMapping("/chat.sendMessage/{companyId}")
+    @SendTo("/topic/chat/{companyId}")
+    public ChatMessage sendMessage(@DestinationVariable Long companyId,
+                                   @Payload ChatMessage message) {
+        chatService.saveMessage(message);
+        return message;
+    }
+
+    @MessageMapping("/chat.leave/{companyId}")
+    @SendTo("/topic/chat/{companyId}")
+    public ChatMessage leaveRoom(@DestinationVariable Long companyId,
+                                 @Payload ChatMessage message,
+                                 SimpMessageHeaderAccessor headerAccessor) {
+        String roomId = "company-" + companyId;
+        chatService.removeParticipant(roomId, message.getSender());
+        headerAccessor.getSessionAttributes().remove("room");
+        headerAccessor.getSessionAttributes().remove("username");
+        return message;
     }
 }

@@ -1,30 +1,65 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    background: #f5f5f5;
 `;
 
-export const UsersContainer = styled.div`
+export const ChatHeader = styled.div`
+    padding: 1rem;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const ReconnectingIndicator = styled.div`
+    color: #f44336;
+    font-size: 0.8rem;
 `;
 
 export const MessagesContainer = styled.div`
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 `;
 
-export const MessageItem = styled.div<{ $isCurrentUser: boolean }>`
+export const MessageItem = styled.div<{ $isMine: boolean; $isSystem: boolean }>`
     display: flex;
-    justify-content: ${props => props.$isCurrentUser ? 'flex-end' : 'flex-start'};
-    margin-bottom: 10px;
+    justify-content: ${props => props.$isMine ? 'flex-end' : 'flex-start'};
+    margin: ${props => props.$isSystem ? '0.5rem 0' : '0'};
+
+    ${props => props.$isSystem && `
+    justify-content: center;
+    color: #666;
+    font-style: italic;
+  `}
+`;
+
+export const ParticipantsList = styled.div`
+    padding: 0.5rem;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+`;
+
+export const ParticipantItem = styled.div`
+    padding: 0.25rem 0.5rem;
+    background: #e3f2fd;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
 `;
 
 export const MessageContent = styled.div`
@@ -34,7 +69,6 @@ export const MessageContent = styled.div`
     max-width: 70%;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
-
 
 export const SenderName = styled.div`
     font-weight: bold;

@@ -81,7 +81,7 @@ const SecondMenuNav = styled.div`
     align-items: center;
     border-bottom: 1px solid #d2d6dc;
     overflow-x: auto;
-    width: 100%;
+    width: 100vw;
     &::-webkit-scrollbar {
         display: none;
     }
@@ -106,7 +106,7 @@ interface StyledMenuProps {
 const SecondMenuSingle = styled.div<StyledMenuProps>`
     font-size: 1rem;
     color: #4a5568;
-    padding: 8px 16px;
+    padding: 8px 20px;
     cursor: pointer;
     white-space: nowrap;
     ${({ $expanded }) => $expanded && `

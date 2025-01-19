@@ -9,6 +9,7 @@ import { stockOrderTypeReducer } from '@slices/stockOrderTypeSlice';
 import { stockOrderPriceReducer } from '@slices/stockOrderPriceSlice';
 import { stockOrderVolumeReducer } from '@slices/stockOrderVolumeSlice';
 import { decisionWindowReducer } from '@slices/decisionWindowSlice';
+import { chatReducer } from '@slices/chatSlice';
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
@@ -21,6 +22,7 @@ export const store = configureStore({
     stockOrderPriceSlice: stockOrderPriceReducer,
     stockOrderVolumeSlice: stockOrderVolumeReducer,
     decisionWindowSlice: decisionWindowReducer,
+    chatSlice: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
