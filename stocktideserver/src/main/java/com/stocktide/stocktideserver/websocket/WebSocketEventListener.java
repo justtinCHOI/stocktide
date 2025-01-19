@@ -13,9 +13,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
@@ -27,26 +25,41 @@ public class WebSocketEventListener {
     // 동시성을 고려한 연결된 사용자 목록 관리
     private final Set<String> connectedUsers = ConcurrentHashMap.newKeySet();
 
+    private String determineUsername(StompHeaderAccessor headerAccessor) {
+        // 헤더나 세션 속성에서 실제 사용자명 추출
+        String username = null;
+
+        // 1. 로그인 사용자 정보 확인
+        if (headerAccessor.getUser() != null) {
+            username = headerAccessor.getUser().getName();
+        }
+
+        // 2. 세션 속성에서 사용자명 확인
+        if (username == null && headerAccessor.getSessionAttributes() != null) {
+            username = (String) headerAccessor.getSessionAttributes().get("username");
+        }
+
+        // 3. 추가 로직: 인증 토큰에서 사용자명 추출 가능
+
+        return username;
+    }
+
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        // Principal에서 사용자 정보 추출
-        String username = headerAccessor.getUser() != null ?
-                headerAccessor.getUser().getName() : null;
+        // 실제 사용자 이름 추출 로직 개선
+        String username = determineUsername(headerAccessor);
 
-        // 기존 코드에 추가
         if (username != null) {
-            // UUID 대신 실제 사용자 이름 저장
             log.info("User connected: " + username);
-            connectedUsers.add(username);  // UUID 대신 실제 이름 추가
+            connectedUsers.add(username);
 
-            // 참여자 목록 브로드캐스트
-            messagingTemplate.convertAndSend("/topic/users",
+            // 채팅방 참여자 명시적 추가
+            messagingTemplate.convertAndSend("/topic/chat/users",
                     new UserStatusMessage("CONNECTED", username, new ArrayList<>(connectedUsers)));
         }
     }
-
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());

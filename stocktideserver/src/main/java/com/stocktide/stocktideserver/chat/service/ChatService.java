@@ -2,6 +2,7 @@ package com.stocktide.stocktideserver.chat.service;
 
 import com.stocktide.stocktideserver.chat.entity.ChatMessage;
 import com.stocktide.stocktideserver.chat.entity.ChatRoom;
+import com.stocktide.stocktideserver.chat.entity.UserStatusMessage;
 import com.stocktide.stocktideserver.chat.repository.ChatMessageRepository;
 import com.stocktide.stocktideserver.chat.repository.ChatRoomRepository;
 import com.stocktide.stocktideserver.exception.BusinessLogicException;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.stocktide.stocktideserver.exception.ExceptionCode;
@@ -25,6 +27,7 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final CompanyRepository companyRepository;
+    private final SimpMessageSendingOperations messagingTemplate;
 
     @Value("${chat.message.history.limit:100}")
     private int messageHistoryLimit;
@@ -32,10 +35,13 @@ public class ChatService {
     @Autowired
     public ChatService(ChatRoomRepository chatRoomRepository,
                        ChatMessageRepository chatMessageRepository,
-                       CompanyRepository companyRepository) {
+                       CompanyRepository companyRepository,
+                       SimpMessageSendingOperations messagingTemplate
+    ) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.companyRepository = companyRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
 
@@ -71,8 +77,16 @@ public class ChatService {
     public void addParticipant(String roomId, String username) {
         ChatRoom room = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_ROOM_NOT_FOUND));
-        room.getParticipants().add(username);
-        chatRoomRepository.save(room);
+
+        // 중복 방지
+        if (!room.getParticipants().contains(username)) {
+            room.getParticipants().add(username);
+            chatRoomRepository.save(room);
+
+            // 실시간 참여자 업데이트 이벤트 발행
+            messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/participants",
+                    new UserStatusMessage("JOIN", username, new ArrayList<>(room.getParticipants())));
+        }
     }
 
     public void removeParticipant(String roomId, String username) {
