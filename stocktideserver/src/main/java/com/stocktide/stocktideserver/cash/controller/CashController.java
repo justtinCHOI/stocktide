@@ -4,6 +4,7 @@ import com.stocktide.stocktideserver.cash.dto.CashResponseDto;
 import com.stocktide.stocktideserver.cash.entity.Cash;
 import com.stocktide.stocktideserver.cash.mapper.CashMapper;
 import com.stocktide.stocktideserver.cash.service.CashService;
+import com.stocktide.stocktideserver.member.dto.MemberDTO;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
 import com.stocktide.stocktideserver.member.service.MemberServiceImpl;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -79,9 +81,10 @@ public class CashController {
         return new ResponseEntity<>(cash, HttpStatus.OK);
     }
 
-    @GetMapping("/one/{memberId}")
-    private ResponseEntity<Object> getOneCash(@PathVariable("memberId") Long memberId) {
-        Cash cash = cashService.findCash(memberId);
+    @GetMapping("/one")
+    private ResponseEntity<Object> getOneCash(@AuthenticationPrincipal MemberDTO memberDTO ) {
+
+        Cash cash = cashService.findCash(memberDTO.getMemberId());
 
         return new ResponseEntity<>(mapper.cashToCashResponseDto(cash), HttpStatus.OK);
     }

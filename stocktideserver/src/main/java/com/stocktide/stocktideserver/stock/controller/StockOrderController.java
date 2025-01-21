@@ -1,5 +1,6 @@
 package com.stocktide.stocktideserver.stock.controller;
 
+import com.stocktide.stocktideserver.member.dto.MemberDTO;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
 import com.stocktide.stocktideserver.stock.dto.StockHoldResponseDto;
@@ -30,10 +31,10 @@ public class StockOrderController {
     private final MemberRepository memberRepository;
 
     // 보유 주식 정보들 반환하는 api
-    @GetMapping("/stockholds/{memberId}")
-    public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@PathVariable("memberId") Long memberId, @RequestParam Long companyId) {
-
-        List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(memberId, companyId);
+    @GetMapping("/stockholds")
+    public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@RequestParam Long companyId, @AuthenticationPrincipal MemberDTO memberDTO) {
+        log.info("getStockHolds memberId: {} ", memberDTO.getMemberId());
+        List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(memberDTO.getMemberId(), companyId);
 
         stockHoldResponseDtos = stockHoldService.setPercentage(stockHoldResponseDtos);
 

@@ -5,7 +5,6 @@ const API_SERVER_HOST = import.meta.env.VITE_API_URL;
 const jwtAxios = axios.create();
 
 const refreshJWT = async (accessToken: string, refreshToken: string): Promise<any> => {
-    console.log('refreshJWT', refreshToken);
     try {
         const host = API_SERVER_HOST;
         const header = { headers: { Authorization: `Bearer ${accessToken}` } };
@@ -50,6 +49,7 @@ const beforeRes = async (res: AxiosResponse) => {
         console.log('[RESPONSE] beforeRes:', res.config.url);
 
         const data = res.data;
+        console.log('[RESPONSE]', data);
         if (data?.error === 'ERROR_ACCESS_TOKEN' ||
           data?.error === 'Expired' ||
           res.status === 401) {
@@ -67,6 +67,7 @@ const beforeRes = async (res: AxiosResponse) => {
             if (!result) {
                 throw new Error('JWT refresh failed');
             }
+            console.log('new accessToken:', result.accessToken);
 
             // Update tokens
             memberInfo.accessToken = result.accessToken;
