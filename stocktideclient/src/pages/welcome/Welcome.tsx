@@ -6,6 +6,7 @@ import {FaSearch} from "react-icons/fa";
 import useCustomMember from "@hooks/useCustomMember";
 import { StyledLink } from '@assets/css/common';
 import { toast } from 'react-toastify';
+import { getMemberTest } from '@api/testApi';
 
 const Welcome = () => {
 
@@ -16,10 +17,16 @@ const Welcome = () => {
         toast.info("로그아웃되었습니다");
     }
 
+    function handleClickTest() {
+      getMemberTest().then(data => {
+        console.log("test", data);
+      })
+    }
+
     return (
         <>
             <StockInfoHomeDiv>
-                <WelcomeMessage>반가워요! StockTide 입니다.</WelcomeMessage>
+                <WelcomeMessage onClick={() => {handleClickTest()}}>반가워요! StockTide 입니다.</WelcomeMessage>
                     { loginState?.email ?
                       <WelcomeLogin
                         onClick={handleClickLogout}>

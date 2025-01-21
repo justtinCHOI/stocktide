@@ -3,6 +3,8 @@ package com.stocktide.stocktideserver.security.filter;
 import com.google.gson.Gson;
 import com.stocktide.stocktideserver.cash.entity.Cash;
 import com.stocktide.stocktideserver.member.dto.MemberDTO;
+import com.stocktide.stocktideserver.member.entity.Member;
+import com.stocktide.stocktideserver.member.entity.MemberStatus;
 import com.stocktide.stocktideserver.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,12 +33,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if (path.startsWith("/stock")) {
-            return true;
-        }
-
         return false;
-
 
     }
 

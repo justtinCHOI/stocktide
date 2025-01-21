@@ -1,5 +1,6 @@
 package com.stocktide.stocktideserver.stock.controller;
 
+import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.stock.dto.*;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

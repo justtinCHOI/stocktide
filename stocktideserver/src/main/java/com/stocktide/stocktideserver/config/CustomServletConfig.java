@@ -16,18 +16,5 @@ public class CustomServletConfig implements WebMvcConfigurer {
 //        registry.addFormatter(new LocalDateTimeFormatter());
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        //addMapping : 허용 파일
-//        //addMapping : 허용 파일
-//        //allowedOrigins : 허용 url
-//        //maxAge : 허용 시간
-//        //OPTIONS 미리 한번 찔러볼 떄
-//        registry.addMapping("/**")
-//                .maxAge(500)
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
-//                .allowedOrigins("*");
-//
-//    }
 }
 

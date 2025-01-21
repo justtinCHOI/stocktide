@@ -4,7 +4,6 @@ import logo from '@assets/images/StockTideImage.jpg';
 import useCustomMove from '@hooks/useCustomMove';
 import { logoList } from '@utils/companyLogos';
 import { MoveStockItemProps } from '@typings/stock';
-import { ColorProps } from '@components/my/profit/StockItem';
 
 const StockItem: FC<MoveStockItemProps> = ({ company }) => {
 
@@ -133,12 +132,12 @@ const StockPriceSection = styled.div`
     margin-right: 10px;
 `;
 
-const StockPrice = styled.span<ColorProps>`
+const StockPrice = styled.span<{ $change: string }>`
     font-size: 15px;
     color: ${(props) => props.$change};
 `;
 
-const StockChange = styled.span<ColorProps>`
+const StockChange = styled.span<{ $change: string }>`
     color: ${(props) => props.$change};
     cursor: pointer;
     font-size: 13px;

@@ -1,113 +1,167 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
+import { logoList } from '@utils/companyLogos';
 import logo from '@assets/images/StockTideImage.jpg';
 import useCustomMove from '@hooks/useCustomMove';
-import { logoList } from '@utils/companyLogos';
-import { StockItemProps } from '@typings/stock';
 
-const StockItem: FC<StockItemProps> = ({ company }) => {
+export type ProfitStockItemProps = {
+    stockData: {
+        stockHoldId: number;
+        memberId: number;
+        companyId: number;
+        companyKorName: string;
+        stockCount: number;
+        totalPrice: number;
+        percentage: number;
+        stockReturn: number;
+        reserveSellStockCount: number;
+    };
+    companyData?: {
+        companyId: number;
+        code: string;
+        korName: string;
+        stockPrice: string;
+        stockChangeAmount: string;
+        stockChangeRate: string;
+    };
+};
 
-    const isPositiveChange = parseFloat(company.stockChangeRate) > 0;
-    const companyLogo = logoList[company.korName] || logo;
-
-    const priceColor1 = isPositiveChange ? "#e22926" : "#2679ed";
-    const priceColor2 = isPositiveChange ? "#e22926" : "#2679ed";
-
-    const [showChangePrice] = useState(false);
+const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
+    const company = companyData ? companyData : undefined;
+    const companyLogo = company ? logoList[company.korName] : logo
     const {moveToChart} = useCustomMove();
 
+    const [showChangePrice, setShowChangePrice] = useState(false);
+    const {
+        stockCount,
+        reserveSellStockCount,
+        totalPrice,
+        percentage,
+        stockReturn,
+    } = stockData;
+    const totalStocksHeld = stockCount + reserveSellStockCount;
+
+    const {
+        code = "",
+        korName = "",
+        stockPrice = "",
+        stockChangeAmount = "",
+        stockChangeRate = "",
+    } = company || {};
+    const price = parseInt(stockPrice);
+    const priceChangeAmount = parseInt(stockChangeAmount);
+
+    // Format percentage to two decimal places
+    const formattedPercentage = parseFloat(percentage.toFixed(2));
+
     const handleItemClick = () => {
-        moveToChart(company.companyId);
+        company && moveToChart(company.companyId);
     };
 
-    const price = parseInt(company.stockPrice).toLocaleString();
-    const changeAmount = parseInt(company.stockChangeAmount).toLocaleString();
-    const priceUnit = "원";
-
     return (
-        <StockItemWrapper
+      <EntireContainer>
+          <ItemContainer
             onClick={handleItemClick}
-        >
-            <LogoContainer>
-                <Logo src={companyLogo} alt="stock logo"/>
-            </LogoContainer>
-            <StockInfo>
-                <StockName>{company.korName}</StockName>
-                <StockCode>{company.code}</StockCode>
-            </StockInfo>
-            <StockPriceSection>
-                <StockPrice $change={priceColor1}>
-                    {price} {priceUnit}
-                </StockPrice>
-                <StockChange $change={priceColor2}>
-                    {showChangePrice
-                        ? `${changeAmount} ${priceUnit}`
-                        : `${company.stockChangeRate}%`}
-                </StockChange>
-            </StockPriceSection>
-        </StockItemWrapper>
+            onMouseEnter={() => {
+                setShowChangePrice(true);
+            }}
+            onMouseLeave={() => {
+                setShowChangePrice(false);
+            }}
+          >
+              <LogoContainer>
+                  <Logo src={companyLogo} alt="stock logo"/>
+              </LogoContainer>
+              <StockInfo>
+                  <StockName>{korName}</StockName>
+                  <StockCode>{code}</StockCode>
+              </StockInfo>
+              <StockPriceSection>
+                  <StockPrice priceChangeAmount={priceChangeAmount}>
+                      {price.toLocaleString()} 원
+                  </StockPrice>
+                  <StockChange
+                    priceChangeAmount={priceChangeAmount}
+                    onMouseEnter={() => setShowChangePrice(true)}
+                    onMouseLeave={() => setShowChangePrice(false)}
+                  >
+                      {showChangePrice
+                        ? `${priceChangeAmount.toLocaleString()} 원`
+                        : `${stockChangeRate}%`}
+                  </StockChange>
+              </StockPriceSection>
+          </ItemContainer>
+          <StockDetails>
+              <DetailSection01>
+                  <DetailTitle>수익</DetailTitle>
+                  <DetailTitle>보유</DetailTitle>
+              </DetailSection01>
+              <DetailSection02>
+                  <ColoredDetailData priceChangeAmount={priceChangeAmount}>
+                      {stockReturn.toLocaleString()} 원
+                  </ColoredDetailData>
+                  <DetailData>{totalPrice.toLocaleString()} 원</DetailData>
+              </DetailSection02>
+              <DetailSection03>
+                  <ColoredDetailData priceChangeAmount={priceChangeAmount}>
+                      {formattedPercentage}%
+                  </ColoredDetailData>
+                  <DetailTitle>{totalStocksHeld}주</DetailTitle>
+              </DetailSection03>
+          </StockDetails>
+          {/* <ThickDivider /> */}
+      </EntireContainer>
     );
 };
 
-const StockItemWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 8px 0;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-    height: 57px;
-    background-color: transparent;
+export default StockItem;
 
-    &:hover {
-        background-color: #cee0ff;
-        transition: background-color 0.5s ease;
-    }
+
+
+const EntireContainer = styled.div`
+  &:hover {
+    background-color: #d9e6ff;
+    transition: background-color 0.5s ease;
+
     cursor: pointer;
+  }
+`;
+
+const ItemContainer = styled.div`
+  display: flex;
+  align-items: center;
+  /* gap: 8px; */
+  width: 100%;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0; // Holdings에서의 스타일 추가
 `;
 
 const LogoContainer = styled.div`
-    height: 100%;
-    width: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-`;
-
-
-const Logo = styled.img`
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    margin-left: 10px;
-    margin-right: 10px;
-    position: absolute;
-`;
-
-// const FavoriteStar = styled.div`
-//   position: absolute;
-//   width: 28px;
-//   height: 28px;
-//   background: url(${star_icon}) no-repeat center;
-//   background-size: contain;
-//   cursor: pointer;
-// `;
-
-// const FavoriteStarFilled = styled(FavoriteStar)`
-//   background: url(${star_filled_icon}) no-repeat center;
-//   background-size: contain;
-// `;
-
-const StockInfo = styled.div`
+  flex: 1 0 0;
   height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  /* margin: 10px; */
+  padding-left: 12px;
+  /* padding-right: 5px/; */
+`;
+
+const Logo = styled.img`
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  position: absolute;
+`;
+
+const StockInfo = styled.div`
+  flex: 5 0 0;
+  height: 100%;
   padding-top: 3px;
-  margin-right: 16px;
+  padding-left: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const StockName = styled.span`
@@ -122,29 +176,89 @@ const StockCode = styled.span`
 `;
 
 const StockPriceSection = styled.div`
-  height: 100%;
+  flex: 5 0 0;
+  padding-top: 3px;
+  margin-left: auto; /* 자동으로 왼쪽 여백 추가 */
+  /* margin-right: 10px; */
+  padding-right: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-end;
-  padding-top: 3px;
-  margin-left: auto;
-  margin-right: 10px;
 `;
 
-export interface ColorProps{
-    $change: string;
-}
+// const getColorByChange = (change: string) => {
+//   if (change.startsWith("")) return "red";
+//   if (change.startsWith("-")) return "blue";
+//   return "black";
+// };
 
-const StockPrice = styled.span<ColorProps>`
+const StockPrice = styled.span<{ priceChangeAmount: number }>`
+  color: ${(props) => (props.priceChangeAmount > 0 ? "#e22926" : "#2679ed")};
   font-size: 15px;
-  color: ${(props) => props.$change};
 `;
 
-const StockChange = styled.span<ColorProps>`
-  color: ${(props) => props.$change};
-  cursor: pointer;
+const StockChange = styled.span<{ priceChangeAmount: number }>`
+  color: ${(props) => (props.priceChangeAmount > 0 ? "#e22926" : "#2679ed")};
   font-size: 13px;
+  cursor: pointer;
 `;
 
-export default StockItem;
+const StockDetails = styled.div`
+  display: flex;
+  /* justify-content: space-between; */
+  /* gap: 15px; */
+  /* padding: 8px 0; */
+  align-items: center;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid darkgray;
+  width: 100%;
+`;
+
+const DetailSection01 = styled.div`
+  flex: 1.4 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 12px;
+  gap: 2px;
+  /* padding-right: 10px; */
+`;
+
+const DetailSection02 = styled.div`
+  flex: 4 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* align-items: center; */
+  justify-content: center;
+  gap: 2px;
+  padding-left: 3px;
+  /* padding-right: 10px; */
+`;
+
+const DetailSection03 = styled.div`
+  flex: 4 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding-left: 10px;
+  padding-right: 12px;
+`;
+
+const DetailTitle = styled.span`
+  font-weight: lighter;
+  /* font-weight: 420; */
+  font-size: 14px;
+`;
+
+const DetailData = styled.span`
+  font-size: 14px; // Setting standardized font size for all data
+`;
+
+const ColoredDetailData = styled.span<{ priceChangeAmount: number }>`
+  color: ${(props) => (props.priceChangeAmount > 0 ? "#e22926" : "#2679ed")};
+  font-size: 14px;
+`;
+

@@ -20,9 +20,9 @@ public class APIRefreshController {
 
     @RequestMapping("/api/member/refresh")
     public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, String refreshToken) {
-        //해더에서 Authorization 값인 accessToken 을 얻고, refreshToken 은 매개변수로 받는다.
-        log.info("refresh refreshToken: " + refreshToken);
+        // 해더 ->  accessToken 을 얻고, 매개변수 -> refreshToken
         log.info("refresh authHeader: " + authHeader);
+        log.info("refresh refreshToken: " + refreshToken);
 
         if (refreshToken == null) {
             throw new CustomJWTException("NULL_REFRASH");

@@ -10,7 +10,7 @@ import { stockOrderPriceReducer } from '@slices/stockOrderPriceSlice';
 import { stockOrderVolumeReducer } from '@slices/stockOrderVolumeSlice';
 import { decisionWindowReducer } from '@slices/decisionWindowSlice';
 import { chatReducer, ChatSliceState } from '@slices/chatSlice';
-import { MemberState } from '@typings/member';
+import { MemberSliceState } from '@typings/member';
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
@@ -35,7 +35,7 @@ export const store = configureStore({
 sagaMiddleware.run(rootSaga);
 
 export interface RootState {
-  memberSlice: MemberState;
+  memberSlice: MemberSliceState;
   companyIdSlice: number;
   compareIdSlice: number;
   cashSlice: CashSliceState;

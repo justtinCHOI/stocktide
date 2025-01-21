@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,5 +66,40 @@ public class StockOrderController {
 
         return new ResponseEntity<>(stockOrderResponseDto, HttpStatus.CREATED);
     }
+
+
+//    // 보유 주식 정보들 반환하는 api
+//    @GetMapping("/stockholds")
+//    public ResponseEntity getStockHolds(@AuthenticationPrincipal Member member) {
+//        List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(member.getMemberId());
+//        //vList<StockHoldResponseDto> stockHoldResponseDtos = companyMapper.stockHoldToStockHoldResponseDto(stockHoldList);
+//        stockHoldResponseDtos = stockHoldService.setPercentage(stockHoldResponseDtos);
+//
+//        return new ResponseEntity<>(stockHoldResponseDtos, HttpStatus.OK);
+//    }
+//
+//    // 멤버의 stockOrder를 반환하는 api
+//    @GetMapping("/stockorders")
+//    public ResponseEntity getStockOrders(@AuthenticationPrincipal Member member) {
+//        List<StockOrderResponseDto> stockOrderResponseDtos = stockOrderService.getMemberStockOrders(member.getMemberId());
+//
+//        return new ResponseEntity<>(stockOrderResponseDtos, HttpStatus.OK);
+//    }
+//
+//    // 미 체결된 매수, 매도 삭제하는 api
+//    @DeleteMapping("/stockorders")
+//    public void deleteStockOrders(@AuthenticationPrincipal Member member,
+//                                  @RequestParam("stockOrderId") long stockOrderId,
+//                                  @RequestParam("stockCount") int stockCount) {
+//        stockOrderService.deleteStockOrder(member, stockOrderId, stockCount);
+//    }
+//
+//    // 예약 매도 매수 기능 실행
+//    @GetMapping("checkOrder")
+//    public ResponseEntity checkOrder() {
+//        stockOrderService.checkOrder();
+//
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
 }
