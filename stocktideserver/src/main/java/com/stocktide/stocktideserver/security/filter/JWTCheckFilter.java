@@ -39,6 +39,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
         //JWT 를 검증하고, 유효한 경우 SecurityContext 에 인증 정보를 설정합니다.
         //header 에 authorization 이 있는데 type 은 bearer 를 표준으로 쓴다.
 
@@ -55,7 +57,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             //"Bearer {JWT 문자열}"
             String accessToken = authHeaderStr.substring(7); // 7개 문자 잘라내기
             Map<String, Object> claims = JWTUtil.validateToken(accessToken); //유효한지 검사
-            log.info("claims {}", claims);
+            log.info("path and claims {} {} ,", path, claims);
 
             //SpringSecurityHolderContext 에다가 Member 정보를 넣어줘야한다.
             //authorization 성공시 -> MemberDTO 정보를 얻어낼 수 있다.

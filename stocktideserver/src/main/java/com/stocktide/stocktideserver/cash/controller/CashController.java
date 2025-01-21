@@ -31,7 +31,7 @@ public class CashController {
     private final MemberRepository memberRepository;
 
     @GetMapping
-    private ResponseEntity getCashList(@RequestParam long memberId){
+    private ResponseEntity<Object> getCashList(@RequestParam long memberId){
 
         Member member = memberRepository.findById(memberId).orElse(null);
 
@@ -50,7 +50,7 @@ public class CashController {
     }
 
     @PostMapping
-    public ResponseEntity createCash(@RequestParam long memberId){
+    public ResponseEntity<Object> createCash(@RequestParam long memberId){
 
         Cash createdCash = cashService.createCash(memberId);
 
@@ -60,7 +60,7 @@ public class CashController {
     }
 
     @DeleteMapping("/{cashId}")
-    public ResponseEntity deleteCash(@PathVariable("cashId") Long cashId) {
+    public ResponseEntity<Object> deleteCash(@PathVariable("cashId") Long cashId) {
 
         cashService.remove(cashId);
 
@@ -69,7 +69,7 @@ public class CashController {
 
 
     @PutMapping("/{cashId}")
-    public ResponseEntity updateCash(@PathVariable("cashId") Long cashId
+    public ResponseEntity<Object> updateCash(@PathVariable("cashId") Long cashId
             , @RequestParam long money
             , @RequestParam long dollar) {
         log.info("---PutMapping-----------cashId money : {} {} {}", cashId, money, dollar);
@@ -80,113 +80,10 @@ public class CashController {
     }
 
     @GetMapping("/one/{memberId}")
-    private ResponseEntity getOneCash(@PathVariable("memberId") Long memberId){
-
+    private ResponseEntity<Object> getOneCash(@PathVariable("memberId") Long memberId) {
         Cash cash = cashService.findCash(memberId);
 
         return new ResponseEntity<>(mapper.cashToCashResponseDto(cash), HttpStatus.OK);
     }
 
 }
-
-
-
-//    @PostMapping
-//    public ResponseEntity postCash(@Valid @RequestBody CashPostDto cashPostDto,
-//                                   Member member){
-//        Cash cashToCreate = mapper.cashPostToCash(cashPostDto);
-//
-//        cashToCreate.setMember(member);
-//
-//        Cash createdCash = cashService.createCash(cashToCreate);
-//        CashResponseDto responseDto = mapper.cashToCashResponseDto(createdCash);
-//
-//        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-//    }
-//
-//    @PatchMapping("{cashId}")
-//    public ResponseEntity patchCash(@PathVariable long cashId, @Valid @RequestBody CashPatchDto requestBody,
-//                                    Member member){
-//
-//        Cash cashToUpdate = mapper.cashPatchToCash(requestBody);
-//
-//        cashToUpdate.setMember(member);
-//
-//        requestBody.setCashId(cashId);
-//
-//        Cash cash = cashService.updateCash(cashId, member, requestBody);
-//        stockHoldService.deleteStockHolds(member.getMemberId());
-//        stockOrderService.deleteStockOrders(member);
-//
-//        return new ResponseEntity<>(mapper.cashToCashResponseDto(cash), HttpStatus.OK);
-//    }
-//
-//    @GetMapping
-//    private ResponseEntity getCash( Member member){
-//        Cash response = cashService.findCash(member);
-//
-//        return new ResponseEntity<>(mapper.cashToCashResponseDto(response), HttpStatus.OK);
-//    }
-//
-////    @Operation(summary = "현금 정보 생성", description = "새로운 현금 정보를 생성합니다.", tags = { "Cash" })
-////    @ApiResponse(responseCode = "201", description = "Created",
-////            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CashResponseDto.class)))
-////    @ApiResponse(responseCode = "400", description = "이미 보유한 현금이 있습니다.")
-////    @ApiResponse(responseCode = "401", description = "Not Enough Money")
-//    @PostMapping
-//    public ResponseEntity postCash(@Valid @RequestBody CashPostDto cashPostDto,
-//                                  Member member){
-////    public ResponseEntity postCash(@Schema(implementation = CashPostDto.class)@Valid @RequestBody CashPostDto cashPostDto,
-////                                   @AuthenticationPrincipal Member member){
-//
-//        Cash cashToCreate = mapper.cashPostToCash(cashPostDto);
-//
-//        cashToCreate.setMember(member);
-//
-//        Cash createdCash = cashService.createCash(cashToCreate);
-//        CashResponseDto responseDto = mapper.cashToCashResponseDto(createdCash);
-//
-//        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-//    }
-
-
-
-
-//
-////    @Operation(summary = "현금 정보 업데이트", description = "현금 정보를 업데이트합니다.", tags = { "Cash" })
-////    @ApiResponse(responseCode = "200", description = "OK",
-////            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CashResponseDto.class)))
-////    @ApiResponse(responseCode = "400", description = "Bad Request")
-////    @ApiResponse(responseCode = "401", description = "Invalid Cash")
-////    @ApiResponse(responseCode = "404", description = "Not Found")
-//    @PatchMapping("{cashId}")
-//    public ResponseEntity patchCash(@PathVariable long cashId, @Valid @RequestBody CashPatchDto requestBody,
-//                                     Member member){
-////    public ResponseEntity patchCash(@Schema(implementation = CashPatchDto.class)@PathVariable long cashId, @Valid @RequestBody CashPatchDto requestBody,
-////                                    @AuthenticationPrincipal Member member){
-//
-//        Cash cashToUpdate = mapper.cashPatchToCash(requestBody);
-//
-//        cashToUpdate.setMember(member);
-//
-//        requestBody.setCashId(cashId);
-//
-//        Cash cash = cashService.updateCash(cashId, member, requestBody);
-//        stockHoldService.deleteStockHolds(member.getMemberId());
-//        stockOrderService.deleteStockOrders(member);
-//
-//        return new ResponseEntity<>(mapper.cashToCashResponseDto(cash), HttpStatus.OK);
-//    }
-//
-////    @Operation(summary = "현금 정보 조회", description = "현금 정보를 조회합니다.", tags = { "Cash" })
-////    @ApiResponse(responseCode = "200", description = "OK",
-////            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CashResponseDto.class)))
-////    @ApiResponse(responseCode = "401", description = "Invalid Cash")
-////    @ApiResponse(responseCode = "404", description = "Not Found")
-//    @GetMapping
-////    private ResponseEntity getCash(@AuthenticationPrincipal Member member){
-//    private ResponseEntity getCash( Member member){
-//        Cash response = cashService.findCash(member);
-//
-//        return new ResponseEntity<>(mapper.cashToCashResponseDto(response), HttpStatus.OK);
-//    }
