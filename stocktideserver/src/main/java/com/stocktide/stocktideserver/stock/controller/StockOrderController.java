@@ -68,39 +68,28 @@ public class StockOrderController {
         return new ResponseEntity<>(stockOrderResponseDto, HttpStatus.CREATED);
     }
 
+    // 멤버의 stockOrder를 반환하는 api
+    @GetMapping("/stockorders")
+    public ResponseEntity<Object> getStockOrders(@AuthenticationPrincipal Member member) {
+        List<StockOrderResponseDto> stockOrderResponseDtos = stockOrderService.getMemberStockOrders(member.getMemberId());
 
-//    // 보유 주식 정보들 반환하는 api
-//    @GetMapping("/stockholds")
-//    public ResponseEntity getStockHolds(@AuthenticationPrincipal Member member) {
-//        List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(member.getMemberId());
-//        //vList<StockHoldResponseDto> stockHoldResponseDtos = companyMapper.stockHoldToStockHoldResponseDto(stockHoldList);
-//        stockHoldResponseDtos = stockHoldService.setPercentage(stockHoldResponseDtos);
-//
-//        return new ResponseEntity<>(stockHoldResponseDtos, HttpStatus.OK);
-//    }
-//
-//    // 멤버의 stockOrder를 반환하는 api
-//    @GetMapping("/stockorders")
-//    public ResponseEntity getStockOrders(@AuthenticationPrincipal Member member) {
-//        List<StockOrderResponseDto> stockOrderResponseDtos = stockOrderService.getMemberStockOrders(member.getMemberId());
-//
-//        return new ResponseEntity<>(stockOrderResponseDtos, HttpStatus.OK);
-//    }
-//
-//    // 미 체결된 매수, 매도 삭제하는 api
-//    @DeleteMapping("/stockorders")
-//    public void deleteStockOrders(@AuthenticationPrincipal Member member,
-//                                  @RequestParam("stockOrderId") long stockOrderId,
-//                                  @RequestParam("stockCount") int stockCount) {
-//        stockOrderService.deleteStockOrder(member, stockOrderId, stockCount);
-//    }
-//
-//    // 예약 매도 매수 기능 실행
-//    @GetMapping("checkOrder")
-//    public ResponseEntity checkOrder() {
-//        stockOrderService.checkOrder();
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
+        return new ResponseEntity<>(stockOrderResponseDtos, HttpStatus.OK);
+    }
+
+    // 미 체결된 매수, 매도 삭제하는 api
+    @DeleteMapping("/stockorders")
+    public void deleteStockOrders(@AuthenticationPrincipal Member member,
+                                  @RequestParam("stockOrderId") long stockOrderId,
+                                  @RequestParam("stockCount") int stockCount) {
+        stockOrderService.deleteStockOrder(member, stockOrderId, stockCount);
+    }
+
+    // 30분 마다 실행되는 예약 매도 매수기능 실행하는 api
+    @GetMapping("checkOrder")
+    public ResponseEntity<Object> checkOrder() {
+        stockOrderService.checkOrder();
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
