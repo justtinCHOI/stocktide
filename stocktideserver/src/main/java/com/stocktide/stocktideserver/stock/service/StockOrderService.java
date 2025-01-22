@@ -125,6 +125,7 @@ public class StockOrderService {
         stockOrder.setStockCount(stockCount);
         stockOrder.setPrice(price);
         stockOrder.setCompany(companyService.findCompanyById(companyId));
+        stockOrder.setMember(member);
 
         // 현금량 감소 , 연관 Entity 수정 (member 수정-> stockOrder 수정)
         List<Cash> cashList = member.getCashList();
@@ -132,7 +133,6 @@ public class StockOrderService {
         cash.setMoney(cash.getMoney()-(price * stockCount));
         cashList.set(0, cash);
         member.setCashList(cashList);
-        stockOrder.setMember(member);
         stockOrderRepository.save(stockOrder);
         memberRepository.save(member);
         stockHoldRepository.save(stockHold);

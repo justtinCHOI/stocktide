@@ -11,12 +11,15 @@ import lombok.Setter;
 public class StockasbiDataDto {
 
     private StockAsBiOutput1 output1;
-    //private StockAsBiOutput2 output2;
+    private StockAsBiOutput2 output2;
+    private String rt_cd;
+    private String msg_cd;
+    private String msg1;
 
     @Getter
     @Setter
     @NoArgsConstructor
-    public class StockAsBiOutput1 {
+    public static class StockAsBiOutput1 {
 
         // 호가 접수 시간
         private String aspr_acpt_hour;
@@ -71,10 +74,28 @@ public class StockasbiDataDto {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    public static class StockAsBiOutput2 {
+        private String antc_mkop_cls_code;
+        private String stck_prpr;
+        private String stck_oprc;
+        private String stck_hgpr;
+        private String stck_lwpr;
+        private String stck_sdpr;
+        private String antc_cnpr;
+        private String antc_cntg_vrss_sign;
+        private String antc_cntg_vrss;
+        private String antc_cntg_prdy_ctrt;
+        private String antc_vol;
+        private String stck_shrn_iscd;
+        private String vi_cls_code;
+    }
+
 //    @Getter
 //    @Setter
 //    @NoArgsConstructor
-//    public class StockAsBiOutput2 {
+//    public static class StockAsBiOutput2 {
 //
 //        //주식 현재가
 //        private String stck_prpr;

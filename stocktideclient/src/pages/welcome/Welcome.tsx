@@ -6,7 +6,7 @@ import {FaSearch} from "react-icons/fa";
 import useCustomMember from "@hooks/useCustomMember";
 import { StyledLink } from '@assets/css/common';
 import { toast } from 'react-toastify';
-import { getTest2 } from '@api/testApi';
+import { putTest1 } from '@api/testApi';
 
 const Welcome = () => {
 
@@ -18,7 +18,7 @@ const Welcome = () => {
     }
 
     function handleClickTest() {
-      getTest2().then(data => {
+      putTest1().then(data => {
         console.log("test", data);
       })
     }

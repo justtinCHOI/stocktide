@@ -1,16 +1,12 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stocktide.stocktideserver.stock.dto.*;
-import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import com.stocktide.stocktideserver.util.Time;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -129,8 +125,12 @@ public class ApiCallService {
 
         log.info("---------------getStockasbiDataFromApi  request send----------------------------------------");
 
-        ResponseEntity<StockasbiDataDto> response = restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<StockasbiDataDto>() {});
-
+        ResponseEntity<StockasbiDataDto> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                StockasbiDataDto.class
+        );
         if (response.getStatusCode().is2xxSuccessful()) {
             StockasbiDataDto stockasbiDataDto = response.getBody();
             log.info("---------------getStockasbiDataFromApi successfully finished getOutput1 getAskp1: {}----------------------------------------", stockasbiDataDto.getOutput1().getAskp1());
@@ -164,7 +164,12 @@ public class ApiCallService {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        ResponseEntity<StockMinDto> response = restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<StockMinDto>() {});
+        ResponseEntity<StockMinDto> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                StockMinDto.class
+        );
 
         if (response.getStatusCode().is2xxSuccessful()) {
             StockMinDto stockMinDto = response.getBody();

@@ -8,7 +8,7 @@ const RapidSlider: React.FC = () => {
 
     const [sliderIndex, setSliderIndex] = useState(0);
 
-    const {data2: companies, isLoading, isError} = useCompanyData(2, 15);
+    const {data2: companies, isLoading, isError} = useCompanyData(1, 14);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -21,7 +21,6 @@ const RapidSlider: React.FC = () => {
         <RapidSliderInfo>
             {companies?.map((company, i) => (
                 <SliderItem key={company.companyId} $active={i === sliderIndex}>
-                    {/*<p>{company.korName}</p>*/}
                     <StockOverview
                         stockInfo={company}
                         stockInfoLoading={isLoading}

@@ -10,7 +10,7 @@ function EntireComponent() {
     const [showChangePrice, setShowChangePrice] = useState(false);
     const {moveToChart} = useCustomMove();
 
-    const {data: companies, isLoading, isError} = useCompanyData(2, 87);
+    const {data: companies, isLoading, isError} = useCompanyData(1, 79);
 
     const companiesList = companies || [];
 

@@ -13,3 +13,8 @@ export const getTest2 = async() => {
     return response.data;
 }
 
+export const putTest1 = async() => {
+    const response = await jwtAxios.put(`${prefix}/test/updateCompany`);
+    return response.data;
+}
+
