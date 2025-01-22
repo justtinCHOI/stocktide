@@ -75,7 +75,7 @@ public class StockAsBiService {
     }
     //companyId -> 회사의 StockAsBi 정보
     public StockAsBi getStockAsBi(long companyId) {
-        Optional<StockAsBi> stock = stockAsBiRepository.findById(companyId);
+        Optional<StockAsBi> stock = stockAsBiRepository.findByCompanyCompanyId(companyId);
         stock.orElseThrow(() -> new BusinessLogicException(ExceptionCode.STOCKASBI_NOT_FOUND));
         return stock.get();
     }

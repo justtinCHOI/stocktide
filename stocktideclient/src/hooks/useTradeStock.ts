@@ -4,7 +4,6 @@ import jwtAxios from "@utils/jwtUtil";
 import {API_SERVER_HOST} from "@api/memberApi";
 import {useParams} from "react-router";
 import { RootState } from '@/store';
-import useCustomMember from '@hooks/useCustomMember';
 
 const host = `${API_SERVER_HOST}/api/stock`;
 
@@ -14,18 +13,22 @@ const useTradeStock = () => {
     const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
     const orderPrice = useSelector((state: RootState) => state.stockOrderPriceSlice);
     const orderVolume = useSelector((state: RootState) => state.stockOrderVolumeSlice);
-    const { loginState } = useCustomMember();
-    const memberId = loginState.memberId;
 
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async () => postOrderRequest(
-          orderType,
-          numericCompanyId,
-          orderPrice,
-          orderVolume,
-          memberId
-        ),
+        mutationFn: async () => {
+            // 주문 수량 검증 추가
+            if (!orderVolume || orderVolume <= 0) {
+                throw new Error('Invalid order volume');
+            }
+
+            return postOrderRequest(
+              orderType,
+              numericCompanyId,
+              orderPrice,
+              orderVolume,
+            );
+        },
         onSuccess: () => {
             // 관련 쿼리들 무효화
             queryClient.invalidateQueries({
@@ -43,6 +46,10 @@ const useTradeStock = () => {
             queryClient.invalidateQueries({
                 queryKey: ['money']
             });
+        },
+        onError: (error) => {
+            console.error('Trade failed:', error);
+            throw error; // 에러를 상위로 전파
         }
     });
 
@@ -50,14 +57,14 @@ const useTradeStock = () => {
 
 export default useTradeStock;
 
-const postOrderRequest = async (orderType:boolean , companyId:number, price:number, volume:number, memberId:number) => {
+const postOrderRequest = async (orderType:boolean , companyId:number, price:number, volume:number) => {
     if (!orderType) {
         // 매수
-        const response = await jwtAxios.post(`${host}/buy?companyId=${companyId}&price=${price}&stockCount=${volume}&memberId=${memberId}`);
+        const response = await jwtAxios.post(`${host}/buy?companyId=${companyId}&price=${price}&stockCount=${volume}`);
         return response.data;
     } else {
         // 매도
-        const response = await jwtAxios.post(`${host}/stock/sell?companyId=${companyId}&price=${price}&stockCount=${volume}`);
+        const response = await jwtAxios.post(`${host}/sell?companyId=${companyId}&price=${price}&stockCount=${volume}`);
         return response.data;
     }
 };

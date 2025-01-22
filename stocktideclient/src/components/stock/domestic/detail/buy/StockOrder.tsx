@@ -58,41 +58,41 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
 
     const orderRequest = useTradeStock();
 
-    const handleOrderConfirm = () => {
-        orderRequest.mutate();
-        // const { isLoading, isError } = orderRequest;
-        const { isError } = orderRequest;
+    // StockOrder.tsx 수정
+    const handleOrderConfirm = async () => {
+        try {
+            // 1. 주문 처리 완료 대기
+            await orderRequest.mutateAsync();
 
-        // if (isLoading) {
-        //     console.log("주식 주문 진행 중");
-        // }
-
-        if (isError) {
-            console.log("주문 오류 발생");
-        }
-
-        toast(
-          <ToastMessage $orderType={orderType}>
-              <div className="overview">
-                  <img src={companyLogo} alt="stock logo" />
-                  <div className="orderInfo">
-                      {corpName} {volume}
-                      {volumeUnit}
+            // 2. 주문 성공 시 처리
+            toast(
+              <ToastMessage $orderType={orderType}>
+                  <div className="overview">
+                      <img src={companyLogo} alt="stock logo" />
+                      <div className="orderInfo">
+                          {corpName} {volume}
+                          {volumeUnit}
+                      </div>
                   </div>
-              </div>
-              <div>
-                  <span className="orderType">✓ {orderTypeText}</span>
-                  <span>{toastText}</span>
-              </div>
-          </ToastMessage>,
-          {
-              // position: toast.POSITION.BOTTOM_LEFT,
-              hideProgressBar: true,
-          }
-        );
+                  <div>
+                      <span className="orderType">✓ {orderTypeText}</span>
+                      <span>{toastText}</span>
+                  </div>
+              </ToastMessage>,
+              {
+                  hideProgressBar: true,
+              }
+            );
 
-        dispatch(setStockOrderVolume(0));
-        handleCloseDecisionWindow();
+            // 3. 주문 완료 후 상태 초기화
+            dispatch(setStockOrderVolume(0));
+            handleCloseDecisionWindow();
+
+        } catch (error) {
+            // 4. 에러 처리
+            console.error('Order failed:', error);
+            toast.error('주문 처리 중 오류가 발생했습니다');
+        }
     };
 
     const orderFailureCase01 = false;

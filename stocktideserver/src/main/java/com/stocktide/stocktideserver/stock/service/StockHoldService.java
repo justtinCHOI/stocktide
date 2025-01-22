@@ -28,17 +28,18 @@ public class StockHoldService {
     private final StockOrderRepository stockOrderRepository;
     private final StockMapper stockMapper;
 
-    //memberId + companyId -> StockHold 없으면 생성
+    // memberId + companyId -> StockHold 반환 없으면 생성
     public StockHold checkStockHold(long companyId, long memberId) {
         StockHold stockHold = stockHoldRepository.findByCompanyCompanyIdAndMemberMemberId(companyId, memberId);
         if(stockHold == null) {
+//            log.info("checkStockHold is null");
             StockHold newStockHold = new StockHold();
             newStockHold.setMember(memberRepository.findById(memberId).get());
             newStockHold.setCompany(companyRepository.findById(companyId).get());
             return newStockHold;
         }
-        else
-            return stockHold;
+//        log.info("checkStockHold is exist");
+        return stockHold;
     }
 
     //memberId + companyId -> StockHold 없으면 오류반환

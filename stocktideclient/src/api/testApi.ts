@@ -7,3 +7,9 @@ export const getTest1 = async() => {
     const response = await jwtAxios.get(`${prefix}/test/test1`);
     return response.data;
 }
+
+export const getTest2 = async() => {
+    const response = await jwtAxios.get(`${prefix}/stock/checkOrder`);
+    return response.data;
+}
+

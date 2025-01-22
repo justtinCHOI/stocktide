@@ -33,7 +33,7 @@ public class StockOrderController {
     // 보유 주식 정보들 반환하는 api
     @GetMapping("/stockholds")
     public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@RequestParam Long companyId, @AuthenticationPrincipal MemberDTO memberDTO) {
-        log.info("getStockHolds memberId: {} ", memberDTO.getMemberId());
+
         List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(memberDTO.getMemberId(), companyId);
 
         stockHoldResponseDtos = stockHoldService.setPercentage(stockHoldResponseDtos);
@@ -47,8 +47,8 @@ public class StockOrderController {
     public ResponseEntity<Object> buyStocks(@RequestParam(name = "companyId") long companyId,
                                     @RequestParam(name = "price") long price,
                                     @RequestParam(name = "stockCount") int stockCount,
-                                    @RequestParam(name = "memberId") Long memberId) {
-        Optional<Member> member = memberRepository.findByMemberId(memberId);
+                                    @AuthenticationPrincipal MemberDTO memberDTO) {
+        Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
         StockOrder stockOrder = stockOrderService.buyStocks(member.get(), companyId, price, stockCount);
         StockOrderResponseDto stockOrderResponseDto = stockMapper.stockOrderToStockOrderResponseDto(stockOrder);
 
@@ -60,8 +60,8 @@ public class StockOrderController {
     public ResponseEntity<Object> sellStocks(@RequestParam(name = "companyId") long companyId,
                                      @RequestParam(name = "price") long price,
                                      @RequestParam(name = "stockCount") int stockCount,
-                                     @RequestParam(name = "memberId") Long memberId) {
-        Optional<Member> member = memberRepository.findByMemberId(memberId);
+                                     @AuthenticationPrincipal MemberDTO memberDTO) {
+        Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
         StockOrder stockOrder = stockOrderService.sellStocks(member.get(), companyId, price, stockCount);
         StockOrderResponseDto stockOrderResponseDto = stockMapper.stockOrderToStockOrderResponseDto(stockOrder);
 
@@ -70,23 +70,26 @@ public class StockOrderController {
 
     // 멤버의 stockOrder를 반환하는 api
     @GetMapping("/stockorders")
-    public ResponseEntity<Object> getStockOrders(@AuthenticationPrincipal Member member) {
-        List<StockOrderResponseDto> stockOrderResponseDtos = stockOrderService.getMemberStockOrders(member.getMemberId());
+    public ResponseEntity<Object> getStockOrders(@AuthenticationPrincipal MemberDTO memberDTO) {
+        Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
+        List<StockOrderResponseDto> stockOrderResponseDtos = stockOrderService.getMemberStockOrders(member.get().getMemberId());
 
         return new ResponseEntity<>(stockOrderResponseDtos, HttpStatus.OK);
     }
 
     // 미 체결된 매수, 매도 삭제하는 api
     @DeleteMapping("/stockorders")
-    public void deleteStockOrders(@AuthenticationPrincipal Member member,
+    public void deleteStockOrders(@AuthenticationPrincipal MemberDTO memberDTO,
                                   @RequestParam("stockOrderId") long stockOrderId,
                                   @RequestParam("stockCount") int stockCount) {
-        stockOrderService.deleteStockOrder(member, stockOrderId, stockCount);
+        Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
+        stockOrderService.deleteStockOrder(member.get(), stockOrderId, stockCount);
     }
 
     // 30분 마다 실행되는 예약 매도 매수기능 실행하는 api
     @GetMapping("checkOrder")
-    public ResponseEntity<Object> checkOrder() {
+    public ResponseEntity<Object> checkOrder(@AuthenticationPrincipal MemberDTO memberDTO) {
+        log.info("checkOrder {}", memberDTO.getMemberId());
         stockOrderService.checkOrder();
 
         return new ResponseEntity<>(HttpStatus.OK);

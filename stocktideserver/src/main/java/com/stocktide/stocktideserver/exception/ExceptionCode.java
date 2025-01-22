@@ -16,6 +16,7 @@ public enum ExceptionCode {
     INVALID_FAILED(404, "작성자만 접근할 수 있습닌다."),
     STOCKASBI_NOT_FOUND(404, "호가 정보를 찾을 수 없습니다"),
     STOCKHOLD_NOT_FOUND(404, "보유 주식 정보가 없습니다."),
+    INVALID_ORDER_VOLUME(400, "주문 수량이 유효하지 않습니다"),
     INSUFFICIENT_STOCK(422,"보유 주식이 부족합니다"),
     NOT_ENOUGH_MONEY(422, "보유 금액이 부족합니다"),
     STOCKORDER_NOT_FOUND(404, "주식 거래내역이 존재하지 않습니다"),

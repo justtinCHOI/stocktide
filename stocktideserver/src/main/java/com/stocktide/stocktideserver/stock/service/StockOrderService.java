@@ -15,6 +15,7 @@ import com.stocktide.stocktideserver.stock.entity.StockOrder;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.StockHoldRepository;
 import com.stocktide.stocktideserver.stock.repository.StockOrderRepository;
+import com.stocktide.stocktideserver.test.service.LogService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -51,8 +52,9 @@ public class StockOrderService {
     private final StockMapper stockMapper;
     private final LongPollingController longPollingController;
     private final SimpMessagingTemplate messagingTemplate;
+    private final LogService logService;
 
-    public StockOrderService(StockAsBiService stockAsBiService, CompanyService companyService, StockOrderRepository stockOrderRepository, MemberRepository memberRepository, StockHoldService stockHoldService, StockHoldRepository stockHoldRepository, CashService cashService, StockMapper stockMapper, LongPollingController longPollingController, SimpMessagingTemplate messagingTemplate) {
+    public StockOrderService(StockAsBiService stockAsBiService, CompanyService companyService, StockOrderRepository stockOrderRepository, MemberRepository memberRepository, StockHoldService stockHoldService, StockHoldRepository stockHoldRepository, CashService cashService, StockMapper stockMapper, LongPollingController longPollingController, SimpMessagingTemplate messagingTemplate, LogService logService) {
         this.stockAsBiService = stockAsBiService;
         this.companyService = companyService;
         this.stockOrderRepository = stockOrderRepository;
@@ -63,10 +65,16 @@ public class StockOrderService {
         this.stockMapper = stockMapper;
         this.longPollingController = longPollingController;
         this.messagingTemplate = messagingTemplate;
+        this.logService = logService;
     }
 
     // 멤버, 회사 id, 가격, 수량 ->
+    @Transactional
     public StockOrder buyStocks(Member member, long companyId, long price, int stockCount) {
+        // 주문 수량 검증 추가
+        if (stockCount <= 0) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_VOLUME);
+        }
         //회원 캐쉬 잔량 비교
         cashService.checkCash(price * stockCount, member); // -> 부족할 시 예외 처리
         // 호가 불러오기
@@ -76,7 +84,9 @@ public class StockOrderService {
     }
 
     private StockOrder buyDiscrimination(Member member, long price, StockAsBi stockAsBi, int stockCount, long companyId) {
-        // 매도 호가와 가격이 같고, 잔량이 남아 있을 경우
+
+        // 매수 호가와 가격이 같고, 잔량이 남아 있을 경우
+//        logService.logStockAsBi(price, stockAsBi, stockCount, companyId);
         if(Long.parseLong(stockAsBi.getAskp1()) == price && Integer.parseInt(stockAsBi.getAskp_rsqn1()) > stockCount)
             return buyStock(member, price, stockCount, companyId); // 구매 로직
         else if(Long.parseLong(stockAsBi.getAskp2()) == price && Integer.parseInt(stockAsBi.getAskp_rsqn2()) > stockCount)
@@ -103,6 +113,7 @@ public class StockOrderService {
 
     public StockOrder buyStock(Member member, long price, int stockCount, long companyId) {
         // StockHold 수정||생성 ,보유주식 추가, 총 투자 금액 추가
+        log.info("buyStock");
         StockHold stockHold = stockHoldService.checkStockHold(companyId, member.getMemberId());
         stockHold.setStockCount(stockHold.getStockCount() + stockCount);
         stockHold.setPrice(stockHold.getPrice() + (stockCount * price));
@@ -131,6 +142,7 @@ public class StockOrderService {
 
     // 멤버, 회사 id, 매도가격, 매도량
     public StockOrder sellStocks(Member member, long companyId, long price, int stockCount) {
+        log.info("sellStocks {} {} {} ", companyId, price, stockCount);
         // StockHold ->  보유량, 매도량 비교
         StockHold stockHold = stockHoldService.findStockHold(companyId, member.getMemberId());
         if(stockHold.getStockCount() < stockCount) //예외방출
@@ -173,7 +185,8 @@ public class StockOrderService {
     public StockOrder sellStock(Member member, long price, int stockCount, long companyId) {
         // StockHold 설정 : 주식량 감소, 주식거래량 감소
         StockHold stockHold = stockHoldService.findStockHold(companyId, member.getMemberId());
-        stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockCount);
+        // stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockCount);
+        stockHold.setPrice(stockHold.getPrice() - price * stockCount);
         stockHold.setStockCount(stockHold.getStockCount() - stockCount);
 
         // StockOrder 생성
@@ -193,7 +206,7 @@ public class StockOrderService {
         stockOrder.setMember(member);
         stockOrderRepository.save(stockOrder);
         memberRepository.save(member);
-        //보유량 전부 매도시 stockHold삭제  //굳이? 보유 주식 고를 떄 stockCount 나 reserveStockCount 가 없는 stockHold 데이터를 가져오면됨.
+        //보유량 전부 매도시 stockHold 삭제
         if(stockHold.getStockCount() + stockHold.getReserveStockCount() == 0)
             stockHoldRepository.delete(stockHold);
         else
@@ -209,9 +222,9 @@ public class StockOrderService {
             StockHold stockHold = stockHoldService.findStockHold(companyId, member.getMemberId());
             stockHold.setStockCount(stockHold.getStockCount() - stockCount);
             stockHold.setReserveStockCount(stockCount);
-
+            stockHoldRepository.save(stockHold);
         }
-        //예약 매수 : 체결 대기
+        // StockOrder 수정: 체결 대기 & 매수, 매도
         StockOrder stockOrder = new StockOrder();
         stockOrder.setOrderStates(StockOrder.OrderStates.ORDER_WAIT); //체결 대기
         stockOrder.setOrderTypes(types);
@@ -299,21 +312,24 @@ public class StockOrderService {
 
     // 예약 매수 타결
     public StockOrder reserveBuyStock(StockOrder stockOrder) {
-        Optional<StockOrder> optionalStockOrder = stockOrderRepository.findById(stockOrder.getStockOrderId());//굳이?
+        //회원 캐쉬 잔량 비교
+        cashService.checkCash(stockOrder.getPrice() * stockOrder.getStockCount(), stockOrder.getMember()); // -> 부족할 시 예외 처리
+        // StockOrder 수정 : 체결완료
+        Optional<StockOrder> optionalStockOrder = stockOrderRepository.findById(stockOrder.getStockOrderId());
         StockOrder updateStockOrder = optionalStockOrder.get();
-        updateStockOrder.setOrderStates(StockOrder.OrderStates.ORDER_COMPLETE); //체결 완료
-        updateStockOrder.setOrderTypes(StockOrder.OrderTypes.BUY);//굳이?
+        updateStockOrder.setOrderStates(StockOrder.OrderStates.ORDER_COMPLETE); // 체결 완료
         // StockHold 수정 : 주식량 증가, 주식거래량 증가
         StockHold stockHold = stockHoldService.checkStockHold(stockOrder.getCompany().getCompanyId(), stockOrder.getMember().getMemberId());
         stockHold.setStockCount(stockHold.getStockCount() + stockOrder.getStockCount());
         stockHold.setPrice(stockHold.getPrice() + (stockOrder.getStockCount() * stockOrder.getPrice()));
-        // 현금량 감소 , 연관 Entity 수정 (member 수정-> stockOrder 수정)
+        // Member 수정: 현금량 감소
         Member member = updateStockOrder.getMember();
         List<Cash> cashList = member.getCashList();
         Cash cash = cashList.get(0);
         cash.setMoney(cash.getMoney()-(stockOrder.getPrice() * stockOrder.getStockCount()));
         cashList.set(0, cash);
         member.setCashList(cashList);
+        // 연관 Entity update
         stockOrder.setMember(member);
         stockOrderRepository.save(stockOrder);
         memberRepository.save(member);
@@ -321,7 +337,6 @@ public class StockOrderService {
 
         return stockOrder;
     }
-
 
     private StockOrder reserveSellDiscrimination(StockAsBi stockAsBi, StockOrder stockOrder) {
         long price = stockOrder.getPrice();
@@ -355,13 +370,14 @@ public class StockOrderService {
     // 예약 매도 타결 -> 판매로 바뀔 때 금액 늘어나게, 보유 주식은 예약 할 때 줄어들도록
     // Price 줄어드는 금액은 주식 투자금액 - (주식 투자 금액 / 보유 주식 개수) * 팔 주식 개수 (완료)
     public StockOrder reserveSellStock(StockOrder stockOrder) {
-        Optional<StockOrder> optionalStockOrder = stockOrderRepository.findById(stockOrder.getStockOrderId());//굳이?
+        // StockOrder 수정 : 체결완료
+        Optional<StockOrder> optionalStockOrder = stockOrderRepository.findById(stockOrder.getStockOrderId());
         StockOrder updateStockOrder = optionalStockOrder.get();
         updateStockOrder.setOrderStates(StockOrder.OrderStates.ORDER_COMPLETE);
-        updateStockOrder.setOrderTypes(StockOrder.OrderTypes.SELL);
         // 보유 주식 설정 : 주식량 감소, 주식거래량 감소
         StockHold stockHold = stockHoldService.findStockHold(stockOrder.getCompany().getCompanyId(), stockOrder.getMember().getMemberId());
-        stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockOrder.getStockCount());
+        // stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockOrder.getStockCount());
+         stockHold.setPrice(stockHold.getPrice() - stockOrder.getPrice() * stockOrder.getStockCount());
         stockHold.setReserveStockCount(stockHold.getReserveStockCount() - stockOrder.getStockCount());
         // 현금량 증가, 연관 Entity 수정 (member 수정-> stockOrder 수정)
         Member member = updateStockOrder.getMember();
@@ -374,7 +390,7 @@ public class StockOrderService {
         stockOrder.setMember(member);
         stockOrderRepository.save(stockOrder);
         memberRepository.save(member);
-        //보유량 전부 매도시 stockHold삭제  //굳이? 보유 주식 고를 떄 stockCount 나 reserveStockCount 가 없는 stockHold 데이터를 가져오면됨.
+        //보유량 전부 매도시 stockHold 삭제
         if(stockHold.getStockCount() + stockHold.getReserveStockCount() == 0)
             stockHoldRepository.delete(stockHold);
         else
@@ -408,14 +424,14 @@ public class StockOrderService {
 
     // 미체결 예약 주문 취소
     public void deleteStockOrder(Member member, long stockOrderId, int stockCount) {
-        //stockOrderId -> StockOrder
+        // stockOrderId -> StockOrder
         Optional<StockOrder> optionalStockOrder = stockOrderRepository.findById(stockOrderId);
         // StockOrder 못찾으면 에러 방출
         StockOrder stockOrder = optionalStockOrder.orElseThrow(() -> new BusinessLogicException(ExceptionCode.STOCKORDER_NOT_FOUND));
         //StockOrder.memberId  Member.memberId 비교
-        if(stockOrder.getMember().getMemberId() != member.getMemberId()) {
+        if(!Objects.equals(stockOrder.getMember().getMemberId(), member.getMemberId())) {
             throw new BusinessLogicException(ExceptionCode.STOCKORDER_PERMISSION_DENIED);
-        }//대기상태 아님 -> 에러 방출
+        } // 대기상태 아님 -> 에러 방출
         else if(!stockOrder.getOrderStates().equals(StockOrder.OrderStates.ORDER_WAIT))
             throw new BusinessLogicException(ExceptionCode.STOCKORDER_ALREADY_FINISH);
             // 수량 선택해서 취소 할 수 있게(취소한 만큼 보유 주식 돌아오게) 0이 되면 미체결 스톡 오더 삭제

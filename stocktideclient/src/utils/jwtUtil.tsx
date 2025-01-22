@@ -18,7 +18,7 @@ const refreshJWT = async (accessToken: string, refreshToken: string): Promise<an
 
 const beforeReq = async (config: InternalAxiosRequestConfig) => {
     try {
-        console.log('[REQUEST] beforeReq:', config.url);
+        // console.log('[REQUEST] beforeReq:', config.url);
 
         const memberInfo = getLocalStorage("member");
         if (!memberInfo) {
@@ -46,10 +46,10 @@ const requestFail = (err: any) => {
 
 const beforeRes = async (res: AxiosResponse) => {
     try {
-        console.log('[RESPONSE] beforeRes:', res.config.url);
+        // console.log('[RESPONSE] beforeRes:', res.config.url);
 
         const data = res.data;
-        console.log('[RESPONSE]', data);
+        // console.log('[RESPONSE]', data);
         if (data?.error === 'ERROR_ACCESS_TOKEN' ||
           data?.error === 'Expired' ||
           res.status === 401) {
@@ -67,7 +67,7 @@ const beforeRes = async (res: AxiosResponse) => {
             if (!result) {
                 throw new Error('JWT refresh failed');
             }
-            console.log('new accessToken:', result.accessToken);
+            // console.log('new accessToken:', result.accessToken);
 
             // Update tokens
             memberInfo.accessToken = result.accessToken;
