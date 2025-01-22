@@ -28,7 +28,7 @@ export type ProfitStockItemProps = {
 
 const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
     const company = companyData ? companyData : undefined;
-    const companyLogo = company ? logoList[company.korName] : logo
+    const companyLogo = company ? (logoList[company.korName] || logo) : logo;
     const {moveToChart} = useCustomMove();
 
     const [showChangePrice, setShowChangePrice] = useState(false);

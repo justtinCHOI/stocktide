@@ -6,17 +6,18 @@ import useCustomMember from '@hooks/useCustomMember';
 
 const host = `${API_SERVER_HOST}/api/stock`;
 
-const getHoldingStock = async (companyId: number): Promise<StockHoldResponseDto[]> => {
-    const response = await jwtAxios.get(`${host}/stockholds`, { params: { companyId } });
+const getHoldingStock = async (): Promise<StockHoldResponseDto[]> => {
+    const response = await jwtAxios.get(`${host}/stockholds`);
     return response.data;
 };
 
-const useGetHoldingStock = (companyId: number) => {
-    const { isLogin } = useCustomMember();
+const useGetHoldingStock = () => {
+    const { isLogin, loginState } = useCustomMember();
+
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['holdingStocks', companyId],
-        queryFn: () => getHoldingStock(companyId),
+        queryKey: ['holdingStocks', loginState.memberId],
+        queryFn: () => getHoldingStock(),
         enabled: isLogin,
         staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: true

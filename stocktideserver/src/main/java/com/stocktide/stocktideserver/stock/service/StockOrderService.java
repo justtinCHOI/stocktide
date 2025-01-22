@@ -113,7 +113,6 @@ public class StockOrderService {
 
     public StockOrder buyStock(Member member, long price, int stockCount, long companyId) {
         // StockHold 수정||생성 ,보유주식 추가, 총 투자 금액 추가
-        log.info("buyStock");
         StockHold stockHold = stockHoldService.checkStockHold(companyId, member.getMemberId());
         stockHold.setStockCount(stockHold.getStockCount() + stockCount);
         stockHold.setPrice(stockHold.getPrice() + (stockCount * price));
@@ -185,8 +184,7 @@ public class StockOrderService {
     public StockOrder sellStock(Member member, long price, int stockCount, long companyId) {
         // StockHold 설정 : 주식량 감소, 주식거래량 감소
         StockHold stockHold = stockHoldService.findStockHold(companyId, member.getMemberId());
-        // stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockCount);
-        stockHold.setPrice(stockHold.getPrice() - price * stockCount);
+        stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockCount);
         stockHold.setStockCount(stockHold.getStockCount() - stockCount);
 
         // StockOrder 생성
@@ -376,8 +374,7 @@ public class StockOrderService {
         updateStockOrder.setOrderStates(StockOrder.OrderStates.ORDER_COMPLETE);
         // 보유 주식 설정 : 주식량 감소, 주식거래량 감소
         StockHold stockHold = stockHoldService.findStockHold(stockOrder.getCompany().getCompanyId(), stockOrder.getMember().getMemberId());
-        // stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockOrder.getStockCount());
-         stockHold.setPrice(stockHold.getPrice() - stockOrder.getPrice() * stockOrder.getStockCount());
+        stockHold.setPrice(stockHold.getPrice() - (stockHold.getPrice() / (stockHold.getStockCount()+stockHold.getReserveStockCount())) * stockOrder.getStockCount());
         stockHold.setReserveStockCount(stockHold.getReserveStockCount() - stockOrder.getStockCount());
         // 현금량 증가, 연관 Entity 수정 (member 수정-> stockOrder 수정)
         Member member = updateStockOrder.getMember();

@@ -33,7 +33,7 @@ const VolumeSetting = () => {
     let availableSellingStock = 0;
 
     const { cashData } = useGetCash();
-    const { holdingStockData } = useGetHoldingStock(companyIdNumber);
+    const { holdingStockData } = useGetHoldingStock();
 
     let maximumBuyingVolume = 0;
 

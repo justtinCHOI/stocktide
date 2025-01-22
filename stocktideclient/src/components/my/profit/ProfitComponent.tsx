@@ -3,25 +3,20 @@ import useGetHoldingStock from '@hooks/useGetHoldingStock';
 import useCompanyData from '@hooks/useCompanyData';
 import styled from "styled-components";
 import StockItem, { ProfitStockItemProps } from '@components/my/profit/StockItem';
-import { useParams } from 'react-router';
 
 const evaluationProfitText = "평가 수익금";
 const profitUnit = "원";
 
 const ProfitComponent: FC =() => {
 
-  const {companyId} = useParams();
-  const companyIdNumber = Number(companyId)
-
     const {
-      holdingStockLoading: stockHolds,
+      holdingStockData: stockHolds,
       holdingStockLoading: isLoading,
       holdingStockError: isError,
-    } = useGetHoldingStock(companyIdNumber);
-
+    } = useGetHoldingStock();
 
     const {data: companyData, isLoading: isCompanyDataLoading, isError: isCompanyDataError,
-    } = useCompanyData(2, 87);
+    } = useCompanyData(1, 79);
 
   // 모든 stockReturn의 합을 계산합니다.
     let totalEvaluationProfit = 0;
@@ -33,7 +28,6 @@ const ProfitComponent: FC =() => {
           0
         );
     }
-
 
     return (
       <WatchListContainer>

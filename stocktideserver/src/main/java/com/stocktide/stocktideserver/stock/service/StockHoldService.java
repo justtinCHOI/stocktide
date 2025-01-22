@@ -61,14 +61,8 @@ public class StockHoldService {
 
     //회원의 모든 StockHoldResponseDto
     // List<StockHold> ->  List<StockHoldResponseDto>
-    public List<StockHoldResponseDto> findStockHolds(Long memberId, Long companyId) {
+    public List<StockHoldResponseDto> findStockHolds(Long memberId) {
         List<StockHold> stockHoldList = stockHoldRepository.findAllByMember_MemberId(memberId);
-        if(stockHoldList.isEmpty()) {
-            StockHold newStockHold = new StockHold();
-            newStockHold.setMember(memberRepository.findById(memberId).get());
-            newStockHold.setCompany(companyRepository.findById(companyId).get());
-            stockHoldList.add(newStockHold);
-        }
         List<StockHoldResponseDto> stockHoldResponseDtos = stockMapper.stockHoldToStockHoldResponseDto(stockHoldList);
         // 특정 조건의 예약된 주식 수량을 설정하는 로직
 //        for(StockHoldResponseDto stockHold : stockHoldResponseDtos) {

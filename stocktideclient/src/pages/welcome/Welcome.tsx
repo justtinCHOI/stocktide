@@ -1,6 +1,5 @@
 import {IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
 import Main from "@components/welcome/main/Main";
-import Footer from "@components/welcome/Footer";
 import styled from "styled-components";
 import {FaSearch} from "react-icons/fa";
 import useCustomMember from "@hooks/useCustomMember";
@@ -42,7 +41,7 @@ const Welcome = () => {
             <IncludeInformationDiv $top={3}>
                     <OutletDiv>
                         <Main/>
-                        <Footer/>
+                        {/*<Footer/>*/}
                     </OutletDiv>
             </IncludeInformationDiv>
         </>

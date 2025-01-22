@@ -32,9 +32,9 @@ public class StockOrderController {
 
     // 보유 주식 정보들 반환하는 api
     @GetMapping("/stockholds")
-    public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@RequestParam Long companyId, @AuthenticationPrincipal MemberDTO memberDTO) {
+    public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@AuthenticationPrincipal MemberDTO memberDTO) {
 
-        List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(memberDTO.getMemberId(), companyId);
+        List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(memberDTO.getMemberId());
 
         stockHoldResponseDtos = stockHoldService.setPercentage(stockHoldResponseDtos);
 
