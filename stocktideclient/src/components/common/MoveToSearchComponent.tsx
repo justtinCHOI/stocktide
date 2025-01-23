@@ -7,7 +7,7 @@ interface SearchCompanyComponentProps {
   area: string;
 }
 
-const SearchCompanyComponent: FC<SearchCompanyComponentProps> = ({area}) => {
+const MoveToSearchComponent: FC<SearchCompanyComponentProps> = ({area}) => {
     const navigate = useNavigate();
 
     const handleInputFocus = () => {
@@ -21,7 +21,7 @@ const SearchCompanyComponent: FC<SearchCompanyComponentProps> = ({area}) => {
     );
 };
 
-export default SearchCompanyComponent;
+export default MoveToSearchComponent;
 
 const SearchInputDiv = styled.div`
     position: fixed;

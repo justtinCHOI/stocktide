@@ -1,7 +1,7 @@
 import MenuComponent from "@components/common/MenuComponent";
 import {Outlet} from "react-router-dom";
 import {ContentBelowMenu, IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
-import SearchCompanyComponent from '@components/common/SearchCompanyComponent';
+import MoveToSearchComponent from '@components/common/MoveToSearchComponent';
 
 const Item = () => {
 
@@ -10,7 +10,7 @@ const Item = () => {
 
   return (
     <>
-      <SearchCompanyComponent area={'domestic'}/>
+      <MoveToSearchComponent area={'domestic'}/>
       <IncludeInformationDiv $top={5}>
         <MenuComponent menus={Menus} urls={Urls}/>
         <ContentBelowMenu >

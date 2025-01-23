@@ -26,7 +26,7 @@ import {
   SkeletonPriceSub
 } from '@assets/css/SkeletonStockItemStyles';
 
-function SearchListComponent() {
+function SearchComponent() {
   const [showChangePrice, setShowChangePrice] = useState(false);
   const {moveToChart} = useCustomMove();
 
@@ -110,7 +110,7 @@ function SearchListComponent() {
   );
 }
 
-export default SearchListComponent;
+export default SearchComponent;
 
 export const SearchListContainer = styled.div`
   height: calc(100vh - 53px);

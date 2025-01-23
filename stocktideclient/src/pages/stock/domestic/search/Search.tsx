@@ -1,13 +1,13 @@
-import SearchListComponent from '@components/stock/domestic/search/SearchListComponent';
+import SearchComponent from '@components/stock/domestic/search/SearchComponent';
 import { IncludeInformationDiv } from '@assets/css/menu';
-import SearchDomesticCompanyComponent from '@components/stock/domestic/search/SearchDomesticCompanyComponent';
+import SearchInputComponent from '@components/stock/domestic/search/SearchInputComponent';
 
 function Search() {
     return (
       <>
-        <SearchDomesticCompanyComponent area={'domestic'}/>
+        <SearchInputComponent area={'domestic'}/>
         <IncludeInformationDiv $top={5}>
-              <SearchListComponent/>
+              <SearchComponent/>
         </IncludeInformationDiv>
       </>
     );

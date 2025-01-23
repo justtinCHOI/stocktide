@@ -12,7 +12,7 @@ interface SearchCompanyComponentProps {
   area: string;
 }
 
-const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area}) => {
+const SearchInputComponent: FC<SearchCompanyComponentProps> = ({area}) => {
   // console.log('area',area);
   const dispatch = useDispatch();
   const [ searchString, setSearchString ] = useState<string>();
@@ -99,7 +99,7 @@ const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area})
     );
 };
 
-export default SearchDomesticCompanyComponent;
+export default SearchInputComponent;
 
 export type IsFocusedProps = {
   $isFocused: boolean;
