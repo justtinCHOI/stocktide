@@ -1,5 +1,5 @@
 import MenuComponent from "@components/common/MenuComponent";
-import {ContentBelowMenu, IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
+import {ContentBelowMenu, IncludeInformationDiv, OutletDiv} from "@styles/menu";
 import {Outlet} from "react-router-dom";
 import {useParams} from "react-router";
 

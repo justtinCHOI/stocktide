@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from 'react';
 import useGetStockBalance from '@hooks/companyInfo/useStockBalance';
-import { SkeletonBox } from '@assets/css/SkeletonStyles';
+import { SkeletonBox } from '@styles/SkeletonStyles';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
 import {
@@ -13,7 +13,7 @@ import {
   AnalysisContainer, AnalysisItem, AnalysisGrid, AnalysisTitle,
   RecommendationItem, RecommendationList, ChartContainer,
   StatusBadge, LoadingContainer, NoDataMessage
-} from '@assets/css/CustomStockTideStyles';
+} from '@styles/CustomStockTideStyles';
 import { analyzeBalanceData, formatBalanceChartData, formatBalanceData } from '@utils/balanceAnalyzer';
 
 interface StockBalanceComponentProps {

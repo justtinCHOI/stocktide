@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import rootSaga from '@/store/sagas/rootSaga';
+import rootSaga from '@store/sagas/rootSaga';
 import { memberReducer } from '@slices/memberSlice';
 import { companyIdReducer } from '@slices/companyIdSlice';
 import { compareIdReducer } from '@slices/compareIdSlice';

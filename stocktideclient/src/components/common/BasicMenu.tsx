@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FC } from 'react';
-import { StyledLink } from '@assets/css/common';
+import { StyledLink } from '@styles/common';
 const BasicMenu: FC = () => {
     return (
         <Footer>

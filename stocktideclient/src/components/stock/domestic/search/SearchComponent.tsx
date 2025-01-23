@@ -1,19 +1,20 @@
 import StockItem from '@components/stock/domestic/search/StockItem';
-import { ContentBottom } from '@assets/css/content';
+import { ContentBottom } from '@styles/content';
 import useCompanyData from '@hooks/useCompanyData';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { useState } from 'react';
 import useCustomMove from '@hooks/useCustomMove';
-import { SkeletonBox } from '@assets/css/SkeletonStyles';
-import { InfoRow } from '@assets/css/CustomStockTideStyles';
+import { SkeletonBox } from '@styles/SkeletonStyles';
+import { InfoRow } from '@styles/CustomStockTideStyles';
 import styled from 'styled-components';
+import { ListContainer, StockList} from "@styles/ListStyles";
 import { AlertTriangle } from 'lucide-react';
 import {
   ErrorContainer,
   ErrorMessage,
   RefreshButton
-} from '@assets/css/CustomStockTideStyles';
+} from '@styles/CustomStockTideStyles';
 
 import {
   SkeletonItem,
@@ -24,7 +25,7 @@ import {
   SkeletonPrice,
   SkeletonPriceMain,
   SkeletonPriceSub
-} from '@assets/css/SkeletonStockItemStyles';
+} from '@styles/SkeletonStockItemStyles';
 
 function SearchComponent() {
   const [showChangePrice, setShowChangePrice] = useState(false);
@@ -38,7 +39,7 @@ function SearchComponent() {
 
   if (isLoading) {
     return (
-      <SearchListContainer>
+      <ListContainer>
         <StockList>
           {[...Array(8)].map((_, index) => (
             <SkeletonItem key={index}>
@@ -55,13 +56,13 @@ function SearchComponent() {
           ))}
         </StockList>
         <ContentBottom/>
-      </SearchListContainer>
+      </ListContainer>
     );
   }
 
   if (isError) {
     return (
-      <SearchListContainer>
+      <ListContainer>
         <StockList>
           <ErrorContainer>
             <AlertTriangle size={24} />
@@ -72,13 +73,13 @@ function SearchComponent() {
           </ErrorContainer>
         </StockList>
         <ContentBottom/>
-      </SearchListContainer>
+      </ListContainer>
     );
   }
 
   return (
 
-    <SearchListContainer>
+    <ListContainer>
       {searchTerm && (
         <SearchResultHeader>
           검색결과: {suggestions.length}개
@@ -106,18 +107,11 @@ function SearchComponent() {
         ))}
       </StockList>
       <ContentBottom/>
-    </SearchListContainer>
+    </ListContainer>
   );
 }
 
 export default SearchComponent;
-
-export const SearchListContainer = styled.div`
-  height: calc(100vh - 53px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
 
 const SearchResultHeader = styled.div`
   margin: 10px 14px;
@@ -127,15 +121,3 @@ const SearchResultHeader = styled.div`
   background: #f5f5f5;
   border-bottom: 1px solid #eee;
 `;
-
-export const StockList = styled.div`
-  height: 100%;
-  width: 100%;
-  overflow-y: auto; /* 세로 스크롤을 활성화합니다 */
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-

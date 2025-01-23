@@ -2,7 +2,7 @@ import {getKakaoLoginLink} from "@api/kakaoApi";
 import kakaoLogo from "@assets/images/KakaoLogo.svg";
 import styled from "styled-components";
 import { FC } from 'react';
-import { StyledLink } from '@assets/css/common';
+import { StyledLink } from '@styles/common';
 
 interface KakaoLoginComponentProps{
   buttonText: string;

@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import {useDispatch} from "react-redux";
 import useCustomMember from "@hooks/useCustomMember";
 import {getAccessToken, getMemberWithAccessToken} from "@api/kakaoApi";
-import {IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
+import {IncludeInformationDiv, OutletDiv} from "@styles/menu";
 import { loginSuccess } from '@slices/memberSlice';
 import { toast } from 'react-toastify';
 

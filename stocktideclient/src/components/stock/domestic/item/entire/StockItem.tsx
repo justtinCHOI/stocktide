@@ -86,20 +86,6 @@ const Logo = styled.img`
     position: absolute;
 `;
 
-// const FavoriteStar = styled.div`
-//   position: absolute;
-//   width: 28px;
-//   height: 28px;
-//   background: url(${star_icon}) no-repeat center;
-//   background-size: contain;
-//   cursor: pointer;
-// `;
-
-// const FavoriteStarFilled = styled(FavoriteStar)`
-//   background: url(${star_filled_icon}) no-repeat center;
-//   background-size: contain;
-// `;
-
 const StockInfo = styled.div`
   height: 100%;
   display: flex;

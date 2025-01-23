@@ -10,7 +10,7 @@ import {
     Label,
     ReadOnlyInput,
     ButtonRow, ContentBottom
-} from "@assets/css/content"
+} from "@styles/content"
 import { CompanyUpdateDto } from '@typings/dto';
 import { CompanyInfoState } from '@typings/company';
 

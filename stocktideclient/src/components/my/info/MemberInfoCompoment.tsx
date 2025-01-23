@@ -11,7 +11,7 @@ import {
     Input,
     InputWrapper,
     Label
-} from "@assets/css/content";
+} from "@styles/content";
 import { MemberState } from '@typings/member';
 
 import useCustomMember from '@hooks/useCustomMember';

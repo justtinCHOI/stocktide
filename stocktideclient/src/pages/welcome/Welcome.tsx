@@ -1,9 +1,9 @@
-import {IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
+import {IncludeInformationDiv, OutletDiv} from "@styles/menu";
 import Main from "@components/welcome/main/Main";
 import styled from "styled-components";
 import {FaSearch} from "react-icons/fa";
 import useCustomMember from "@hooks/useCustomMember";
-import { StyledLink } from '@assets/css/common';
+import { StyledLink } from '@styles/common';
 import { toast } from 'react-toastify';
 import { putTest1 } from '@api/testApi';
 

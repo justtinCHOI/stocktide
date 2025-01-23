@@ -1,4 +1,4 @@
-import {IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
+import {IncludeInformationDiv, OutletDiv} from "@styles/menu";
 import LoginComponent from '@components/member/login/LoginComponent';
 
 const Login = () => {

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FC, useState } from 'react';
-import { StyledLink } from '@assets/css/common';
+import { StyledLink } from '@styles/common';
 
 interface MenuComponentProps {
     menus: string[];

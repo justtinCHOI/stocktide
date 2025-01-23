@@ -14,9 +14,12 @@
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
       "@layouts/*": ["src/layouts/*"],
+      "@locales/*": ["src/locales/*"],
       "@pages/*": ["src/pages/*"],
       "@router/*": ["src/router/*"],
       "@slices/*": ["src/slices/*"],
+      "@store/*": ["src/store/*"],
+      "@styles/*": ["src/styles/*"],
       "@typings/*": ["src/typings/*"],
       "@utils/*": ["src/utils/*"]
     },

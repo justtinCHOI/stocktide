@@ -1,6 +1,6 @@
-import { StockList, WatchListContainer } from '@assets/css/item';
+import { ListContainer, StockList } from '@styles/ListStyles';
 import StockItem from '@components/stock/domestic/item/hold/StockItem';
-import { ContentBottom } from '@assets/css/content';
+import { ContentBottom } from '@styles/content';
 import { useState } from 'react';
 import useCustomMove from '@hooks/useCustomMove';
 import useCompanyData from '@hooks/useCompanyData';
@@ -22,7 +22,7 @@ const HoldComponent = () => {
     } = useCompanyData(1, 79);
 
     return (
-      <WatchListContainer>
+      <ListContainer>
           <StockList>
               {isLoading || isCompanyDataLoading ? (
                 <div></div>
@@ -51,7 +51,7 @@ const HoldComponent = () => {
               )}
           </StockList>
           <ContentBottom/>
-      </WatchListContainer>
+      </ListContainer>
     );
 };
 

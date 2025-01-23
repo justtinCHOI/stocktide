@@ -41,9 +41,12 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@layouts': path.resolve(__dirname, './src/layouts'),
+      '@locales': path.resolve(__dirname, './src/locales'),
       '@pages': path.resolve(__dirname, './src/pages'),
       '@router': path.resolve(__dirname, './src/router'),
       '@slices': path.resolve(__dirname, './src/slices'),
+      '@store': path.resolve(__dirname, './src/store'),
+      '@styles': path.resolve(__dirname, './src/styles'),
       '@typings': path.resolve(__dirname, './src/typings'),
       '@utils': path.resolve(__dirname, './src/utils'),
     }

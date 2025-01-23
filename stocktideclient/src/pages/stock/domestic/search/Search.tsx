@@ -1,5 +1,5 @@
 import SearchComponent from '@components/stock/domestic/search/SearchComponent';
-import { IncludeInformationDiv } from '@assets/css/menu';
+import { IncludeInformationDiv } from '@styles/menu';
 import SearchInputComponent from '@components/stock/domestic/search/SearchInputComponent';
 
 function Search() {

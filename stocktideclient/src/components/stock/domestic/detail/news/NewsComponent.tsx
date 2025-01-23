@@ -2,7 +2,7 @@ import { FC, useState, useMemo } from 'react';
 import useGetStockNews from '@hooks/useGetStockNews';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
-import { SkeletonBox } from '@assets/css/SkeletonStyles';
+import { SkeletonBox } from '@styles/SkeletonStyles';
 
 interface NewsComponentProps {
   companyId: number;

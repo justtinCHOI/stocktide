@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
 import useStockBasic from '@hooks/companyInfo/useStockBasic'
-import { SkeletonBox } from '@assets/css/SkeletonStyles';
+import { SkeletonBox } from '@styles/SkeletonStyles';
 import { RefreshCw } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
-import {Section, TitleRow, Title, InfoContainer, InfoRow, Label, Value, ErrorContainer, ErrorMessage, RefreshButton } from '@assets/css/CustomStockTideStyles';
+import {Section, TitleRow, Title, InfoContainer, InfoRow, Label, Value, ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
 
 interface StockBasicComponentProps {
   companyId: number;

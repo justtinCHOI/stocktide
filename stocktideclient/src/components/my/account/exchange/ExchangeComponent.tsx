@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import useCustomCash from "@hooks/useCustomCash";
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import { ContentBottom } from "@assets/css/content";
+import { ContentBottom } from "@styles/content";
 import { RootState } from '@/store';
 import { AccountState, ExchangeProps } from '@typings/account';
 import { CashSliceState } from '@slices/cashSlice';

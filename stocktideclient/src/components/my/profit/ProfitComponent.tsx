@@ -2,6 +2,8 @@ import { FC } from 'react';
 import useGetHoldingStock from '@hooks/useGetHoldingStock';
 import useCompanyData from '@hooks/useCompanyData';
 import styled from "styled-components";
+import {ListContainer, StockList} from "@styles/ListStyles";
+
 import StockItem, { ProfitStockItemProps } from '@components/my/profit/StockItem';
 
 const evaluationProfitText = "평가 수익금";
@@ -9,75 +11,67 @@ const profitUnit = "원";
 
 const ProfitComponent: FC =() => {
 
-    const {
-      holdingStockData: stockHolds,
-      holdingStockLoading: isLoading,
-      holdingStockError: isError,
-    } = useGetHoldingStock();
+  const {
+    holdingStockData: stockHolds,
+    holdingStockLoading: isLoading,
+    holdingStockError: isError,
+  } = useGetHoldingStock();
 
-    const {data: companyData, isLoading: isCompanyDataLoading, isError: isCompanyDataError,
-    } = useCompanyData(1, 79);
+  const {data: companyData, isLoading: isCompanyDataLoading, isError: isCompanyDataError,
+  } = useCompanyData(1, 79);
 
   // 모든 stockReturn의 합을 계산합니다.
-    let totalEvaluationProfit = 0;
+  let totalEvaluationProfit = 0;
 
-    if (Array.isArray(stockHolds) && stockHolds.length > 0) {
-        totalEvaluationProfit = stockHolds.reduce(
-          (sum: number, stockHold: ProfitStockItemProps["stockData"]) =>
-            sum + stockHold.stockReturn,
-          0
-        );
-    }
-
-    return (
-      <WatchListContainer>
-          <Header2Container>
-              <EvaluationProfit profit={totalEvaluationProfit}>
-                  <div className="profitText">{evaluationProfitText}</div>
-                  <div className="profit">
-                      {totalEvaluationProfit.toLocaleString()} {profitUnit}
-                  </div>
-              </EvaluationProfit>
-          </Header2Container>
-          <StockList>
-              {isLoading || isCompanyDataLoading ? (
-                <div></div>
-              ) : isError || isCompanyDataError ? (
-                <div>Error fetching data</div>
-              ) : (
-                Array.isArray(stockHolds) &&
-                stockHolds.length > 0 && // 여기에 조건을 추가합니다
-                stockHolds.map((stockHold: ProfitStockItemProps["stockData"]) => {
-                    const matchedCompany = companyData
-                      ? companyData.find(
-                        (company) => company.companyId === stockHold.companyId
-                      )
-                      : undefined;
-
-                    return matchedCompany ? (
-                      <StockItem
-                        key={stockHold.companyId}
-                        stockData={stockHold}
-                        companyData={matchedCompany}
-                      />
-                    ) : null;
-                })
-              )}
-          </StockList>
-      </WatchListContainer>
+  if (Array.isArray(stockHolds) && stockHolds.length > 0) {
+    totalEvaluationProfit = stockHolds.reduce(
+      (sum: number, stockHold: ProfitStockItemProps["stockData"]) =>
+        sum + stockHold.stockReturn,
+      0
     );
+  }
+
+  return (
+    <ListContainer>
+      <Header2Container>
+        <EvaluationProfit profit={totalEvaluationProfit}>
+          <div className="profitText">{evaluationProfitText}</div>
+          <div className="profit">
+            {totalEvaluationProfit.toLocaleString()} {profitUnit}
+          </div>
+        </EvaluationProfit>
+      </Header2Container>
+      <StockList>
+        {isLoading || isCompanyDataLoading ? (
+          <div></div>
+        ) : isError || isCompanyDataError ? (
+          <div>Error fetching data</div>
+        ) : (
+          Array.isArray(stockHolds) &&
+          stockHolds.length > 0 && // 여기에 조건을 추가합니다
+          stockHolds.map((stockHold: ProfitStockItemProps["stockData"]) => {
+            const matchedCompany = companyData
+              ? companyData.find(
+                (company) => company.companyId === stockHold.companyId
+              )
+              : undefined;
+
+            return matchedCompany ? (
+              <StockItem
+                key={stockHold.companyId}
+                stockData={stockHold}
+                companyData={matchedCompany}
+              />
+            ) : null;
+          })
+        )}
+      </StockList>
+    </ListContainer>
+  );
 }
 
 export default ProfitComponent;
 
-
-const WatchListContainer = styled.div`
-  width: 100%;
-  height: calc(100vh - 53px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
 
 const Header2Container = styled.div`
   width: 100%;
@@ -117,12 +111,3 @@ const EvaluationProfit = styled.div<{ profit: number }>`
   }
 `;
 
-const StockList = styled.div`
-  height: 100%;
-  width: 100%;
-  overflow-y: auto; /* 세로 스크롤을 활성화합니다 */
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;

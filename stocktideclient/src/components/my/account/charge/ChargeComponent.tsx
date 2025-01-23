@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import useCustomCash from "@hooks/useCustomCash"
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import { ContentBottom } from "@assets/css/content";
+import { ContentBottom } from "@styles/content";
 import {requestPay} from "@api/paymentApi";
 import { AccountState, ChargeProps } from '@typings/account';
 import { RootState } from '@/store';
@@ -73,35 +73,35 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
     };
 
     return (
-        <AppContainer>
-            <AccountBox>
-                <AccountRow>
-                    <AccountLabel>계좌번호:</AccountLabel>
-                    <AccountValue>{account.accountNumber}</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>원화량:</AccountLabel>
-                    <AccountValue>{account.money}원</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>외화량:</AccountLabel>
-                    <AccountValue>{account.dollar}달러</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>충전 금액:</AccountLabel>
-                    <ChargeInput type="number" value={(chargeAmount || '')} onChange={handleChargeAmountChange}/>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>충전 후 금액:</AccountLabel>
-                    <AccountValue style={{color: isCharged ? 'black' : 'gray'}}>{chargedMoney}원</AccountValue>
-                </AccountRow>
-                <ButtonContainer>
-                    <Button onClick={handleManage}>계좌 관리</Button>
-                    <Button onClick={handleCharge}>충전</Button>
-                </ButtonContainer>
-            </AccountBox>
-            <ContentBottom/>
-        </AppContainer>
+      <AppContainer>
+          <AccountBox>
+              <AccountRow>
+                  <AccountLabel>계좌번호:</AccountLabel>
+                  <AccountValue>{account.accountNumber}</AccountValue>
+              </AccountRow>
+              <AccountRow>
+                  <AccountLabel>원화량:</AccountLabel>
+                  <AccountValue>{account.money}원</AccountValue>
+              </AccountRow>
+              <AccountRow>
+                  <AccountLabel>외화량:</AccountLabel>
+                  <AccountValue>{account.dollar}달러</AccountValue>
+              </AccountRow>
+              <AccountRow>
+                  <AccountLabel>충전 금액:</AccountLabel>
+                  <ChargeInput type="number" value={(chargeAmount || '')} onChange={handleChargeAmountChange}/>
+              </AccountRow>
+              <AccountRow>
+                  <AccountLabel>충전 후 금액:</AccountLabel>
+                  <AccountValue style={{color: isCharged ? 'black' : 'gray'}}>{chargedMoney}원</AccountValue>
+              </AccountRow>
+              <ButtonContainer>
+                  <Button onClick={handleManage}>계좌 관리</Button>
+                  <Button onClick={handleCharge}>충전</Button>
+              </ButtonContainer>
+          </AccountBox>
+          <ContentBottom/>
+      </AppContainer>
     );
 };
 

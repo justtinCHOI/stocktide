@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ResultModal from "@components/common/ResultModal";
 import { postAdd } from "@api/companyApi";
 import useCustomMove from "@hooks/useCustomMove";
-import {Button, ButtonRow, Container, FormRow, Input, Label} from "@assets/css/content";
+import {Button, ButtonRow, Container, FormRow, Input, Label} from "@styles/content";
 import { CompanyAddState } from '@typings/company';
 
 const initState = {

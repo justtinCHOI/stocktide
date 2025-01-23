@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ContentBottom } from "@assets/css/content";
+import { ContentBottom } from "@styles/content";
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FaTimes } from "react-icons/fa";
 import useCustomCash from "@hooks/useCustomCash";

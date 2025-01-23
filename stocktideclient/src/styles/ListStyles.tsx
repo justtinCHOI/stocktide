@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const WatchListContainer = styled.div`
+export const ListContainer = styled.div`
   height: calc(100vh - 53px);
   display: flex;
   flex-direction: column;
