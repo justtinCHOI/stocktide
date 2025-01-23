@@ -13,8 +13,11 @@ import {
 } from '@styles/SkeletonStockItemStyles';
 import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
 import { AlertTriangle } from 'lucide-react';
+import { useMediaQuery } from '@hooks/useMediaQuery';
 
 const TestComponent: FC = () => {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   const { moveToChart } = useCustomMove();
   const { data: companies, isLoading, isError, refetch } = useTestCompanyListData();
 
@@ -23,7 +26,7 @@ const TestComponent: FC = () => {
       <ListContainer>
         <StockList>
           {[...Array(8)].map((_, index) => (
-            <SkeletonItem key={index}>
+            <SkeletonItem key={index} $isMobile={isMobile}>
               <SkeletonLogo />
               <SkeletonContent>
                 <SkeletonTitle />

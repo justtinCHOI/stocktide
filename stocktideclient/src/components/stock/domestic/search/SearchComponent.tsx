@@ -26,8 +26,11 @@ import {
   SkeletonPriceMain,
   SkeletonPriceSub
 } from '@styles/SkeletonStockItemStyles';
+import { useMediaQuery } from '@hooks/useMediaQuery';
 
 function SearchComponent() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   const [showChangePrice, setShowChangePrice] = useState(false);
   const {moveToChart} = useCustomMove();
 
@@ -42,7 +45,7 @@ function SearchComponent() {
       <ListContainer>
         <StockList>
           {[...Array(8)].map((_, index) => (
-            <SkeletonItem key={index}>
+            <SkeletonItem key={index} $isMobile={isMobile}>
               <SkeletonLogo />
               <SkeletonContent>
                 <SkeletonTitle />

@@ -109,7 +109,6 @@ const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
                   <DetailTitle>{totalStocksHeld}주</DetailTitle>
               </DetailSection03>
           </StockDetails>
-          {/* <ThickDivider /> */}
       </EntireContainer>
     );
 };
@@ -118,7 +117,7 @@ export default StockItem;
 
 
 
-const EntireContainer = styled.div`
+export const EntireContainer = styled.div`
   &:hover {
     background-color: #d9e6ff;
     transition: background-color 0.5s ease;

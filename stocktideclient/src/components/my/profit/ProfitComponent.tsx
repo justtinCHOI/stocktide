@@ -4,23 +4,36 @@ import useCompanyData from '@hooks/useCompanyData';
 import styled from "styled-components";
 import {ListContainer, StockList} from "@styles/ListStyles";
 
-import StockItem, { ProfitStockItemProps } from '@components/my/profit/StockItem';
+import StockItem, { EntireContainer, ProfitStockItemProps } from '@components/my/profit/StockItem';
 import {
   SkeletonContent,
+  SkeletonDetails,
+  SkeletonDetailData,
+  SkeletonDetailSection01,
+  SkeletonDetailSection02,
+  SkeletonDetailSection03,
+  SkeletonHeader,
+  SkeletonHeaderContent,
+  SkeletonHeaderText,
+  SkeletonHeaderValue,
   SkeletonItem,
-  SkeletonLogo, SkeletonPrice, SkeletonPriceMain, SkeletonPriceSub,
+  SkeletonLogo,
+  SkeletonPrice,
+  SkeletonPriceMain,
+  SkeletonPriceSub,
   SkeletonSubtitle,
   SkeletonTitle,
 } from '@styles/SkeletonStockItemStyles';
 import { ContentBottom } from '@styles/content';
 import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
 import { AlertTriangle } from 'lucide-react';
+import { useMediaQuery } from '@hooks/useMediaQuery';
 
 const evaluationProfitText = "평가 수익금";
 const profitUnit = "원";
 
 const ProfitComponent: FC =() => {
-
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const {
     holdingStockData: stockHolds,
     holdingStockLoading: isLoading,
@@ -44,19 +57,41 @@ const ProfitComponent: FC =() => {
   if (isLoading || isCompanyDataLoading) {
     return (
       <ListContainer>
+        <SkeletonHeader>
+          <SkeletonHeaderContent>
+            <SkeletonHeaderText />
+            <SkeletonHeaderValue />
+          </SkeletonHeaderContent>
+        </SkeletonHeader>
         <StockList>
-          {[...Array(8)].map((_, index) => (
-            <SkeletonItem key={index}>
-              <SkeletonLogo />
-              <SkeletonContent>
-                <SkeletonTitle />
-                <SkeletonSubtitle />
-              </SkeletonContent>
-              <SkeletonPrice>
-                <SkeletonPriceMain />
-                <SkeletonPriceSub />
-              </SkeletonPrice>
-            </SkeletonItem>
+          {[...Array(2)].map((_, index) => (
+            <EntireContainer>
+              <SkeletonItem key={index} $isMobile={isMobile}>
+                <SkeletonLogo />
+                <SkeletonContent>
+                  <SkeletonTitle />
+                  <SkeletonSubtitle />
+                </SkeletonContent>
+                <SkeletonPrice>
+                  <SkeletonPriceMain />
+                  <SkeletonPriceSub />
+                </SkeletonPrice>
+              </SkeletonItem>
+              <SkeletonDetails>
+                <SkeletonDetailSection01>
+                  <SkeletonDetailData />
+                  <SkeletonDetailData />
+                </SkeletonDetailSection01>
+                <SkeletonDetailSection02>
+                  <SkeletonDetailData />
+                  <SkeletonDetailData />
+                </SkeletonDetailSection02>
+                <SkeletonDetailSection03>
+                  <SkeletonDetailData />
+                  <SkeletonDetailData />
+                </SkeletonDetailSection03>
+              </SkeletonDetails>
+            </EntireContainer>
           ))}
         </StockList>
         <ContentBottom/>
@@ -127,12 +162,6 @@ const Header2Container = styled.div`
   align-items: center;
 `;
 
-// const Divider = styled.div`
-//   width: 100%;
-//   display: flex;
-//   flex-direction: row;
-//   border-bottom: 1px solid #2f4f4f;
-// `;
 const EvaluationProfit = styled.div<{ profit: number }>`
   width: 100%;
   height: 100%;
