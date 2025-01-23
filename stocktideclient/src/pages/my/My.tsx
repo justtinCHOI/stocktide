@@ -5,8 +5,8 @@ import StockInfoComponent from "@components/common/StockInfoComponent";
 
 const My = () => {
 
-    const Menus = ['손익', '회원정보',  '설정' , '계좌', '회사추가', ];
-    const Urls = ['profit', 'info',  'setting', 'account', 'company/add'];
+    const Menus = ['손익', '계좌', '회원정보',  '설정'  ];
+    const Urls = ['profit', 'account', 'info',  'setting'];
     return (
         <>
             <StockInfoComponent/>
