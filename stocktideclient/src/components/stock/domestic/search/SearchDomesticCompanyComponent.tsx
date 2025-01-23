@@ -16,9 +16,11 @@ const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area})
   // console.log('area',area);
   const dispatch = useDispatch();
   const [ searchString, setSearchString ] = useState<string>();
-  const { searchTerm, suggestions } = useSelector((state: RootState) => state.searchSlice);
+  // const { searchTerm, suggestions } = useSelector((state: RootState) => state.searchSlice);
+  const { searchTerm } = useSelector((state: RootState) => state.searchSlice);
   const [isFocused, setIsFocused] = useState(false);
-  const {data: companies, isLoading, isError} = useCompanyData(1, 79);
+  // const {data: companies, isLoading, isError} = useCompanyData(1, 79);
+  const {data: companies} = useCompanyData(1, 79);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -31,7 +33,7 @@ const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area})
 
   useEffect(() => {
     setSearchString(searchTerm)
-  }, [searchTerm])
+  }, [searchTerm, area])
 
   // 필터링 함수를 컴포넌트 외부로 이동
   const filterCompanies = (companies: extractedCompanyData[], term: string) => {

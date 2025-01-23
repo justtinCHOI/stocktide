@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from 'react';
 import useGetStockBalance from '@hooks/companyInfo/useStockBalance';
-import { SkeletonBox } from '@components/common/Skeleton';
+import { SkeletonBox } from '@assets/css/SkeletonStyles';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
 import {

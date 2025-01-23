@@ -7,6 +7,7 @@ export interface CompanyDataResponse {
   data3?: CompanyResponseDto[];
   isLoading: boolean;
   isError: boolean | null;
+  refetch: () => void;
 }
 
 export interface extractedCompanyData{

@@ -173,8 +173,6 @@ export const RecommendationItem = styled.div`
   line-height: 1.4;
 `;
 
-
-
 export const NoDataMessage = styled.div`
   text-align: center;
   padding: 20px;

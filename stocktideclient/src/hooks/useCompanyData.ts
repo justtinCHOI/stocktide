@@ -19,7 +19,7 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
     const companyIds = Array.from({length: endCompanyId - startCompanyId + 1}, (_, index) => startCompanyId + index);
 
     // companyIds 배열을 순회하며 fetchData 함수를 호출, 모든 호출이 완료될 때까지 기다림
-    const {data, isLoading, isError} = useQuery({
+    const {data, isLoading, isError, refetch} = useQuery({
         queryKey: ['companyData', startCompanyId, endCompanyId],
         queryFn: async () => {
             const promises = companyIds.map((companyId) => fetchData(companyId));
@@ -61,6 +61,7 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
         data3: extractedData3,
         isLoading,
         isError,
+        refetch
     };
 }
 

@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import useStockBasic from '@hooks/companyInfo/useStockBasic'
-import { SkeletonBox } from '@components/common/Skeleton';
+import { SkeletonBox } from '@assets/css/SkeletonStyles';
 import { RefreshCw } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
 import {Section, TitleRow, Title, InfoContainer, InfoRow, Label, Value, ErrorContainer, ErrorMessage, RefreshButton } from '@assets/css/CustomStockTideStyles';
