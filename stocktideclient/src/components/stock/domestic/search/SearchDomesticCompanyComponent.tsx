@@ -1,41 +1,64 @@
 import styled from "styled-components";
 import { FaSearch, FaTimes } from 'react-icons/fa';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import {setSearchTerm, setSuggestions, setSearchActive} from '@slices/searchSlice'
 import useCompanyData from '@hooks/useCompanyData';
 import { debounce } from 'lodash';
+import { extractedCompanyData } from '@typings/hooks';
 
 interface SearchCompanyComponentProps {
   area: string;
 }
 
 const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area}) => {
-  console.log('area',area);
+  // console.log('area',area);
   const dispatch = useDispatch();
-  const { searchTerm, recentSearches } = useSelector((state: RootState) => state.searchSlice);
+  const [ searchString, setSearchString ] = useState<string>();
+  const { searchTerm, suggestions } = useSelector((state: RootState) => state.searchSlice);
   const [isFocused, setIsFocused] = useState(false);
   const {data: companies, isLoading, isError} = useCompanyData(1, 79);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+
+  useEffect(() => {
+    dispatch(setSearchActive(false));
+    dispatch(setSearchTerm(''));
+    // 컴포넌트 마운트 후 자동 포커스
+    searchInputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    setSearchString(searchTerm)
+  }, [searchTerm])
+
+  // 필터링 함수를 컴포넌트 외부로 이동
+  const filterCompanies = (companies: extractedCompanyData[], term: string) => {
+    return companies?.filter((company: extractedCompanyData) =>
+      company.korName.toLowerCase().includes(term.toLowerCase()) ||
+      company.code.includes(term)
+    ) || [];
+  };
 
   const debouncedSearch = useCallback(
     debounce((term: string) => {
       dispatch(setSearchTerm(term));
+      // API 호출 또는 로컬 필터링, 여기서는 예시로 로컬 메모이제이션된 필터링만 구현
       if (term.length >= 1 && Array.isArray(companies) &&  companies.length > 0) {
-        // API 호출 또는 로컬 필터링
-        // 여기서는 예시로 로컬 필터링만 구현
-        const filtered = companies.filter(company =>
-          company.korName.toLowerCase().includes(term.toLowerCase()) ||
-          company.code.includes(term)
-        );
+        const filtered = filterCompanies(companies, term);
         dispatch(setSuggestions(filtered));
+      } else {
+        dispatch(setSuggestions([]));
       }
-    }, 300),
+    }, 150),
     []
   );
 
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    setSearchString(value);
     debouncedSearch(value);
   };
 
@@ -51,12 +74,12 @@ const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area})
     return (
       <>
         <SearchInputDiv $isFocused={isFocused}>
-
           <SearchInput
+            ref={searchInputRef}
             placeholder="회사명 또는 종목코드 검색"
             onChange={handleSearchChange}
             onFocus={handleInputFocus}
-            value={searchTerm}
+            value={searchString}
           />
           {searchTerm ? (
             <ClearIcon onClick={clearSearch}/>
@@ -64,16 +87,12 @@ const SearchDomesticCompanyComponent: FC<SearchCompanyComponentProps> = ({area})
             <SearchIcon />
           }
         </SearchInputDiv>
-        {isFocused && (
-          <RecentSearches>
-            <RecentTitle>최근 검색어</RecentTitle>
-            {recentSearches.map((term, index) => (
-              <RecentItem key={index} onClick={() => debouncedSearch(term)}>
-                {term}
-              </RecentItem>
-            ))}
-          </RecentSearches>
-        )}
+        {/*{suggestions[0] && searchTerm && (*/}
+        {/*  <p>*/}
+        {/*    {searchTerm}*/}
+        {/*    {suggestions[0].korName.slice(searchTerm.length)}*/}
+        {/*  </p>*/}
+        {/*)}*/}
       </>
     );
 };
@@ -120,37 +139,4 @@ const ClearIcon = styled(FaTimes)`
     &:hover {
         color: #333;
     }
-`;
-
-const RecentSearches = styled.div`
- position: absolute;
- top: 100%;
- left: 0;
- right: 0;
- background: white;
- border-radius: 0 0 8px 8px;
- box-shadow: 0 4px 6px rgba(0,0,0,0.1);
- padding: 8px 0;
- z-index: 10;
-`;
-
-const RecentTitle = styled.div`
- padding: 8px 16px;
- color: #666;
- font-size: 0.9rem;
- font-weight: 500;
- border-bottom: 1px solid #eee;
-`;
-
-const RecentItem = styled.div`
- padding: 8px 16px;
- cursor: pointer;
- display: flex;
- align-items: center;
- gap: 8px;
- color: #333;
-
- &:hover {
-   background-color: #f5f5f5;
- }
 `;

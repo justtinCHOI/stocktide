@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { useState } from 'react';
 import useCustomMove from '@hooks/useCustomMove';
+import { SkeletonBox } from '@components/common/Skeleton';
+import { InfoRow } from '@assets/css/CustomStockTideStyles';
 
 function SearchListComponent() {
   const [showChangePrice, setShowChangePrice] = useState(false);
@@ -18,6 +20,7 @@ function SearchListComponent() {
   const displayedCompanies = searchTerm ? suggestions : companiesList || [];
 
     return (
+
       <SearchListContainer>
         {searchTerm && (
           <SearchResultHeader>
@@ -25,7 +28,17 @@ function SearchListComponent() {
           </SearchResultHeader>
         )}
         <StockList>
-          {displayedCompanies.map((company) => (
+
+          {
+            isLoading ? (
+                [...Array(5)].map((_, index) => (
+                  <InfoRow key={index}>
+                    <SkeletonBox $height="24px" $width="30%" />
+                    <SkeletonBox $height="24px" $width="60%" />
+                  </InfoRow>
+                ))
+            ) :
+            displayedCompanies.map((company) => (
             <StockItem
               key={company.companyId}
               company={company}
@@ -51,11 +64,12 @@ export const SearchListContainer = styled.div`
 
 
 const SearchResultHeader = styled.div`
- padding: 12px 16px;
- font-size: 0.9rem;
- color: #666;
- background: #f5f5f5;
- border-bottom: 1px solid #eee;
+  margin: 10px 14px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  color: #666;
+  background: #f5f5f5;
+  border-bottom: 1px solid #eee;
 `;
 
 export const StockList = styled.div`
@@ -67,5 +81,3 @@ export const StockList = styled.div`
     display: none;
   }
 `;
-
-
