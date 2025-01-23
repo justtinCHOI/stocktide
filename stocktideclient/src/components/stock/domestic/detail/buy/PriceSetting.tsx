@@ -5,7 +5,7 @@ import {
     minusStockOrderPrice,
     plusStockOrderPrice,
     setStockOrderPrice
-} from "@slices/stockOrderPriceSlice.ts";
+} from "@slices/stockOrderPriceSlice";
 import { StockAsBiResponseDto } from '@typings/dto';
 import { RootState } from '@/store';
 

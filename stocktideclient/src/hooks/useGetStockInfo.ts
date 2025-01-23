@@ -42,7 +42,7 @@ const useGetStockInfo = (companyId: number) => {
         refetchInterval: autoRefetch ? 60000 * 10 : false
     });
 
-    return { stockInfo: data, stockInfoLoading: isLoading, stockInfoError: error };
+    return { stockInfo: data, stockInfoLoading: isLoading, stockInfoError: error, refetch };
 };
 
 const getStockInfo = async (companyId: number) => {

@@ -7,7 +7,7 @@ import useTradeStock from "@hooks/useTradeStock";
 import StockPriceList from "./StockPriceList";
 import StockOrderSetting from "./StockOrderSetting";
 
-import {dummyLogo, logoList} from "@utils/companyLogos.ts";
+import {dummyLogo, logoList} from "@utils/companyLogos";
 import { FC } from 'react';
 import { RootState } from '@/store';
 import { OrderTypeProps } from '@components/stock/domestic/detail/buy/OrderDecisionBtn';

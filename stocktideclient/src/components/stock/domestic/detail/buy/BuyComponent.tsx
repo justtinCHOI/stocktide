@@ -1,10 +1,17 @@
 import { styled } from 'styled-components';
-import useGetStockInfo from '@hooks/useGetStockInfo.ts';
-import {dummyLogo, logoList} from "@utils/companyLogos.ts"
+import useGetStockInfo from '@hooks/useGetStockInfo';
+import {dummyLogo, logoList} from "@utils/companyLogos"
 import StockOrder from "./StockOrder";
-import LoginRequestIndicator from "@components/common/LoginRequestIndicator";
 import { FC } from 'react';
-import useCustomMember from '@hooks/useCustomMember';
+import {
+    SkeletonBuyContainer,
+    SkeletonInfo,
+    SkeletonLogo, SkeletonPrice, SkeletonPriceValue,
+    SkeletonStockHeader, SkeletonSubtitle,
+    SkeletonTitle,
+} from '@styles/SkeletonBuyStyles';
+import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
+import { AlertTriangle } from 'lucide-react';
 
 interface BuyComponentProps {
     companyId: number;
@@ -13,10 +20,13 @@ interface BuyComponentProps {
 const marketType = "코스피";
 
 const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
-    const { loginState } = useCustomMember();
-    const isLogin = !!loginState.email;
 
-    const {stockInfo} = useGetStockInfo(companyId);
+    const {
+        stockInfo,
+        stockInfoLoading: isLoading,
+        stockInfoError: isError,
+        refetch
+    } = useGetStockInfo(companyId);
     if (!stockInfo || !stockInfo.korName || !stockInfo.code || !stockInfo.stockInfResponseDto.prdy_ctrt) {
         return null;
     }
@@ -34,39 +44,70 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
 
     const companyLogo = logos[corpName] || dummyLogo;
 
+    if (isLoading) {
+        return (
+        <SkeletonBuyContainer>
+              <SkeletonStockHeader>
+                  <SkeletonLogo />
+                  <SkeletonInfo>
+                      <SkeletonTitle />
+                      <SkeletonSubtitle />
+                  </SkeletonInfo>
+                  <SkeletonPrice>
+                      <SkeletonPriceValue />
+                      <SkeletonPriceValue />
+                  </SkeletonPrice>
+              </SkeletonStockHeader>
+              {/* Add more skeleton UI components for the order section */}
+          </SkeletonBuyContainer>
+        );
+    }
+
+    if (isError) {
+        return (
+          <Container>
+              <div className="mainContent">
+                  <ErrorContainer>
+                      <AlertTriangle size={24} />
+                      <ErrorMessage>데이터를 불러올 수 없습니다.</ErrorMessage>
+                      <RefreshButton onClick={() => refetch()}>
+                          다시 시도
+                      </RefreshButton>
+                  </ErrorContainer>
+              </div>
+          </Container>
+        );
+    }
+
     return (
         <Container>
-            {isLogin ? (
-                <div className="mainContent">
-                    <StockName $priceChangeRate={priceChangeRate}>
-                        <img className="CorpLogo" src={companyLogo} alt="stock logo"/>
-                        <div className="NameContainer">
-                            <div className="StockCode">
-                                {stockCode} | {marketType}
-                            </div>
-                            <div className="CorpName">{corpName}</div>
+            <div className="mainContent">
+                <StockName $priceChangeRate={priceChangeRate}>
+                    <img className="CorpLogo" src={companyLogo} alt="stock logo"/>
+                    <div className="NameContainer">
+                        <div className="StockCode">
+                            {stockCode} | {marketType}
                         </div>
-                        <div className="StockPrice">{stockPrice}</div>
-                        <div className="PriceChangeAmount">
-                            <div className="changeDirection">{changeDirection}</div>
-                            {priceChangeAmount}
-                        </div>
-                        <div className="TransactionVolume ">
-                            <div className="PriceChangeRate">{priceChangeRate}%</div>
-                            <TransactionVolume>
-                                {transactionVolume}주
-                            </TransactionVolume>
-                        </div>
-                    </StockName>
-                    <BuyingDiv>
-                        <StockOrder corpName={corpName}/>
-                        {/*<OrderResult />*/}
-                        {/*<WaitOrderIndicator />*/}
-                    </BuyingDiv>
-                </div>
-            ) : (
-                <LoginRequestIndicator/>
-            )}
+                        <div className="CorpName">{corpName}</div>
+                    </div>
+                    <div className="StockPrice">{stockPrice}</div>
+                    <div className="PriceChangeAmount">
+                        <div className="changeDirection">{changeDirection}</div>
+                        {priceChangeAmount}
+                    </div>
+                    <div className="TransactionVolume ">
+                        <div className="PriceChangeRate">{priceChangeRate}%</div>
+                        <TransactionVolume>
+                            {transactionVolume}주
+                        </TransactionVolume>
+                    </div>
+                </StockName>
+                <BuyingDiv>
+                    <StockOrder corpName={corpName}/>
+                    {/*<OrderResult />*/}
+                    {/*<WaitOrderIndicator />*/}
+                </BuyingDiv>
+            </div>
         </Container>
     );
 };
@@ -110,8 +151,6 @@ const Container = styled.div`
         }
     }
 `;
-
-// const MoneyRequireContainer = styled(LoginRequestContainer)``;
 
 interface priceChangeRageProps{
     $priceChangeRate: number;

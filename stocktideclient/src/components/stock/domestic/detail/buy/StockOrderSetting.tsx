@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
-import { orderTypeBuying, orderTypeSelling } from "@slices/stockOrderTypeSlice.ts"
+import { orderTypeBuying, orderTypeSelling } from "@slices/stockOrderTypeSlice"
 import styled from "styled-components";
-import useGetStockInfo from "@hooks/useGetStockInfo.ts";
+import useGetStockInfo from "@hooks/useGetStockInfo";
 import {useParams} from "react-router";
 
 import PriceSetting from "./PriceSetting";
@@ -13,19 +13,19 @@ const orderType01 = "매수";
 const orderType02 = "매도";
 
 const StockOrderSetting = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
     const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
     const {companyId} = useParams();
     const companyIdNumber = Number(companyId); // 숫자로 변환
-    const { stockInfo, stockInfoLoading, stockInfoError } = useGetStockInfo(companyIdNumber);
+    const { stockInfo, stockInfoLoading, stockInfoError, refetch } = useGetStockInfo(companyIdNumber);
 
-    if (!stockInfo) {
-        return null;
-    }
+  if (!stockInfo) {
+    return null;
+  }
 
-    if (stockInfoLoading) { return <></>; }
+  if (stockInfoLoading) { return <></>; }
 
-    if (stockInfoError) { return <></>;  }
+  if (stockInfoError) { return <></>;  }
 
     const handleSetBuying = () => {
         dispatch(orderTypeBuying());

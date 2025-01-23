@@ -1,9 +1,9 @@
 import {useState, useEffect} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import styled from "styled-components";
-import useGetCash from "@hooks/useGetCash.ts";
-import {setStockOrderVolume} from "@slices/stockOrderVolumeSlice.ts";
-import {openDecisionWindow} from "@slices/decisionWindowSlice.ts";
+import useGetCash from "@hooks/useGetCash";
+import {setStockOrderVolume} from "@slices/stockOrderVolumeSlice";
+import {openDecisionWindow} from "@slices/decisionWindowSlice";
 import { RootState } from '@/store';
 
 const availableMoneyText01 = "최대";
