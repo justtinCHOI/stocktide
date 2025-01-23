@@ -1,13 +1,35 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import useCustomCash from "@hooks/useCustomCash";
 import { useNavigate } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { ContentBottom } from "@styles/content";
 import { RootState } from '@/store';
 import { AccountState, ExchangeProps } from '@typings/account';
 import { toast } from 'react-toastify';
 import { Cash } from '@typings/entity';
+import { RefreshCw, ArrowLeft, AlertTriangle, ArrowLeftRight } from 'lucide-react';
+import { useMediaQuery } from '@hooks/useMediaQuery';
+import {
+    Section,
+    TitleRow,
+    Title,
+    InfoContainer,
+    InfoRow,
+    Label,
+    Value,
+    ErrorContainer,
+    ErrorMessage,
+    RefreshButton,
+} from '@styles/CustomStockTideStyles';
+import {
+    SkeletonExchangeContainer,
+    SkeletonExchangeRow,
+    SkeletonExchangeLabel,
+    SkeletonExchangeValue,
+} from '@styles/SkeletonAccountStyles';
+
+const exchangeRate = 1386.83; // 상수로 분리
 
 const initAccountState: AccountState = {
     cashId: 0,
@@ -16,208 +38,236 @@ const initAccountState: AccountState = {
     dollar: 0,
 }
 
-const exchangeRate  = 1386.83;
-
 const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
+    const isMobile = useMediaQuery('(max-width: 768px)');
     const cashState = useSelector((state: RootState) => state.cashSlice);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const { doUpdateCash } = useCustomCash();
     const [account, setAccount] = useState(initAccountState);
     const [exchangeCurrency, setExchangeCurrency] = useState("money");
     const [exchangeAmount, setExchangeAmount] = useState(0);
-    const [exchangedMoney, setExchangedMoney] = useState(0);
-    const [exchangedDollar, setExchangedDollar] = useState(0);
-    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const selectedAccount = cashState.cashList.find((cash: Cash) => cash.cashId == cashId);
+        const selectedAccount = cashState.cashList.find((cash: Cash) => cash.cashId === cashId);
         if (selectedAccount) {
             setAccount(selectedAccount);
+            setIsLoading(false);
+        } else {
+            setIsError(true);
         }
     }, [cashState, cashId]);
 
-    useEffect(() => {
-        let newExchangedMoney = account.money;
-        let newExchangedDollar = account.dollar;
 
-        if (exchangeCurrency === "money") {
-            newExchangedMoney = account.money - exchangeAmount;
-            newExchangedDollar = account.dollar + (exchangeAmount / exchangeRate);
-        } else if (exchangeCurrency === "dollar") {
-            newExchangedMoney = account.money + (exchangeAmount * exchangeRate);
-            newExchangedDollar = account.dollar - exchangeAmount;
-        }
-
-        if (newExchangedDollar > 0 && newExchangedDollar < 1) {
-            setErrorMessage('외화량은 1보다 작을 수 없습니다.');
-        } else if (newExchangedMoney < 0 || newExchangedDollar < 0) {
-            setErrorMessage('환전 후의 금액은 0보다 작을 수 없습니다.');
-        } else {
-            setErrorMessage('');
-        }
-
-        setExchangedMoney(Math.floor(newExchangedMoney));
-        setExchangedDollar(Math.floor(newExchangedDollar));
-    }, [exchangeAmount, exchangeCurrency, account.money, account.dollar]);
-
-    const handleExchangeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setExchangeAmount(Number(e.target.value));
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        setTimeout(() => setIsRefreshing(false), 1000);
     };
 
-    const handleExchangeCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setExchangeCurrency(e.target.value);
-    };
-
-    const handleManage = () => {
-        navigate("../manage");
-    };
-
-    const handleExchange = () => {
-        if (errorMessage) return;
-
-        if (exchangedMoney < 0 || exchangedDollar < 0) {
-            toast.error("환전 금액이 유효하지 않습니다");
+    const handleExchange = async () => {
+        if (!exchangeAmount || exchangeAmount <= 0) {
+            toast.error("환전 금액을 확인해주세요");
             return;
         }
 
-        doUpdateCash(cashId, exchangedMoney, exchangedDollar).then(() => {
+        let newMoney = account.money;
+        let newDollar = account.dollar;
+
+        if (exchangeCurrency === "money") {
+            if (exchangeAmount > account.money) {
+                toast.error("보유 원화가 부족합니다");
+                return;
+            }
+            newMoney -= exchangeAmount;
+            newDollar += exchangeAmount / exchangeRate;
+        } else {
+            if (exchangeAmount > account.dollar) {
+                toast.error("보유 달러가 부족합니다");
+                return;
+            }
+            newMoney += exchangeAmount * exchangeRate;
+            newDollar -= exchangeAmount;
+        }
+
+        try {
+            await doUpdateCash(cashId, Math.floor(newMoney), Math.floor(newDollar));
+            toast.success("환전이 완료되었습니다");
             setExchangeAmount(0);
-            toast.success("환전되었습니다");
-        }).catch((error) => {
-            toast.error("환전 처리 중 오류가 발생했습니다", error);
-        });
+        } catch (error) {
+            toast.error("환전 처리 중 오류가 발생했습니다");
+        }
     };
 
+    if (isLoading) {
+        return (
+          <Section>
+              <TitleRow>
+                  <Title>계좌 환전</Title>
+              </TitleRow>
+              <SkeletonExchangeContainer>
+                  {[...Array(5)].map((_, index) => (
+                    <SkeletonExchangeRow key={index}>
+                        <SkeletonExchangeLabel />
+                        <SkeletonExchangeValue />
+                    </SkeletonExchangeRow>
+                  ))}
+              </SkeletonExchangeContainer>
+          </Section>
+        );
+    }
+
+    if (isError) {
+        return (
+          <Section>
+              <ErrorContainer>
+                  <AlertTriangle size={24} />
+                  <ErrorMessage>계좌 정보를 불러올 수 없습니다.</ErrorMessage>
+                  <RefreshButton onClick={() => {
+                      setIsError(false);
+                      setIsLoading(true);
+                  }}>
+                      <RefreshCw size={16} />
+                      다시 시도
+                  </RefreshButton>
+              </ErrorContainer>
+          </Section>
+        );
+    }
+
     return (
-        <AppContainer>
-            <AccountBox>
-                <AccountRow>
-                    <AccountLabel>계좌번호:</AccountLabel>
-                    <AccountValue>{account.accountNumber}</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>원화량:</AccountLabel>
-                    <AccountValue>{account.money}원</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>외화량:</AccountLabel>
-                    <AccountValue>{account.dollar}달러</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>환전 금액:</AccountLabel>
-                    <ChargeInput type="number" value={exchangeAmount} onChange={handleExchangeAmountChange} />
-                </AccountRow>
-                {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-                <AccountRow>
-                    <AccountLabel>환전 화폐:</AccountLabel>
-                    <select value={exchangeCurrency} onChange={handleExchangeCurrencyChange}>
-                        <option value="money">원화에서 외화로</option>
-                        <option value="dollar">외화에서 원화로</option>
-                    </select>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>환전 후 원화량:</AccountLabel>
-                    <AccountValue>{exchangedMoney}원</AccountValue>
-                </AccountRow>
-                <AccountRow>
-                    <AccountLabel>환전 후 외화량:</AccountLabel>
-                    <AccountValue>{exchangedDollar}달러</AccountValue>
-                </AccountRow>
-                <ButtonContainer>
-                    <Button onClick={handleManage}>계좌 관리</Button>
-                    <Button onClick={handleExchange} disabled={Boolean(errorMessage)}>환전</Button>
-                </ButtonContainer>
-            </AccountBox>
-            <ContentBottom />
-        </AppContainer>
+      <>
+          <Section>
+              <TitleRow>
+                  <Title>계좌 환전</Title>
+                  <RefreshButton
+                    onClick={handleRefresh}
+                    disabled={isRefreshing}
+                    $isRefreshing={isRefreshing}
+                  >
+                      <RefreshCw size={16} />
+                  </RefreshButton>
+              </TitleRow>
+
+              <InfoContainer $isMobile={isMobile}>
+                  <InfoRow $isMobile={isMobile}>
+                      <Label>계좌번호</Label>
+                      <Value>{account.accountNumber}</Value>
+                  </InfoRow>
+                  <InfoRow $isMobile={isMobile}>
+                      <Label>보유 원화</Label>
+                      <Value>{account.money.toLocaleString()}원</Value>
+                  </InfoRow>
+                  <InfoRow $isMobile={isMobile}>
+                      <Label>보유 달러</Label>
+                      <Value>{account.dollar.toLocaleString()}달러</Value>
+                  </InfoRow>
+                  <InfoRow $isMobile={isMobile}>
+                      <Label>환전 화폐</Label>
+                      <CurrencySelector
+                        value={exchangeCurrency}
+                        onChange={(e) => setExchangeCurrency(e.target.value)}
+                      >
+                          <option value="money">원화 ➝ 달러</option>
+                          <option value="dollar">달러 ➝ 원화</option>
+                      </CurrencySelector>
+                  </InfoRow>
+                  <InfoRow $isMobile={isMobile}>
+                      <Label>환전 금액</Label>
+                      <ExchangeInput
+                        type="number"
+                        value={exchangeAmount || ''}
+                        onChange={(e) => setExchangeAmount(Number(e.target.value))}
+                        placeholder={`${exchangeCurrency === 'money' ? '원화' : '달러'} 금액 입력`}
+                      />
+                  </InfoRow>
+                  <InfoRow $isMobile={isMobile}>
+                      <Label>환전 결과</Label>
+                      <Value>
+                          {exchangeAmount ? (
+                            exchangeCurrency === "money"
+                              ? `${(exchangeAmount / exchangeRate).toFixed(2)} 달러`
+                              : `${(exchangeAmount * exchangeRate).toLocaleString()} 원`
+                          ) : '-'}
+                      </Value>
+                  </InfoRow>
+              </InfoContainer>
+
+              <ButtonContainer>
+                  <Button
+                    $variant="secondary"
+                    onClick={() => navigate('../manage')}
+                  >
+                      <ArrowLeft size={20} />
+                      계좌 관리
+                  </Button>
+                  <Button
+                    $variant="primary"
+                    onClick={handleExchange}
+                  >
+                      <ArrowLeftRight size={20} />
+                      환전하기
+                  </Button>
+              </ButtonContainer>
+          </Section>
+          <ContentBottom />
+      </>
     );
 };
 
 export default ExchangeComponent;
 
-const fadeIn = keyframes`
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-`;
-
-const AppContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-`;
-
-const AccountBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px solid #ccc;
-    padding: 10px;
-    width: 100%;
-    margin: 10px;
-    border-radius: 5px;
-    animation: ${fadeIn} 3s;
-`;
-
-const AccountRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-`;
-
-const AccountLabel = styled.div`
-    font-weight: bold;
-    margin-right: 10px;
-`;
-
-const AccountValue = styled.div`
-    margin-left: auto;
-`;
-
-const ChargeInput = styled.input`
-    width: 60%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-`;
-
-const ErrorMessage = styled.div`
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-`;
-
 const ButtonContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
 `;
 
-const Button = styled.button`
-    height: 40px;
-    width: 45%;
-    margin: 5px;
-    padding: 5px;
-    border: 2px solid #0056b3;
-    color: #0056b3;
+const Button = styled.button<{ $variant: 'primary' | 'secondary' }>`
+    padding: 12px;
+    background-color: ${({ $variant }) => $variant === 'primary' ? '#4A90E2' : '#f5f5f5'};
+    color: ${({ $variant }) => $variant === 'primary' ? 'white' : '#666'};
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
 
     &:hover {
-        background-color: #0056b3;
-        color: white;
+        background-color: ${({ $variant }) => $variant === 'primary' ? '#357ABD' : '#e0e0e0'};
     }
+`;
 
-    &:disabled {
-        background-color: gray;
-        color: white;
-        cursor: not-allowed;
+const ExchangeInput = styled.input`
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+
+    &:focus {
+        border-color: #4A90E2;
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+`;
+
+const CurrencySelector = styled.select`
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+
+    &:focus {
+        border-color: #4A90E2;
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
     }
 `;
