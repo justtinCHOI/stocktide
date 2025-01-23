@@ -17,7 +17,7 @@ const StockOrderSetting = () => {
     const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
     const {companyId} = useParams();
     const companyIdNumber = Number(companyId); // 숫자로 변환
-    const { stockInfo, stockInfoLoading, stockInfoError, refetch } = useGetStockInfo(companyIdNumber);
+    const { stockInfo, stockInfoLoading, stockInfoError } = useGetStockInfo(companyIdNumber);
 
   if (!stockInfo) {
     return null;

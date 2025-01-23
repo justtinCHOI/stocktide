@@ -6,8 +6,8 @@ import styled, { keyframes } from 'styled-components';
 import { ContentBottom } from "@styles/content";
 import { RootState } from '@/store';
 import { AccountState, ExchangeProps } from '@typings/account';
-import { CashSliceState } from '@slices/cashSlice';
 import { toast } from 'react-toastify';
+import { Cash } from '@typings/entity';
 
 const initAccountState: AccountState = {
     cashId: 0,
@@ -30,7 +30,7 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const selectedAccount = cashState.cashList.find((cash: CashSliceState) => cash.cashId == cashId);
+        const selectedAccount = cashState.cashList.find((cash: Cash) => cash.cashId == cashId);
         if (selectedAccount) {
             setAccount(selectedAccount);
         }

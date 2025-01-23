@@ -7,8 +7,8 @@ import { ContentBottom } from "@styles/content";
 import {requestPay} from "@api/paymentApi";
 import { AccountState, ChargeProps } from '@typings/account';
 import { RootState } from '@/store';
-import { CashSliceState } from '@slices/cashSlice';
 import { toast } from 'react-toastify';
+import { Cash } from '@typings/entity';
 
 const initAccountState: AccountState = {
     cashId: 0,
@@ -34,7 +34,7 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
 
 
     useEffect(() => {
-        const selectedAccount = cashState.cashList.find((cash: CashSliceState) => cash.cashId == cashId);
+        const selectedAccount = cashState.cashList.find((cash: Cash) => cash.cashId == cashId);
         if (selectedAccount) {
             setAccount(selectedAccount);
         }

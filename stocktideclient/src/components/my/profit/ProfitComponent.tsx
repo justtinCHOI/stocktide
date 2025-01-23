@@ -65,8 +65,8 @@ const ProfitComponent: FC =() => {
         </SkeletonHeader>
         <StockList>
           {[...Array(2)].map((_, index) => (
-            <EntireContainer>
-              <SkeletonItem key={index} $isMobile={isMobile}>
+            <EntireContainer key={index}>
+              <SkeletonItem  $isMobile={isMobile}>
                 <SkeletonLogo />
                 <SkeletonContent>
                   <SkeletonTitle />

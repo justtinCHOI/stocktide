@@ -34,18 +34,28 @@ public class APIRefreshController {
 
         String accessToken = authHeader.substring(7);
 
-        //Access 토큰이 만료되지 않았다면 그대로 반환
+        // Access 토큰이 만료되지 않았다면 그대로 반환
         if (!checkExpiredToken(accessToken)) {
+            log.info("accessToken is not expired");
             return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
         }
+        log.info("accessToken is expired");
 
         Map<String, Object> claims = JWTUtil.validateToken(refreshToken);
 
-        //refreshToken 의 claims 으로써 accessToken 생성
+        // refreshToken 의 claims 으로써 accessToken 생성
         String newAccessToken = JWTUtil.generateToken(claims, 10);
+        log.info("accessToken is generated: " + newAccessToken);
 
-        //refreshToken 만료에 가까워지면 새로운 refreshToken 생성
-        String newRefreshToken = checkTime((Integer) claims.get("exp")) ? JWTUtil.generateToken(claims, 60 * 24) : refreshToken;
+        log.info("exp: " + claims.get("exp"));
+
+        String newRefreshToken;
+        // refreshToken 만료에 가까워지면 새로운 refreshToken 생성
+        if(checkTime((Integer) claims.get("exp"))){
+            newRefreshToken = JWTUtil.generateToken(claims, 60 * 24);
+            log.info("refreshToken is generated: " + newRefreshToken);
+        }
+        newRefreshToken = refreshToken;
 
         return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);
     }
