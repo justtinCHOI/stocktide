@@ -1,54 +1,50 @@
-// import {useEffect, useState} from 'react';
-// import {getList} from "@api/companyApi";
-// import useCustomMove from "@hooks/useCustomMove";
-// import PageComponent from "@common/PageComponent";
-// const initState = {
-//     dtoList : [],
-//     pageNumList : [],
-//     pageRequestDTO : null,
-//     prev : false,
-//     next : false,
-//     totalCount : 0,
-//     prevPage : 0,
-//     nextPage : 0,
-//     totalPage : 0,
-//     current : 0
-// }
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import StockItem from '@components/stock/domestic/item/entire/StockItem';
+import { useState } from 'react';
+import useCustomMove from '@hooks/useCustomMove';
 
 function WatchComponent() {
-    //navigate -> router -> useCustomMove -> page,size, refresh 변경 -> useEffect -> setServerData
-
-    // const {page, size, refresh, moveToList, moveToChart} = useCustomMove();
-    //
-    // const [serverData, setServerData] = useState(initState);
-    //
-    // useEffect(() => {
-    //     getList({page, size}).then(data => {
-    //         console.log(data);
-    //         setServerData(data);
-    //     })
-    //
-    // }, [page, size, refresh]);
+  const [showChangePrice, setShowChangePrice] = useState(false);
+  const {moveToChart} = useCustomMove();
+  const { recentSearches} = useSelector((state: RootState) => state.searchSlice);
 
     return (
-        <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-            <div className="flex flex-wrap mx-auto justify-center p-1">
-                {/*{serverData.dtoList.map(company =>*/}
-                {/*    <div key={company.companyId} className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"*/}
-                {/*         onClick={() => moveToChart(company.companyId)}*/}
-                {/*    >*/}
-                {/*        <div className="flex w-full">*/}
-                {/*            <div className="font-extrabold text-2xl p-2 flex-grow">{company.companyId}</div>*/}
-                {/*            <div className="text-1xl m-1 p-2 flex-grow">{company.korName}</div>*/}
-                {/*            <div className="text-1xl m-1 p-2 flex-grow">{company.created_at}</div>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*)}*/}
-                WatchComponent
-            </div>
-            {/*<PageComponent serverData={serverData} movePage={moveToList}/>*/}
-        </div>
+          <RecentSearches>
+            <RecentTitle>최근 검색어</RecentTitle>
+            {recentSearches.map((company) => (
+              <StockItem
+                key={company.companyId}
+                company={company}
+                setShowChangePrice={setShowChangePrice}
+                showChangePrice={showChangePrice}
+                onclick={() => moveToChart(company.companyId)}
+              />
+            ))}
+          </RecentSearches>
     );
 }
 
 export default WatchComponent;
+
+const RecentSearches = styled.div`
+ position: absolute;
+ top: 100%;
+ left: 0;
+ right: 0;
+ background: white;
+ border-radius: 0 0 8px 8px;
+ box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+ padding: 8px 0;
+ z-index: 10;
+`;
+
+const RecentTitle = styled.div`
+ padding: 8px 16px;
+ color: #666;
+ font-size: 0.9rem;
+ font-weight: 500;
+ border-bottom: 1px solid #eee;
+`;
+

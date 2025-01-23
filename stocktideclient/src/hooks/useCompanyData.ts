@@ -52,9 +52,13 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
             amount: company.stockInfResponseDto.acml_tr_pbmn, // 총 거래대금
         };
     });
+
+    const extractedData3 = data as CompanyResponseDto[];
+
     return {
         data: extractedData,
         data2: extractedData2,
+        data3: extractedData3,
         isLoading,
         isError,
     };

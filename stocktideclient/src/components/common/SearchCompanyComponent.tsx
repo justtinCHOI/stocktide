@@ -3,7 +3,6 @@ import {FaSearch} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 import { FC } from 'react';
 
-
 interface SearchCompanyComponentProps {
   area: string;
 }

@@ -1,8 +1,10 @@
 import { Member, Company, Cash, StockHold, StockOrder, Token } from './entity';
+import { CompanyResponseDto } from '@typings/dto';
 
 export interface CompanyDataResponse {
   data?: extractedCompanyData[];
   data2?: extractedCompanyData2[];
+  data3?: CompanyResponseDto[];
   isLoading: boolean;
   isError: boolean | null;
 }

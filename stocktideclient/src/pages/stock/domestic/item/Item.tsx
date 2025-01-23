@@ -1,6 +1,7 @@
 import MenuComponent from "@components/common/MenuComponent";
 import {Outlet} from "react-router-dom";
 import {ContentBelowMenu, IncludeInformationDiv, OutletDiv} from "@assets/css/menu";
+import SearchCompanyComponent from '@components/common/SearchCompanyComponent';
 
 const Item = () => {
 
@@ -8,14 +9,17 @@ const Item = () => {
   const Urls = ['entire', 'hold', 'watch', 'test', '/stock/domestic/detail/buy/2'];
 
   return (
-    <IncludeInformationDiv $top={5}>
-      <MenuComponent menus={Menus} urls={Urls}/>
-      <ContentBelowMenu >
-        <OutletDiv>
-          <Outlet/>
-        </OutletDiv>
-      </ContentBelowMenu >
-    </IncludeInformationDiv>
+    <>
+      <SearchCompanyComponent area={'domestic'}/>
+      <IncludeInformationDiv $top={5}>
+        <MenuComponent menus={Menus} urls={Urls}/>
+        <ContentBelowMenu >
+          <OutletDiv>
+            <Outlet/>
+          </OutletDiv>
+        </ContentBelowMenu >
+      </IncludeInformationDiv>
+    </>
   );
 }
 export default Item;

@@ -11,6 +11,7 @@ import { stockOrderVolumeReducer } from '@slices/stockOrderVolumeSlice';
 import { decisionWindowReducer } from '@slices/decisionWindowSlice';
 import { chatReducer, ChatSliceState } from '@slices/chatSlice';
 import { MemberSliceState } from '@typings/member';
+import { searchReducer, SearchSliceState } from '@slices/searchSlice';
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
@@ -24,6 +25,7 @@ export const store = configureStore({
     stockOrderVolumeSlice: stockOrderVolumeReducer,
     decisionWindowSlice: decisionWindowReducer,
     chatSlice: chatReducer,
+    searchSlice: searchReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -44,6 +46,7 @@ export interface RootState {
   stockOrderVolumeSlice: number;
   decisionWindowSlice: boolean;
   chatSlice: ChatSliceState;
+  searchSlice: SearchSliceState;
 }
 
 export type AppDispatch = typeof store.dispatch;

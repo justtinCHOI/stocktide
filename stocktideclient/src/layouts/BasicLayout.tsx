@@ -64,7 +64,7 @@ export default BasicLayout;
 // <Container>
 //     <MainContent>
 //         <StockInfoComponent/>
-//         <SearchCompanyComponent/>
+//         <SearchDomesticCompanyComponent/>
 //         <IncludeInformationDiv $top={5} >
 //             <MenuComponent menus={Menus} urls={Urls}/>
 //             <ContentBelowMenu >
