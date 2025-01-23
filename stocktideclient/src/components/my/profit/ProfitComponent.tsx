@@ -5,6 +5,16 @@ import styled from "styled-components";
 import {ListContainer, StockList} from "@styles/ListStyles";
 
 import StockItem, { ProfitStockItemProps } from '@components/my/profit/StockItem';
+import {
+  SkeletonContent,
+  SkeletonItem,
+  SkeletonLogo, SkeletonPrice, SkeletonPriceMain, SkeletonPriceSub,
+  SkeletonSubtitle,
+  SkeletonTitle,
+} from '@styles/SkeletonStockItemStyles';
+import { ContentBottom } from '@styles/content';
+import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
+import { AlertTriangle } from 'lucide-react';
 
 const evaluationProfitText = "평가 수익금";
 const profitUnit = "원";
@@ -17,7 +27,7 @@ const ProfitComponent: FC =() => {
     holdingStockError: isError,
   } = useGetHoldingStock();
 
-  const {data: companyData, isLoading: isCompanyDataLoading, isError: isCompanyDataError,
+  const {data: companyData, isLoading: isCompanyDataLoading, isError: isCompanyDataError, refetch
   } = useCompanyData(1, 79);
 
   // 모든 stockReturn의 합을 계산합니다.
@@ -28,6 +38,46 @@ const ProfitComponent: FC =() => {
       (sum: number, stockHold: ProfitStockItemProps["stockData"]) =>
         sum + stockHold.stockReturn,
       0
+    );
+  }
+
+  if (isLoading || isCompanyDataLoading) {
+    return (
+      <ListContainer>
+        <StockList>
+          {[...Array(8)].map((_, index) => (
+            <SkeletonItem key={index}>
+              <SkeletonLogo />
+              <SkeletonContent>
+                <SkeletonTitle />
+                <SkeletonSubtitle />
+              </SkeletonContent>
+              <SkeletonPrice>
+                <SkeletonPriceMain />
+                <SkeletonPriceSub />
+              </SkeletonPrice>
+            </SkeletonItem>
+          ))}
+        </StockList>
+        <ContentBottom/>
+      </ListContainer>
+    );
+  }
+
+  if (isError || isCompanyDataError) {
+    return (
+      <ListContainer>
+        <StockList>
+          <ErrorContainer>
+            <AlertTriangle size={24} />
+            <ErrorMessage>데이터를 불러올 수 없습니다.</ErrorMessage>
+            <RefreshButton onClick={() => refetch()}>
+              다시 시도
+            </RefreshButton>
+          </ErrorContainer>
+        </StockList>
+        <ContentBottom/>
+      </ListContainer>
     );
   }
 
@@ -42,11 +92,7 @@ const ProfitComponent: FC =() => {
         </EvaluationProfit>
       </Header2Container>
       <StockList>
-        {isLoading || isCompanyDataLoading ? (
-          <div></div>
-        ) : isError || isCompanyDataError ? (
-          <div>Error fetching data</div>
-        ) : (
+        {
           Array.isArray(stockHolds) &&
           stockHolds.length > 0 && // 여기에 조건을 추가합니다
           stockHolds.map((stockHold: ProfitStockItemProps["stockData"]) => {
@@ -64,7 +110,7 @@ const ProfitComponent: FC =() => {
               />
             ) : null;
           })
-        )}
+        }
       </StockList>
     </ListContainer>
   );

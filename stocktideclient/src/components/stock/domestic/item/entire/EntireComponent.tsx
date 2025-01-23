@@ -64,27 +64,20 @@ function EntireComponent() {
     );
   }
 
-
     return (
-        <ListContainer>
-            <StockList>
-                {isLoading ? (
-                    <div></div>
-                ) : isError ? (
-                    <div>Error fetching data</div>
-                ) : (
-                    companiesList.map((company) => (
-                        <StockItem
-                            key={company.companyId}
-                            company={company}
-                            setShowChangePrice={setShowChangePrice}
-                            showChangePrice={showChangePrice}
-                            onclick={() => moveToChart(company.companyId)}
-                        />
-                    ))
-                )}
-            </StockList>
-            <ContentBottom/>
+      <ListContainer>
+        <StockList>
+          {companiesList.map((company) => (
+            <StockItem
+              key={company.companyId}
+              company={company}
+              setShowChangePrice={setShowChangePrice}
+              showChangePrice={showChangePrice}
+              onclick={() => moveToChart(company.companyId)}
+            />
+          ))}
+        </StockList>
+        <ContentBottom/>
         </ListContainer>
     );
 }
