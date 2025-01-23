@@ -1,14 +1,13 @@
 import SearchListComponent from '@components/stock/domestic/search/SearchListComponent';
+import { IncludeInformationDiv } from '@assets/css/menu';
 
 function Search() {
 
     return (
-        <div className="p-4 w-full bg-white  ">
-            <div className="text-3xl font-extrabold">
-                Todo SearchListPage
-            </div>
+      <IncludeInformationDiv $top={5}>
             <SearchListComponent/>
-        </div>
+      </IncludeInformationDiv>
+
     );
 }
 

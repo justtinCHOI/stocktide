@@ -1,55 +1,59 @@
-// import {useEffect, useState} from 'react';
-// import {getList} from "@api/companyApi.ts";
-// import useCustomMove from "@hooks/useCustomMove.ts";
-// import PageComponent from "@components/common/PageComponent";
-//
-// const initState = {
-//     dtoList : [],
-//     pageNumList : [],
-//     pageRequestDTO : null,
-//     prev : false,
-//     next : false,
-//     totalCount : 0,
-//     prevPage : 0,
-//     nextPage : 0,
-//     totalPage : 0,
-//     current : 0
-// }
+import StockItem from '@components/stock/domestic/search/StockItem';
+import { ContentBottom } from '@assets/css/content';
+import { useState } from 'react';
+import useCustomMove from '@hooks/useCustomMove';
+import useCompanyData from '@hooks/useCompanyData';
+import styled from 'styled-components';
 
 function SearchListComponent() {
-    //navigate -> router -> useCustomMove -> page,size, refresh 변경 -> useEffect -> setServerData
 
-    // const {page, size, refresh, moveToList, moveToChart} = useCustomMove();
-    //
-    // const [serverData, setServerData] = useState(initState);
-    //
-    // useEffect(() => {
-    //     getList({page, size}).then(data => {
-    //         console.log(data);
-    //         setServerData(data);
-    //     })
-    //
-    // }, [page, size, refresh]);
+    const [showChangePrice, setShowChangePrice] = useState(false);
+    const {moveToChart} = useCustomMove();
+
+    const {data: companies, isLoading, isError} = useCompanyData(1, 79);
+
+    const companiesList = companies || [];
 
     return (
-        <>
-            {/*<div className="flex flex-wrap mx-auto justify-center p-1">*/}
-            {/*    {serverData.dtoList.map(company =>*/}
-            {/*        <div key={company.companyId} className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"*/}
-            {/*             onClick={() => moveToChart(company.companyId)}*/}
-            {/*        >*/}
-            {/*            <div className="flex w-full">*/}
-            {/*                <div className="font-extrabold text-2xl p-2 flex-grow">{company.companyId}</div>*/}
-            {/*                <div className="text-1xl m-1 p-2 flex-grow">{company.korName}</div>*/}
-            {/*                <div className="text-1xl m-1 p-2 flex-grow">{company.created_at}</div>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-            {/*</div>*/}
-            {/*<PageComponent serverData={serverData} movePage={moveToList}/>*/}
-        </>
+      <SearchListContainer>
+          <StockList>
+              {isLoading ? (
+                <div></div>
+              ) : isError ? (
+                <div>Error fetching data</div>
+              ) : (
+                companiesList.map((company) => (
+                  <StockItem
+                    key={company.companyId}
+                    company={company}
+                    setShowChangePrice={setShowChangePrice}
+                    showChangePrice={showChangePrice}
+                    onclick={() => moveToChart(company.companyId)}
+                  />
+                ))
+              )}
+          </StockList>
+          <ContentBottom/>
+      </SearchListContainer>
     );
 }
 
 export default SearchListComponent;
+
+export const SearchListContainer = styled.div`
+  height: calc(100vh - 53px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+export const StockList = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* 세로 스크롤을 활성화합니다 */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
