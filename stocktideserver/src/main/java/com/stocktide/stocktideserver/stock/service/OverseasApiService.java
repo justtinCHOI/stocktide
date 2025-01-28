@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor
 public class OverseasApiService extends AbstractStockApiService {
     @Getter
     @Value("${token.app-key}")
@@ -26,7 +25,7 @@ public class OverseasApiService extends AbstractStockApiService {
     private String APP_SECRET;
 
     @Getter
-    @Value("${stock-url.overseas.token}")
+    @Value("${stock-url.token}")
     private String TOKEN_URL;
 
     @Getter
@@ -95,6 +94,12 @@ public class OverseasApiService extends AbstractStockApiService {
 
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
+
+    @Autowired
+    public OverseasApiService(RestTemplate restTemplate, TokenService tokenService) {
+        this.restTemplate = restTemplate;
+        this.tokenService = tokenService;
+    }
 
     @Override
     public Object getStockAsBiDataFromApi(String stockCode) {

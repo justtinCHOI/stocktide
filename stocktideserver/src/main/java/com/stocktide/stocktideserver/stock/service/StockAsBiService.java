@@ -35,7 +35,6 @@ public class StockAsBiService {
     public void updateStockAsBi() throws InterruptedException {
         log.info("---------------updateStockAsBi  started----------------------------------------");
         List<Company> companyList = companyService.findCompanies(); //모든 회사
-        log.info("---------------companyList {}----------------------------------------", companyList);
 
         for(int i = 0; i < companyList.size(); i++) {
             log.info("---------------{}st company  started----------------------------------------", (i + 1));
@@ -47,7 +46,7 @@ public class StockAsBiService {
             company.setStockAsBi(stockAsBi);
             companyService.saveCompany(company);
             log.info("---------------companyService.saveCompany {} ----------------------------------------", company.getStockAsBi().getAskp1());
-//            Thread.sleep(500);
+            Thread.sleep(500);
         }
         log.info("---------------updateStockAsBi  finished----------------------------------------");
     }

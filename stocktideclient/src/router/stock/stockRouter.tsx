@@ -1,9 +1,9 @@
 import {lazy, Suspense} from "react";
 import {Navigate} from "react-router";
-import domesticRouter from "@router/stock/domestic/domesticRouter";
+import areaRouter from "@router/stock/area/areaRouter";
 import {Loading} from "@router/root";
 
-const Domestic = lazy(() => import("@pages/stock/domestic/Domestic"));
+const Domestic = lazy(() => import("@pages/stock/area/Area"));
 
 const stockRouter = () => {
     return[
@@ -11,14 +11,10 @@ const stockRouter = () => {
             path: '',
             element: <Navigate replace={true} to='domestic' />,
         },{
-            path: 'domestic',
+            path: ':area',
             element: <Suspense fallback={Loading}><Domestic/></Suspense>,
-            children: domesticRouter()
-        },{
-            // path: 'overseas',
-            // element: <Suspense fallback={Loading}><OverseasPage/></Suspense>,
-            // children: overseasRouter()
-        },
+            children: areaRouter()
+        }
     ]
 }
 

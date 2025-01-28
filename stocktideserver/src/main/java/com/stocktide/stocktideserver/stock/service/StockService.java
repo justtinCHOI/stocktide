@@ -2,6 +2,8 @@ package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.stock.entity.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,11 +11,17 @@ import java.util.List;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+@Lazy
 public class StockService {
     private final DomesticApiService domesticApiService;
     private final OverseasApiService overseasApiService;
 
+    @Autowired
+    public StockService(@Lazy DomesticApiService domesticApiService,
+                        @Lazy OverseasApiService overseasApiService) {
+        this.domesticApiService = domesticApiService;
+        this.overseasApiService = overseasApiService;
+    }
 
     public StockName getStockNameFromApi(Company company) {
         AbstractStockApiService apiService = company.getMarketType() == MarketType.DOMESTIC ?

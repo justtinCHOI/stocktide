@@ -46,21 +46,30 @@ public class StockMinService {
 
         //Company -> code + strHour -> StockMinDto ->  List<StockMinOutput2> -> List<StockMin> -> 정렬 -> 저장
         //Company -> code + strHour -> StockMinDto ->  StockMinOutput1 -> StockInf 저장 -> Company
-        for (Company value : companyList) {
-            // 주식 코드로 회사 불러오기
-            Company company = companyService.findCompanyByCode(value.getCode());
+        for (Company company : companyList) {
+            log.info("--------------- {}st company  started----------------------------------------", (count + 1));
             // 분봉, 회사 정보 호출하기
             List<StockMin> stockMinList = stockService.getStockMinFromApi(company, strHour);
+            if (stockMinList == null || stockMinList.isEmpty()) {
+                log.warn("No stock min data received for company: {}", company.getCode());
+                continue;
+            }
+
             StockInf stockInf = stockService.getStockInfFromApi(company, strHour);
+            if (stockInf == null) {
+                log.warn("No stock info data received for company: {}", company.getCode());
+                continue;
+            }
             // 저장
             stockMinRepository.saveAll(stockMinList);
             stockInfRepository.save(stockInf);
             company.setStockInf(stockInf);
             companyService.saveCompany(company);
+            count++;
 
             Thread.sleep(500);
-            log.info("---------------updateStockMin  finished----------------------------------------");
         }
+        log.info("---------------updateStockMin  finished----------------------------------------");
     }
 
     // companyId -> List<StockMin> 

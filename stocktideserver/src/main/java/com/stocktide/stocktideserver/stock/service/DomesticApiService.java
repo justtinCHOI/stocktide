@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor
 public class DomesticApiService extends AbstractStockApiService {
     @Getter
     @Value("${token.app-key}")
@@ -105,6 +104,13 @@ public class DomesticApiService extends AbstractStockApiService {
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
     private final ApiMapper apiMapper;
+
+    @Autowired
+    public DomesticApiService(RestTemplate restTemplate, TokenService tokenService,  ApiMapper apiMapper) {
+        this.restTemplate = restTemplate;
+        this.tokenService = tokenService;
+        this.apiMapper = apiMapper;
+    }
 
     @Override
     public StockasbiDataDto getStockAsBiDataFromApi(String stockCode){
@@ -615,7 +621,7 @@ public class DomesticApiService extends AbstractStockApiService {
         if(oldStockInf != null){
             stockInf.setStockInfId(oldStockInf.getStockInfId());
         }
-        return oldStockInf;
+        return stockInf;
     }
 
     @Override

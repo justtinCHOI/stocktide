@@ -64,14 +64,11 @@ public class CompanyService {
         company.setMarketType(MarketType.DOMESTIC);
 
         StockName stockName = stockService.getStockNameFromApi(company);
-
         company.setKorName(stockName.getKorName());
         company.setEngName(stockName.getEngName());
-
         company.setStockAsBi(new StockAsBi());
 
         StockAsBi stockAsBi = stockService.getStockAsBiFromApi(company);
-
         company.setStockAsBi(stockAsBi);
         Thread.sleep(500);
         companyRepository.save(company);
@@ -79,44 +76,33 @@ public class CompanyService {
 
     // 회사들의 korName, engName, code, stockAsBi 를 채우고 데이터베이스에 저장
     public void fillDomesticCompanies() throws InterruptedException {
-        List<String> korName = List.of("삼성전자", "POSCO홀딩스", "셀트리온", "에코프로", "에코프로비엠", "디와이", "쿠쿠홀딩스", "카카오뱅크", "한세엠케이", "KG케미칼", "LG화학", "현대차", "LG전자", "기아");
         List<String> code = List.of("005930", "005490", "068270", "086520", "247540", "013570", "192400", "323410", "069640", "001390", "051910", "005380", "066570", "000270");
 
-        for(int i = 0; i < code.size(); i++) {
+        for (String currentCode : code) {
+            // 기존 데이터 존재 여부 확인
+            Company existingCompany = companyRepository.findByCode(currentCode);
+
+            if (existingCompany != null) {
+                log.info("Skipping company ({}) - already exists", currentCode);
+                continue;
+            }
             Company company = new Company();
-            company.setCode(code.get(i));
+            company.setCode(currentCode);
             company.setMarketType(MarketType.DOMESTIC);
-            company.setKorName(korName.get(i));
+
+            StockName stockName = stockService.getStockNameFromApi(company);
+            company.setKorName(stockName.getKorName());
+            company.setEngName(stockName.getEngName());
             company.setStockAsBi(new StockAsBi());
 
             StockAsBi stockAsBi = stockService.getStockAsBiFromApi(company);
 
             company.setStockAsBi(stockAsBi);
-            Thread.sleep(500);
             companyRepository.save(company);
         }
     }
 
     public void fillEveryDomesticCompanies() throws InterruptedException {
-        List<String> korName = List.of(
-                "HMM", "한화생명", "미래에셋증권", "기업은행", "우리금융지주",
-                "SK하이닉스", "맥쿼리인프라", "한국전력", "두산에너빌리티", "신한지주",
-                "LG유플러스", "LG디스플레이", "카카오뱅크", "기아", "KB금융",
-                "대우건설", "대한항공", "NH투자증권", "BNK금융지주", "KT",
-                "한화오션", "하나금융지주", "현대차", "금호타이어", "한화투자증권",
-                "유안타증권", "아시아나항공", "JB금융지주", "KG모빌리티", "삼성E&A",
-                "KT&G", "한화시스템", "LG전자", "삼성전자", "한화솔루션",
-                "미래에셋생명", "삼성중공업", "포스코인터내셔널", "DGB금융지주", "KB발해인프라",
-                "동양생명", "LG", "SK이노베이션", "현대제철", "SK네트웍스",
-                "삼성카드", "한화손해보험", "교보증권", "현대건설", "현대로템",
-                "유진투자증권", "팬오션", "KG스틸", "현대모비스", "한국항공우주",
-                "POSCO홀딩스", "한화", "GS", "맵스리얼티1", "한국가스공사",
-                "삼성증권", "HD현대중공업", "대신증권", "GS건설", "HJ중공업",
-                "한국패러랠", "LS네트웍스", "LG화학", "삼성전기", "하이트진로",
-                "삼성SDI", "HD한국조선해양", "한국ANKOR유전", "HDC현대산업개발", "흥국화재",
-                "롯데손해보험", "한국금융지주", "다올투자증권", "HDC"
-        );
-
         List<String> code = List.of(
                 "011200", "088350", "006800", "024110", "316140",
                 "000660", "088980", "015760", "034020", "055550",
@@ -146,7 +132,7 @@ public class CompanyService {
             Company existingCompany = companyRepository.findByCode(currentCode);
 
             if (existingCompany != null) {
-                log.info("Skipping company {} ({}) - already exists", korName.get(i), currentCode);
+                log.info("Skipping company ({}) - already exists", currentCode);
                 skippedCount++;
                 continue;
             }
@@ -155,23 +141,26 @@ public class CompanyService {
                 Company company = new Company();
                 company.setCode(currentCode);
                 company.setMarketType(MarketType.DOMESTIC);
-                company.setKorName(korName.get(i));
+
+                StockName stockName = stockService.getStockNameFromApi(company);
+                company.setKorName(stockName.getKorName());
+                company.setEngName(stockName.getEngName());
                 company.setStockAsBi(new StockAsBi());
 
                 StockAsBi stockAsBi = stockService.getStockAsBiFromApi(company);
 
                 company.setStockAsBi(stockAsBi);
                 companyRepository.save(company);
+
                 addedCount++;
 
-                log.info("Successfully added company {} ({}) - {}/{}",
-                        korName.get(i), currentCode, addedCount, code.size() - skippedCount);
+                log.info("Successfully added company ({}) - {}/{}", currentCode, addedCount, code.size() - skippedCount);
 
                 Thread.sleep(500); // API 호출 제한 고려
 
             } catch (Exception e) {
-                log.error("Error processing company {} ({}): {}",
-                        korName.get(i), currentCode, e.getMessage());
+                log.error("Error processing company ({}): {}",
+                        currentCode, e.getMessage());
             }
         }
 
