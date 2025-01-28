@@ -39,11 +39,11 @@ public class StockScheduler {
 
     @Scheduled(cron = "0 30 9-15 * * MON-FRI")
     public void myScheduledStockMinMethod() throws InterruptedException {
-        stockMinService.updateDomesticStockMin();
+        stockMinService.updateStockMin();
     }
     @Scheduled(cron = "0 0 10-15 * * MON-FRI")
     public void myScheduledStockMinMethod2() throws InterruptedException {
-        stockMinService.updateDomesticStockMin();
+        stockMinService.updateStockMin();
 
     }
 }

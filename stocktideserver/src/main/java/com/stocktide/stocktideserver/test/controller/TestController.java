@@ -41,7 +41,7 @@ public class TestController {
         log.info("memberDTO is not null {}:", memberDTO.toString());
         stockAsBiService.updateStockAsBi();
         stockOrderService.checkOrder();
-        stockMinService.updateDomesticStockMin();
+        stockMinService.updateStockMin();
         return Map.of("RESULT", "SUCCESS");
     }
 }

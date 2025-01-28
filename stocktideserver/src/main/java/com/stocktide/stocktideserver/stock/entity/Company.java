@@ -19,8 +19,14 @@ public class Company extends Auditable {
     @Column
     private String code;
 
+    @Enumerated(EnumType.STRING)
+    private MarketType marketType;
+
     @Column
     private String korName;
+
+    @Column
+    private String engName;
 
     @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
     private StockAsBi stockAsBi;

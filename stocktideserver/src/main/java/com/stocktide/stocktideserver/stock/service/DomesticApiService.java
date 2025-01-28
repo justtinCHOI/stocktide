@@ -1,6 +1,11 @@
 package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.entity.Company;
+import com.stocktide.stocktideserver.stock.entity.StockAsBi;
+import com.stocktide.stocktideserver.stock.entity.StockInf;
+import com.stocktide.stocktideserver.stock.entity.StockMin;
+import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.util.Time;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
@@ -12,12 +17,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 @Transactional
 @Slf4j
-public class ApiCallService {
+public class DomesticApiService extends AbstractStockApiService {
     @Getter
     @Value("${token.app-key}")
     private String APP_KEY;
@@ -31,55 +39,55 @@ public class ApiCallService {
     private String TOKEN_URL;
 
     @Getter
-    @Value("${stock-url.stockasbi}")
+    @Value("${stock-url.domestic.stockasbi}")
     private String STOCKASBI_URL;
 
     @Getter
-    @Value("${stock-url.stockhour}")
+    @Value("${stock-url.domestic.stockhour}")
     private String STOCKHOUR_URL;
 
     @Getter
-    @Value("${stock-url.kospi}")
+    @Value("${stock-url.domestic.kospi}")
     private String KOSPI_URL;
 
     @Getter
-    @Value("${stock-url.stockBasic}")
+    @Value("${stock-url.domestic.stockBasic}")
     private String STOCKBASIC_URL;
 
     @Getter
-    @Value("${stock-url.stockBalance}")
+    @Value("${stock-url.domestic.stockBalance}")
     private String STOCKBALANCE_URL;
 
     @Getter
-    @Value("${stock-url.stockIncome}")
+    @Value("${stock-url.domestic.stockIncome}")
     private String STOCKINCOME_URL;
 
     @Getter
-    @Value("${stock-url.stockFinancial}")
+    @Value("${stock-url.domestic.stockFinancial}")
     private String STOCKFINANCIAL_URL;
 
     @Getter
-    @Value("${stock-url.stockProfit}")
+    @Value("${stock-url.domestic.stockProfit}")
     private String STOCKPROFIT_URL;
 
     @Getter
-    @Value("${stock-url.stockOther}")
+    @Value("${stock-url.domestic.stockOther}")
     private String STOCKOTHER_URL;
 
     @Getter
-    @Value("${stock-url.stockStability}")
+    @Value("${stock-url.domestic.stockStability}")
     private String STOCKSTABILITY_URL;
 
     @Getter
-    @Value("${stock-url.stockGrowth}")
+    @Value("${stock-url.domestic.stockGrowth}")
     private String STOCKGROWTH_URL;
 
     @Getter
-    @Value("${stock-url.stockCredit}")
+    @Value("${stock-url.domestic.stockCredit}")
     private String STOCKCREDIT_URL;
 
     @Getter
-    @Value("${stock-url.stockNews}")
+    @Value("${stock-url.domestic.stockNews}")
     private String STOCKNEWS_URL;
 
     private final String FID_ETC_CLS_CODE = "";
@@ -87,27 +95,26 @@ public class ApiCallService {
     // private final String FID_INPUT_HOUR_1 = "153000";
     private final String FID_PW_DATA_INCU_YN = "Y";
     private final String CUST_TYPE = "P";
-
     private final String FID_RANK_SORT_CLS_CODE = "1"; // 순위 정렬 구분 코드 (0:코드순, 1:이름순)
     private final String FID_SLCT_YN = "0"; // 선택 여부	(0:신용주문가능, 1: 신용주문불가)
     private final String FID_INPUT_ISCD = "2001"; // 입력 종목코드	(2001:코스피)
     private final String FID_COND_SCR_DIV_CODE = "20477"; //  조건 화면 분류 코드 (Unique key(20477))
-
     private final String PRDT_TYPE_CD= "300"; //  300: 주식, ETF, ETN, ELW, 301:선물옵션, 302 : 채권, 306 : ELS
-
     private final String FID_DIV_CLS_CODE= "0"; // 0: 년, 1: 분기
 
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
+    private final ApiMapper apiMapper;
 
-    public ApiCallService(RestTemplate restTemplate, TokenService tokenService) {
+    public DomesticApiService(RestTemplate restTemplate, TokenService tokenService, ApiMapper apiMapper) {
         this.restTemplate = restTemplate;
         this.tokenService = tokenService;
+        this.apiMapper = apiMapper;
     }
 
-
-    public StockasbiDataDto getStockasbiDataFromApi(String stockCode){
-        log.info("---------------getStockasbiDataFromApi  started----------------------------------------");
+    @Override
+    public StockasbiDataDto getStockAsBiDataFromApi(String stockCode){
+        log.info("---------------getStockAsBiDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
 
         HttpHeaders headers = new HttpHeaders();
@@ -123,7 +130,7 @@ public class ApiCallService {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        log.info("---------------getStockasbiDataFromApi  request send----------------------------------------");
+        log.info("---------------getStockAsBiDataFromApi  request send----------------------------------------");
 
         ResponseEntity<StockasbiDataDto> response = restTemplate.exchange(
                 uri,
@@ -133,16 +140,17 @@ public class ApiCallService {
         );
         if (response.getStatusCode().is2xxSuccessful()) {
             StockasbiDataDto stockasbiDataDto = response.getBody();
-            log.info("---------------getStockasbiDataFromApi successfully finished getOutput1 getAskp1: {}----------------------------------------", stockasbiDataDto.getOutput1().getAskp1());
+            log.info("---------------getStockAsBiDataFromApi successfully finished getOutput1 getAskp1: {}----------------------------------------", stockasbiDataDto.getOutput1().getAskp1());
             return stockasbiDataDto;
         } else {
             log.info("error");
-            log.info("---------------getStockasbiDataFromApi  error----------------------------------------");
+            log.info("---------------getStockAsBiDataFromApi  error----------------------------------------");
             return null;
         }
 
     }
 
+    @Override
     public StockMinDto getStockMinDataFromApi(String stockCode, String strHour) {
         log.info("---------------getStockMinDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
@@ -186,7 +194,8 @@ public class ApiCallService {
 
     }
 
-    public String getKospiMonthFromApi(){
+    @Override
+    public String getMarketMonthDataFromApi(){
         String token = tokenService.getAccessToken();
 
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -221,7 +230,8 @@ public class ApiCallService {
 
     }
 
-    public StockBasicDto getStockBasicFromApi(String stockCode) {
+    @Override
+    public StockBasicDto getStockBasicDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -252,7 +262,8 @@ public class ApiCallService {
         }
     }
 
-    public StockBalanceDto getStockBalanceFromApi(String stockCode) {
+    @Override
+    public StockBalanceDto getStockBalanceDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -284,8 +295,8 @@ public class ApiCallService {
         }
     }
 
-
-    public StockListResponseDto getStockIncomeFromApi(String stockCode) {
+    @Override
+    public StockListResponseDto getStockIncomeDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -317,7 +328,8 @@ public class ApiCallService {
         }
     }
 
-    public StockFinancialDto getStockFinancialFromApi(String stockCode) {
+    @Override
+    public StockFinancialDto getStockFinancialDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -349,7 +361,8 @@ public class ApiCallService {
         }
     }
 
-    public StockProfitDto getStockProfitFromApi(String stockCode) {
+    @Override
+    public StockProfitDto getStockProfitDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -381,7 +394,8 @@ public class ApiCallService {
         }
     }
 
-    public StockOtherDto getStockOtherFromApi(String stockCode) {
+    @Override
+    public StockOtherDto getStockOtherDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -413,7 +427,8 @@ public class ApiCallService {
         }
     }
 
-    public StockStabilityDto getStockStabilityFromApi(String stockCode) {
+    @Override
+    public StockStabilityDto getStockStabilityDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -445,7 +460,8 @@ public class ApiCallService {
         }
     }
 
-    public StockGrowthDto getStockGrowthFromApi(String stockCode) {
+    @Override
+    public StockGrowthDto getStockGrowthDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -477,7 +493,8 @@ public class ApiCallService {
         }
     }
 
-    public StockListResponseDto getCodesFromApi() {
+    @Override
+    public StockListResponseDto getCodesDataFromApi() {
         try {
             String token = tokenService.getAccessToken();
 
@@ -511,7 +528,8 @@ public class ApiCallService {
         }
     }
 
-    public StockNewsDto getNewsFromApi(String stockCode) {
+    @Override
+    public StockNewsDto getNewsDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -552,5 +570,98 @@ public class ApiCallService {
         }
     }
 
+    @Override
+    public StockAsBi getStockAsBiFromApi(Company company) {
+        String stockCode = company.getCode();
+        StockasbiDataDto stockasbiDataDto = getStockAsBiDataFromApi(stockCode);
+        StockAsBi stockAsBi = apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
+        // 새로운 stockAsBi의 회사 등록
+        stockAsBi.setCompany(company);
+        // 호가 컬럼을 새로운 호가 컬럼으로 변경
+        StockAsBi oldStockAsBi = company.getStockAsBi();
+        // 기존의 Id
+        if(oldStockAsBi != null){
+            stockAsBi.setStockAsBiId(oldStockAsBi.getStockAsBiId());
+        }
+        return apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
+    }
+
+    @Override
+    public List<StockMin> getStockMinFromApi(Company company, String strHour) {
+        String stockCode = company.getCode();
+        LocalDateTime now = LocalDateTime.now();
+        StockMinDto stockMinDto = getStockMinDataFromApi(stockCode, strHour);
+        // dto -> entity 전환, 최신일자
+        return stockMinDto.getOutput2().stream()
+                .map(stockMinOutput2 -> {
+                    StockMin stockMin = apiMapper.stockMinOutput2ToStockMin(stockMinOutput2);
+                    stockMin.setCompany(company);
+                    stockMin.setStockTradeTime(now);
+                    return stockMin;
+                }).sorted(Comparator.comparing(StockMin::getStockTradeTime)).collect(Collectors.toList());
+    }
+
+    @Override
+    public StockInf getStockInfFromApi(Company company, String strHour) {
+        String stockCode = company.getCode();
+        StockMinDto stockMinDto = getStockMinDataFromApi(stockCode, strHour);
+        StockInf stockInf = apiMapper.stockMinOutput1ToStockInf(stockMinDto.getOutput1());
+        stockInf.setCompany(company);
+        StockInf oldStockInf = company.getStockInf();
+        if(oldStockInf != null){
+            stockInf.setStockInfId(oldStockInf.getStockInfId());
+        }
+        return oldStockInf;
+    }
+
+    @Override
+    public Object getStockBasicFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockBalanceFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockIncomeFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockFinancialFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockProfitFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockOtherFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockStabilityFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getStockGrowthFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public Object getCodesFromApi() {
+        return null;
+    }
+
+    @Override
+    public Object getNewsFromApi(String stockCode) {
+        return null;
+    }
 
 }

@@ -37,7 +37,7 @@ public class CompanyServiceTest {
     // 1-1. ActiveProfiles test -> dev
     // 1-2. @Transactional 주석
     // 2. testFillEveryDomesticCompanies(): Company + StockAsBi 추가
-    // 3. updateDomesticStockMin(): StockMin 추가
+    // 3. updateStockMin(): StockMin 추가
     // 4. testCheckOrder(): StockOrder -> StockHold
     // 5-1. @Transactional 주석 풀기
     // 5-2. ActiveProfiles dev -> test
@@ -65,10 +65,10 @@ public class CompanyServiceTest {
     // update StockMin
     // If you finished with updating, remove comment on @Transactional
 //    @Test
-//    @Transactional
-//    public void testUpdateDomesticStockMin() throws InterruptedException {
-//        stockMinService.updateDomesticStockMin();
-//    }
+    @Transactional
+    public void testupdateStockMin() throws InterruptedException {
+        stockMinService.updateStockMin();
+    }
 
     @Test
     @Transactional

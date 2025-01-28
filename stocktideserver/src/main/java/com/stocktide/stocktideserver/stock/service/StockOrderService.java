@@ -413,10 +413,9 @@ public class StockOrderService {
     // 멤버의 모든 StockOrders 불러오기
     public List<StockOrderResponseDto> getMemberStockOrders(long memberId) {
         List<StockOrder> stockOrders = stockOrderRepository.findAllByMember_MemberIdOrderByModifiedAtDesc(memberId);
-        List<StockOrderResponseDto> stockOrderRepositories = stockOrders.stream()
-                .map(stockOrder -> stockMapper.stockOrderToStockOrderResponseDto(stockOrder)).collect(Collectors.toList());
 
-        return stockOrderRepositories;
+        return stockOrders.stream()
+                .map(stockMapper::stockOrderToStockOrderResponseDto).collect(Collectors.toList());
     }
 
     // 미체결 예약 주문 취소

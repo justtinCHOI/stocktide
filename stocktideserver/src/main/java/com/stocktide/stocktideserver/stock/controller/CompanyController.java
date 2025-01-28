@@ -1,18 +1,16 @@
 package com.stocktide.stocktideserver.stock.controller;
 
-import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.stock.dto.*;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
-import com.stocktide.stocktideserver.stock.service.ApiCallService;
+import com.stocktide.stocktideserver.stock.service.DomesticApiService;
 import com.stocktide.stocktideserver.stock.service.CompanyService;
 import com.stocktide.stocktideserver.stock.service.StockMinService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +26,7 @@ public class CompanyController {
     private final StockMapper stockMapper;
     private final CompanyRepository companyRepository;
     private StockMinService stockMinService;
-    private ApiCallService apiCallService;
+    private DomesticApiService apiCallService;
 
     @GetMapping("/basic/{companyId}")
     public ResponseEntity<StockBasicDto> getStockBasic(@PathVariable Long companyId) {
@@ -48,7 +46,7 @@ public class CompanyController {
             }
 
             // 3. stockCode를 사용하여 API 호출
-            StockBasicDto response = apiCallService.getStockBasicFromApi(stockCode);
+            StockBasicDto response = apiCallService.getStockBasicDataFromApi(stockCode);
             if (response == null) {
                 log.error("No response from API for stock code: {}", stockCode);
                 return ResponseEntity.noContent().build();
@@ -80,7 +78,7 @@ public class CompanyController {
             }
 
             // 3. stockCode를 사용하여 API 호출
-            StockBalanceDto response = apiCallService.getStockBalanceFromApi(stockCode);
+            StockBalanceDto response = apiCallService.getStockBalanceDataFromApi(stockCode);
             if (response == null) {
                 log.error("No response from API for stock code: {}", stockCode);
                 return ResponseEntity.noContent().build();
@@ -104,7 +102,7 @@ public class CompanyController {
             }
             log.info("Company code: {}", company.getCode());
 
-            StockNewsDto response = apiCallService.getNewsFromApi(company.getCode());
+            StockNewsDto response = apiCallService.getNewsDataFromApi(company.getCode());
             if (response == null) {
                 return ResponseEntity.noContent().build();
             }
@@ -122,7 +120,7 @@ public class CompanyController {
     @GetMapping("/domestic/all")
     public ResponseEntity<?> getAllDomesticCompanies() {
         try {
-            StockListResponseDto response = apiCallService.getCodesFromApi();
+            StockListResponseDto response = apiCallService.getCodesDataFromApi();
 
             if (response == null || response.getOutput() == null) {
                 return ResponseEntity

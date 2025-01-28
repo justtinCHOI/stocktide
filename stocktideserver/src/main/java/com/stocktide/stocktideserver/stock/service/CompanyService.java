@@ -6,6 +6,7 @@ import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
+import com.stocktide.stocktideserver.stock.repository.StockAsBiRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,30 +21,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyService {
     private final CompanyRepository companyRepository;
-    private final ApiCallService apiCallService;
-    private final ApiMapper apiMapper;
+    private final StockService stockService;
 
-    //code -> Company
+    // code -> Company
     public Company findCompanyByCode(String stockCode) {
         return companyRepository.findByCode(stockCode);
     }
 
-    //autoIncrement -> Company
+    // autoIncrement -> Company
     public Company findCompanyById(long companyId) {
-//        log.info("----------------------------------findCompanyById started");
-        Company company = companyRepository.findByCompanyId(companyId);
-//        log.info("----------------------------------findCompanyById finished {}", company);
-        return company;
+        return companyRepository.findByCompanyId(companyId);
     }
 
     // 모든 회사 리턴
     public List<Company> findCompanies() {
-//        log.info("---------------findCompanies  started----------------------------------------");
-        List<Company> all = companyRepository.findAll();
-//        log.info("---------------findCompanies  finished {}----------------------------------------", all);
-        return all;
+        return companyRepository.findAll();
     }
-
 
     // 특정 회사 저장
     public Company saveCompany(Company company) {
@@ -57,10 +50,9 @@ public class CompanyService {
 
     public void fillCompany() {
         Company company = new Company();
-
     }
 
-    //회사들의 의 korName, code를 채우고 데이터베이스에 저장
+    //회사들의 의 korName, code 를 채우고 데이터베이스에 저장
     public void fillDomesticCompanies() throws InterruptedException {
         List<String> korName = List.of("삼성전자", "POSCO홀딩스", "셀트리온", "에코프로", "에코프로비엠", "디와이", "쿠쿠홀딩스", "카카오뱅크", "한세엠케이", "KG케미칼", "LG화학", "현대차", "LG전자", "기아");
         List<String> code = List.of("005930", "005490", "068270", "086520", "247540", "013570", "192400", "323410", "069640", "001390", "051910", "005380", "066570", "000270");
@@ -71,20 +63,13 @@ public class CompanyService {
             company.setKorName(korName.get(i));
             company.setStockAsBi(new StockAsBi());
 
-            StockasbiDataDto stockasbiDataDto = apiCallService.getStockasbiDataFromApi(company.getCode());
-            //StockasbiDataDto -> StockAsBiOutput1 -> StockAsBi
-            StockAsBi stockAsBi = apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
-            
-            //양방향 관계이므로 서로에 저장
+            StockAsBi stockAsBi = stockService.getStockAsBiFromApi(company);
+
             company.setStockAsBi(stockAsBi);
-            stockAsBi.setCompany(company);
-
             Thread.sleep(500);
-
             companyRepository.save(company);
         }
     }
-
 
     public void fillEveryDomesticCompanies() throws InterruptedException {
         List<String> korName = List.of(
@@ -146,18 +131,9 @@ public class CompanyService {
                 company.setKorName(korName.get(i));
                 company.setStockAsBi(new StockAsBi());
 
-                StockasbiDataDto stockasbiDataDto = apiCallService.getStockasbiDataFromApi(currentCode);
-
-                if (stockasbiDataDto == null || stockasbiDataDto.getOutput1() == null) {
-                    log.warn("Failed to fetch stock data for {} ({})", korName.get(i), currentCode);
-                    continue;
-                }
-
-                StockAsBi stockAsBi = apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
+                StockAsBi stockAsBi = stockService.getStockAsBiFromApi(company);
 
                 company.setStockAsBi(stockAsBi);
-                stockAsBi.setCompany(company);
-
                 companyRepository.save(company);
                 addedCount++;
 

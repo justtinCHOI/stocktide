@@ -53,10 +53,7 @@ public class StockHoldService {
 
      //회원의 모든 StockHold
      public List<StockHold> getMemberStockHolds(long memberId) {
-        List<StockHold> stockHolds = stockHoldRepository.findAllByMember_MemberId(memberId);
-
-
-        return stockHolds;
+         return stockHoldRepository.findAllByMember_MemberId(memberId);
     }
 
     //회원의 모든 StockHoldResponseDto
