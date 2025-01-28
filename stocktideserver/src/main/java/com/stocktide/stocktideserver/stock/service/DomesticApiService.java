@@ -1,15 +1,14 @@
 package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.stock.dto.*;
-import com.stocktide.stocktideserver.stock.entity.Company;
-import com.stocktide.stocktideserver.stock.entity.StockAsBi;
-import com.stocktide.stocktideserver.stock.entity.StockInf;
-import com.stocktide.stocktideserver.stock.entity.StockMin;
+import com.stocktide.stocktideserver.stock.entity.*;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.util.Time;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class DomesticApiService extends AbstractStockApiService {
     @Getter
     @Value("${token.app-key}")
@@ -105,12 +105,6 @@ public class DomesticApiService extends AbstractStockApiService {
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
     private final ApiMapper apiMapper;
-
-    public DomesticApiService(RestTemplate restTemplate, TokenService tokenService, ApiMapper apiMapper) {
-        this.restTemplate = restTemplate;
-        this.tokenService = tokenService;
-        this.apiMapper = apiMapper;
-    }
 
     @Override
     public StockasbiDataDto getStockAsBiDataFromApi(String stockCode){
@@ -568,6 +562,16 @@ public class DomesticApiService extends AbstractStockApiService {
             log.error("Error fetching news: ", e);
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public StockName getStockNameFromApi(Company company) {
+        String stockCode = company.getCode();
+        StockBasicDto stockBasicDto = getStockBasicDataFromApi(stockCode);
+        StockName stockName = new StockName();
+        stockName.setEngName(stockBasicDto.getOutput().getPrdt_eng_abrv_name());
+        stockName.setKorName(stockBasicDto.getOutput().getPrdt_abrv_name());
+        return stockName;
     }
 
     @Override

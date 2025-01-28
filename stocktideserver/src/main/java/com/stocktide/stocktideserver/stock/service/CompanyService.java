@@ -3,13 +3,16 @@ package com.stocktide.stocktideserver.stock.service;
 import com.stocktide.stocktideserver.stock.dto.CompanyModifyDTO;
 import com.stocktide.stocktideserver.stock.dto.StockasbiDataDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
+import com.stocktide.stocktideserver.stock.entity.MarketType;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
+import com.stocktide.stocktideserver.stock.entity.StockName;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import com.stocktide.stocktideserver.stock.repository.StockAsBiRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final StockService stockService;
@@ -52,7 +55,29 @@ public class CompanyService {
         Company company = new Company();
     }
 
-    //회사들의 의 korName, code 를 채우고 데이터베이스에 저장
+    // 회사의 korName, engName, code, stockAsBi 를 채우고 데이터베이스에 저장
+    public void fillDomesticCompany() throws InterruptedException {
+        String stockCode = "005930";
+
+        Company company = new Company();
+        company.setCode(stockCode);
+        company.setMarketType(MarketType.DOMESTIC);
+
+        StockName stockName = stockService.getStockNameFromApi(company);
+
+        company.setKorName(stockName.getKorName());
+        company.setEngName(stockName.getEngName());
+
+        company.setStockAsBi(new StockAsBi());
+
+        StockAsBi stockAsBi = stockService.getStockAsBiFromApi(company);
+
+        company.setStockAsBi(stockAsBi);
+        Thread.sleep(500);
+        companyRepository.save(company);
+    }
+
+    // 회사들의 korName, engName, code, stockAsBi 를 채우고 데이터베이스에 저장
     public void fillDomesticCompanies() throws InterruptedException {
         List<String> korName = List.of("삼성전자", "POSCO홀딩스", "셀트리온", "에코프로", "에코프로비엠", "디와이", "쿠쿠홀딩스", "카카오뱅크", "한세엠케이", "KG케미칼", "LG화학", "현대차", "LG전자", "기아");
         List<String> code = List.of("005930", "005490", "068270", "086520", "247540", "013570", "192400", "323410", "069640", "001390", "051910", "005380", "066570", "000270");
@@ -60,6 +85,7 @@ public class CompanyService {
         for(int i = 0; i < code.size(); i++) {
             Company company = new Company();
             company.setCode(code.get(i));
+            company.setMarketType(MarketType.DOMESTIC);
             company.setKorName(korName.get(i));
             company.setStockAsBi(new StockAsBi());
 
@@ -128,6 +154,7 @@ public class CompanyService {
             try {
                 Company company = new Company();
                 company.setCode(currentCode);
+                company.setMarketType(MarketType.DOMESTIC);
                 company.setKorName(korName.get(i));
                 company.setStockAsBi(new StockAsBi());
 

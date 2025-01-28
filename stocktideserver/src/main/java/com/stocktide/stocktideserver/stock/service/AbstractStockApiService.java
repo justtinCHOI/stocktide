@@ -1,9 +1,6 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.stocktide.stocktideserver.stock.entity.Company;
-import com.stocktide.stocktideserver.stock.entity.StockAsBi;
-import com.stocktide.stocktideserver.stock.entity.StockInf;
-import com.stocktide.stocktideserver.stock.entity.StockMin;
+import com.stocktide.stocktideserver.stock.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +22,7 @@ public abstract class AbstractStockApiService {
     public abstract Object getCodesDataFromApi();
     public abstract Object getNewsDataFromApi(String stockCode);
 
+    public abstract StockName getStockNameFromApi(Company company);
     public abstract StockAsBi getStockAsBiFromApi(Company company);
     public abstract List<StockMin> getStockMinFromApi(Company company, String strHour);
     public abstract StockInf getStockInfFromApi(Company company, String strHour);

@@ -1,18 +1,24 @@
 package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.stock.entity.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class StockService {
     private final DomesticApiService domesticApiService;
     private final OverseasApiService overseasApiService;
 
-    public StockService(DomesticApiService domesticApiService, OverseasApiService overseasApiService) {
-        this.domesticApiService = domesticApiService;
-        this.overseasApiService = overseasApiService;
+
+    public StockName getStockNameFromApi(Company company) {
+        AbstractStockApiService apiService = company.getMarketType() == MarketType.DOMESTIC ?
+                domesticApiService : overseasApiService;
+        return apiService.getStockNameFromApi(company);
     }
 
     public StockAsBi getStockAsBiFromApi(Company company) {
@@ -32,5 +38,6 @@ public class StockService {
                 domesticApiService : overseasApiService;
         return apiService.getStockInfFromApi(company, strHour);
     }
+
 
 }

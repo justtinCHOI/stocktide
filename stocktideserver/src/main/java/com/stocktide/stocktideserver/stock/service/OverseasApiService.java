@@ -1,22 +1,21 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.stocktide.stocktideserver.stock.entity.Company;
-import com.stocktide.stocktideserver.stock.entity.StockAsBi;
-import com.stocktide.stocktideserver.stock.entity.StockInf;
-import com.stocktide.stocktideserver.stock.entity.StockMin;
+import com.stocktide.stocktideserver.stock.entity.*;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class OverseasApiService extends AbstractStockApiService {
     @Getter
     @Value("${token.app-key}")
@@ -97,12 +96,6 @@ public class OverseasApiService extends AbstractStockApiService {
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
 
-    public OverseasApiService(RestTemplate restTemplate, TokenService tokenService) {
-        this.restTemplate = restTemplate;
-        this.tokenService = tokenService;
-    }
-
-
     @Override
     public Object getStockAsBiDataFromApi(String stockCode) {
         return null;
@@ -165,6 +158,11 @@ public class OverseasApiService extends AbstractStockApiService {
 
     @Override
     public Object getNewsDataFromApi(String stockCode) {
+        return null;
+    }
+
+    @Override
+    public StockName getStockNameFromApi(Company company) {
         return null;
     }
 

@@ -43,14 +43,21 @@ public class CompanyServiceTest {
     // 5-2. ActiveProfiles dev -> test
     // 5-3. 함수 1개 제외하고 전부 주석 (token 발급 주기)
 
+    // Update Company + StockAsBi
+    // If you finished with updating, remove comment on @Transactional
+    @Test
+    @Transactional
+    public void testFillDomesticCompany() throws InterruptedException {
+        companyService.fillDomesticCompany();
+    }
 
     // Update Company + StockAsBi
     // If you finished with updating, remove comment on @Transactional
-//    @Test
-//    @Transactional
-//    public void testFillDomesticCompanies() throws InterruptedException {
-//        companyService.fillDomesticCompanies();
-//    }
+    @Test
+    @Transactional
+    public void testFillDomesticCompanies() throws InterruptedException {
+        companyService.fillDomesticCompanies();
+    }
 
     // Update Company + StockAsBi
     // If you finished with updating, remove comment on @Transactional
@@ -64,9 +71,9 @@ public class CompanyServiceTest {
     // 403 Forbidden: "{"error_description":"접근토큰 발급 잠시 후 다시 시도하세요(1분당 1회)","error_code":"EGW00133"}"
     // update StockMin
     // If you finished with updating, remove comment on @Transactional
-//    @Test
+    @Test
     @Transactional
-    public void testupdateStockMin() throws InterruptedException {
+    public void testUpdateStockMin() throws InterruptedException {
         stockMinService.updateStockMin();
     }
 
