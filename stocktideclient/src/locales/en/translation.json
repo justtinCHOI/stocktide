@@ -6,5 +6,9 @@
     "loginButton": "Sign In",
     "signupButton": "Sign Up",
     "kakaoLogin": "Login with Kakao"
+  },
+  "marketType": {
+    "DOMESTIC": "Domestic",
+    "OVERSEAS": "Overseas"
   }
 }

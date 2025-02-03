@@ -625,8 +625,10 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public Object getStockBasicFromApi(String stockCode) {
-        return null;
+    public StockBasic getStockBasicFromApi(Company company) {
+        String stockCode = company.getCode();
+        StockBasicDto stockBasicDto = getStockBasicDataFromApi(stockCode);
+        return apiMapper.stockBasicDtoToStockBasic(stockBasicDto.getOutput());
     }
 
     @Override

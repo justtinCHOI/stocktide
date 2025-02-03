@@ -6,8 +6,11 @@ import { logoList } from '@utils/companyLogos';
 import { MoveStockItemProps } from '@typings/stock';
 import { useDispatch } from 'react-redux';
 import { addRecentSearch } from '@slices/searchSlice';
+import { useTranslation } from 'react-i18next';
 
 const StockItem: FC<MoveStockItemProps> = ({ company }) => {
+    const { i18n } = useTranslation();
+
     const dispatch = useDispatch();
     const companyLogo = logoList[company.korName] || logo;
 
@@ -26,7 +29,7 @@ const StockItem: FC<MoveStockItemProps> = ({ company }) => {
               <Logo src={companyLogo} alt="stock logo"/>
           </LogoContainer>
           <StockInfo>
-              <StockName>{company.korName}</StockName>
+              <StockName>{i18n.language === 'ko' ? company.korName : company.engName}</StockName>
               <StockCode>{company.code}</StockCode>
           </StockInfo>
       </StockItemWrapper>

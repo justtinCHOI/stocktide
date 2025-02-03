@@ -32,7 +32,9 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
         return {
             companyId: company.companyId,
             code: company.code,
+            marketType: company.marketType,
             korName: company.korName,
+            engName: company.engName,
             stockPrice: company.stockInfResponseDto.stck_prpr,// 현재 주가
             stockChangeAmount: company.stockInfResponseDto.prdy_vrss,//전일 대비 주가
             stockChangeRate: company.stockInfResponseDto.prdy_ctrt,
@@ -44,7 +46,9 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
         return {
             companyId: company.companyId,
             code: company.code,
+            marketType: company.marketType,
             korName: company.korName,
+            engName: company.engName,
             stockPrice: company.stockInfResponseDto.stck_prpr,// 현재 주가
             priceChangeAmount: company.stockInfResponseDto.prdy_vrss, //전일 대비 주가
             transactionVolume: company.stockInfResponseDto.acml_vol, //거래량
@@ -53,12 +57,9 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
         };
     });
 
-    const extractedData3 = data as CompanyResponseDto[];
-
     return {
         data: extractedData,
         data2: extractedData2,
-        data3: extractedData3,
         isLoading,
         isError,
         refetch

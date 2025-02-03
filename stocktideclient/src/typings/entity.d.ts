@@ -17,14 +17,21 @@ export interface Member extends BaseEntity {
   memberStatus: MemberStatus;
 }
 
+export enum MarketType {
+  DOMESTIC = 'DOMESTIC',
+  OVERSEAS = 'OVERSEAS'
+}
+
 // Company Entity 인터페이스
 export interface Company extends BaseEntity {
   companyId: number;
   code: string;
   korName: string;
+  engName: string;
   stockAsBi: StockAsBi;
   stockInf: StockInf;
 }
+
 
 // StockAsBi Entity 인터페이스
 export interface StockAsBi {

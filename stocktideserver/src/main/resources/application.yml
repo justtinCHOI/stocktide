@@ -45,10 +45,13 @@ stock-url:
     stockCredit: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/credit-by-company"
     stockNews: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/news-title"
   overseas:
-    stockasbi: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn"
-    stockhour: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice"
+    stockInf: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/price"
+    stockasbi: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/inquire-asking-price"
+    stockhour: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/inquire-time-itemchartprice"
     kospi: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-indexchartprice"
-    stockBasic: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/search-stock-info"
+    stockBasic: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/search-info"
+    stockDetail: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/price-detail"
+
     stockBalance: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/balance-sheet"
     stockIncome: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/income-statement"
     stockFinancial: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/financial-ratio"

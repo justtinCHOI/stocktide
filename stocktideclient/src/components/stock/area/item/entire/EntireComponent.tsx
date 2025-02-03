@@ -14,17 +14,16 @@ import {
 import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
 import { AlertTriangle } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
-
+import { useParams } from 'react-router';
 
 function EntireComponent() {
+  const { area } = useParams();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const [showChangePrice, setShowChangePrice] = useState(false);
   const {moveToChart} = useCustomMove();
 
-  const {data: companies, isLoading, isError, refetch} = useCompanyData(1, 79);
-
-  const companiesList = companies || [];
+  const {data: companies, isLoading, isError, refetch} = area === 'domestic' ? useCompanyData(1, 79) : useCompanyData(80, 80) ;
 
   if (isLoading) {
     return (
@@ -69,15 +68,17 @@ function EntireComponent() {
     return (
       <ListContainer>
         <StockList>
-          {companiesList.map((company) => (
-            <StockItem
-              key={company.companyId}
-              company={company}
-              setShowChangePrice={setShowChangePrice}
-              showChangePrice={showChangePrice}
-              onclick={() => moveToChart(company.companyId)}
-            />
-          ))}
+          {companies?.map((company) => {
+            return (
+              <StockItem
+                key={company.companyId}
+                company={company}
+                setShowChangePrice={setShowChangePrice}
+                showChangePrice={showChangePrice}
+                onclick={() => moveToChart(company.companyId)}
+              />
+            )
+          })}
         </StockList>
         <ContentBottom/>
         </ListContainer>

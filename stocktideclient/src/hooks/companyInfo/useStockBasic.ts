@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { StockBasicDto } from '@typings/company';
+import { StockBasicResponseDto } from '@typings/company';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 
-const fetchStockBasic = async (companyId: number): Promise<StockBasicDto> => {
+const fetchStockBasic = async (companyId: number): Promise<StockBasicResponseDto> => {
   try {
     const { data } = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/company/basic/${companyId}`

@@ -34,6 +34,7 @@ const profitUnit = "원";
 
 const ProfitComponent: FC =() => {
   const isMobile = useMediaQuery('(max-width: 768px)');
+
   const {
     holdingStockData: stockHolds,
     holdingStockLoading: isLoading,

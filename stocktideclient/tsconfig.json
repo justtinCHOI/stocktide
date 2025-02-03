@@ -21,7 +21,8 @@
       "@styles/*": ["src/styles/*"],
       "@typings/*": ["src/typings/*"],
       "@utils/*": ["src/utils/*"]
-    }
+    },
+    "jsx": "react"
   },
   "include": [
     "src/**/*.ts",

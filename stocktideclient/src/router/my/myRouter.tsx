@@ -7,7 +7,6 @@ const ProfitPage = lazy(() => import("@pages/my/profit/Profit"))
 const MemberInfoPage = lazy(() => import("@pages/my/info/MemberInfo"))
 const MemberModifyPage = lazy(() => import("@pages/my/modify/MemberModify"))
 const SettingPage = lazy(() => import("@pages/my/setting/Setting"))
-const CompanyAddPage = lazy(() => import("@pages/my/add/CompanyAdd"))
 const AccountPage = lazy(() => import("@pages/my/account/Account"))
 
 const myRouter = () => {
@@ -31,10 +30,6 @@ const myRouter = () => {
         {
             path: 'setting',
             element: <Suspense fallback={Loading}><SettingPage/></Suspense>
-        },
-        {
-            path: 'add',
-            element: <Suspense fallback={Loading}><CompanyAddPage/></Suspense>
         },
         {
             path: "account",

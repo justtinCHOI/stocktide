@@ -1,3 +1,5 @@
+import { extractedCompanyData } from '@typings/hooks';
+
 export interface StockMinData {
   stockMinId: number;
   companyId: number;
@@ -53,28 +55,9 @@ export interface StockChartResponse {
   loading: boolean;
 }
 
-export interface StockItemProps {
-  company: {
-    companyId: number;
-    code: string;
-    korName: string;
-    stockPrice: string;
-    stockChangeAmount: string;
-    stockChangeRate: string;
-  };
-  setShowChangePrice: (show: boolean) => void;
-  showChangePrice: boolean;
-}
 
 export interface MoveStockItemProps {
-  company: {
-    companyId: number;
-    code: string;
-    korName: string;
-    stockPrice: string;
-    stockChangeAmount: string;
-    stockChangeRate: string;
-  };
+  company: extractedCompanyData;
   setShowChangePrice: (show: boolean) => void;
   showChangePrice: boolean;
   onclick: () => void;

@@ -2,11 +2,13 @@ package com.stocktide.stocktideserver.stock.controller;
 
 import com.stocktide.stocktideserver.stock.dto.*;
 import com.stocktide.stocktideserver.stock.entity.Company;
+import com.stocktide.stocktideserver.stock.entity.StockBasic;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import com.stocktide.stocktideserver.stock.service.DomesticApiService;
 import com.stocktide.stocktideserver.stock.service.CompanyService;
 import com.stocktide.stocktideserver.stock.service.StockMinService;
+import com.stocktide.stocktideserver.stock.service.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,34 +27,28 @@ public class CompanyController {
     private final CompanyService companyService;
     private final StockMapper stockMapper;
     private final CompanyRepository companyRepository;
+    private final StockService stockService;
     private StockMinService stockMinService;
     private DomesticApiService apiCallService;
 
     @GetMapping("/basic/{companyId}")
-    public ResponseEntity<StockBasicDto> getStockBasic(@PathVariable Long companyId) {
+    public ResponseEntity<StockBasicResponseDto> getStockBasic(@PathVariable Long companyId) {
         try {
-            // 1. companyId로 Company 엔티티 조회
+
             Company company = companyService.findCompanyById(companyId);
             if (company == null) {
                 log.error("Company not found with id: {}", companyId);
                 return ResponseEntity.notFound().build();
             }
 
-            // 2. Company 엔티티에서 stockCode 추출
-            String stockCode = company.getCode();
-            if (stockCode == null || stockCode.isEmpty()) {
-                log.error("Stock code is null or empty for company id: {}", companyId);
-                return ResponseEntity.badRequest().build();
-            }
-
-            // 3. stockCode를 사용하여 API 호출
-            StockBasicDto response = apiCallService.getStockBasicDataFromApi(stockCode);
-            if (response == null) {
-                log.error("No response from API for stock code: {}", stockCode);
+            StockBasic stockBasic = stockService.getStockBasicResponseFromApi(company);
+            if (stockBasic == null) {
+                log.error("No response from API for stock code: {}", companyId);
                 return ResponseEntity.noContent().build();
             }
+            StockBasicResponseDto StockBasicResponseDto = stockMapper.stockBasicToStockBasicResponseDto(stockBasic);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(StockBasicResponseDto);
 
         } catch (Exception e) {
             log.error("Error fetching stock basic data for company id: {}, error: {}", companyId, e.getMessage());

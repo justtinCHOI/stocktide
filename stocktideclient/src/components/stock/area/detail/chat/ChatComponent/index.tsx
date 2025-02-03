@@ -25,12 +25,14 @@ import {
 import { useSocket } from '@hooks/useSocket';
 import useGetStockInfo from '@hooks/useGetStockInfo';
 import useCustomMember from '@hooks/useCustomMember';
+import { useTranslation } from 'react-i18next';
 
 interface ChatComponentProps {
     companyId: number;
 }
 
 const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
+    const { i18n } = useTranslation();
     const dispatch = useDispatch();
     const {stockInfo: company} = useGetStockInfo(companyId);
     const { loginState } = useCustomMember();
@@ -90,7 +92,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
     return (
       <Container>
           <ChatHeader>
-              <CompanyName>{company?.korName} 채팅방</CompanyName>
+              <CompanyName>{i18n.language === 'ko' ? company?.korName : company?.engName} 채팅방</CompanyName>
               <ParticipantCount>
                       {connectionStatus === 'connected'
                         ? `참여자 ${participants.length}명`

@@ -3,30 +3,17 @@ import styled from 'styled-components';
 import { logoList } from '@utils/companyLogos';
 import logo from '@assets/images/StockTideImage.jpg';
 import useCustomMove from '@hooks/useCustomMove';
+import { extractedCompanyData } from '@typings/hooks';
+import { StockHoldResponseDto } from '@typings/dto';
+import { useTranslation } from 'react-i18next';
 
 export type ProfitStockItemProps = {
-    stockData: {
-        stockHoldId: number;
-        memberId: number;
-        companyId: number;
-        companyKorName: string;
-        stockCount: number;
-        totalPrice: number;
-        percentage: number;
-        stockReturn: number;
-        reserveSellStockCount: number;
-    };
-    companyData?: {
-        companyId: number;
-        code: string;
-        korName: string;
-        stockPrice: string;
-        stockChangeAmount: string;
-        stockChangeRate: string;
-    };
+    stockData: StockHoldResponseDto;
+    companyData?: extractedCompanyData;
 };
 
 const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
+    const { i18n } = useTranslation();
     const company = companyData ? companyData : undefined;
     const companyLogo = company ? (logoList[company.korName] || logo) : logo;
     const {moveToChart} = useCustomMove();
@@ -44,6 +31,7 @@ const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
     const {
         code = "",
         korName = "",
+        engName = "",
         stockPrice = "",
         stockChangeAmount = "",
         stockChangeRate = "",
@@ -73,7 +61,7 @@ const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
                   <Logo src={companyLogo} alt="stock logo"/>
               </LogoContainer>
               <StockInfo>
-                  <StockName>{korName}</StockName>
+                  <StockName>{i18n.language === 'ko' ? korName : engName}</StockName>
                   <StockCode>{code}</StockCode>
               </StockInfo>
               <StockPriceSection>

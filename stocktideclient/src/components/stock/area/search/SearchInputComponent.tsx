@@ -39,6 +39,7 @@ const SearchInputComponent: FC<SearchCompanyComponentProps> = ({area}) => {
   const filterCompanies = (companies: extractedCompanyData[], term: string) => {
     return companies?.filter((company: extractedCompanyData) =>
       company.korName.toLowerCase().includes(term.toLowerCase()) ||
+      company.engName.toLowerCase().includes(term.toLowerCase()) ||
       company.code.includes(term)
     ) || [];
   };
@@ -92,7 +93,7 @@ const SearchInputComponent: FC<SearchCompanyComponentProps> = ({area}) => {
         {/*{suggestions[0] && searchTerm && (*/}
         {/*  <p>*/}
         {/*    {searchTerm}*/}
-        {/*    {suggestions[0].korName.slice(searchTerm.length)}*/}
+        {/*    {i18n.language === 'ko' ? suggestions[0].korName.slice(searchTerm.length)} : suggestions[0].engName.slice(searchTerm.length)*/}
         {/*  </p>*/}
         {/*)}*/}
       </>

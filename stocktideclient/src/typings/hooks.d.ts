@@ -1,10 +1,8 @@
 import { Member, Company, Cash, StockHold, StockOrder, Token } from './entity';
-import { CompanyResponseDto } from '@typings/dto';
 
 export interface CompanyDataResponse {
   data?: extractedCompanyData[];
   data2?: extractedCompanyData2[];
-  data3?: CompanyResponseDto[];
   isLoading: boolean;
   isError: boolean | null;
   refetch: () => void;
@@ -13,7 +11,9 @@ export interface CompanyDataResponse {
 export interface extractedCompanyData{
   companyId: number,
   code: string,
+  marketType: MarketType,
   korName: string,
+  engName: string,
   stockPrice: string,// 현재 주가
   stockChangeAmount: string,//전일 대비 주가
   stockChangeRate: string,
@@ -22,7 +22,9 @@ export interface extractedCompanyData{
 export interface extractedCompanyData2 {
   companyId: number,
   code: string,
+  marketType: MarketType,
   korName: string,
+  engName: string,
   stockPrice: string,// 현재 주가
   priceChangeAmount: string, //전일 대비 주가
   transactionVolume: string, //거래량

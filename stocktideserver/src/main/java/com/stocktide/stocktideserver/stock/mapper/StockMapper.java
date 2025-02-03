@@ -27,7 +27,9 @@ public interface StockMapper {
 
         companyResponseDto.setCompanyId(company.getCompanyId());
         companyResponseDto.setCode(company.getCode());
+        companyResponseDto.setMarketType(company.getMarketType());
         companyResponseDto.setKorName(company.getKorName());
+        companyResponseDto.setEngName(company.getEngName());
         companyResponseDto.setStockAsBiResponseDto(stockAsBiToStockAsBiResponseDto(company.getStockAsBi()));
         companyResponseDto.setStockInfResponseDto(stockInfToStockInfResponseDto(company.getStockInf()));
 
@@ -61,7 +63,9 @@ public interface StockMapper {
 
             stockHoldResponseDto.setStockHoldId(stockHold.getStockHoldId());
             stockHoldResponseDto.setCompanyId(stockHold.getCompany().getCompanyId());
+            stockHoldResponseDto.setCompanyMarketType(stockHold.getCompany().getMarketType());
             stockHoldResponseDto.setCompanyKorName(stockHold.getCompany().getKorName());
+            stockHoldResponseDto.setCompanyEngName(stockHold.getCompany().getEngName());
             stockHoldResponseDto.setMemberId(stockHold.getMember().getMemberId());
             stockHoldResponseDto.setStockCount(stockHold.getStockCount());
             stockHoldResponseDto.setReserveSellStockCount(stockHold.getReserveStockCount());
@@ -88,4 +92,12 @@ public interface StockMapper {
         }
         return starResponseDtos;
     }
+
+    @Mapping(source = "pdno", target = "pdno")
+    @Mapping(source = "prdt_abrv_name", target = "prdt_abrv_name")
+    @Mapping(source = "prdt_eng_abrv_name", target = "prdt_eng_abrv_name")
+    @Mapping(source = "lstg_stqt", target = "lstg_stqt")
+    @Mapping(source = "cpta", target = "cpta")
+    @Mapping(source = "papr", target = "papr")
+    StockBasicResponseDto stockBasicToStockBasicResponseDto(StockBasic stockBasic);
 }

@@ -3,6 +3,7 @@ import { dummyLogo, logoList } from "@utils/companyLogos.ts"
 
 import { extractedCompanyData2 } from '@typings/hooks';
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const volumeText = "거래량";
 
@@ -13,8 +14,9 @@ interface StockOverviewProps {
 }
 
 const StockOverview: FC<StockOverviewProps> = ({ stockInfo, stockInfoLoading, stockInfoError }) => {
+  const { i18n } = useTranslation();
 
-    const corpName = stockInfo?.korName;
+    const corpName = stockInfo && i18n.language === 'ko' ? stockInfo.korName : stockInfo.engName;
 
     const logos = {
         ...logoList

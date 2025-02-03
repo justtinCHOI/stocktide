@@ -1,5 +1,6 @@
 package com.stocktide.stocktideserver.stock.dto;
 
+import com.stocktide.stocktideserver.stock.entity.MarketType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,11 @@ public class StockHoldResponseDto {
 
     private long companyId; //from company
 
+    private MarketType companyMarketType; //from company
+
     private String companyKorName; // from company
+
+    private String companyEngName; // from company
 
     private int stockCount; // from stockCount
 

@@ -12,6 +12,7 @@ import {
 } from '@styles/SkeletonBuyStyles';
 import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
 import { AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface BuyComponentProps {
     companyId: number;
@@ -20,6 +21,7 @@ interface BuyComponentProps {
 const marketType = "코스피";
 
 const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
+    const { i18n } = useTranslation();
 
     const {
         stockInfo,
@@ -88,7 +90,7 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
                         <div className="StockCode">
                             {stockCode} | {marketType}
                         </div>
-                        <div className="CorpName">{corpName}</div>
+                        <div className="CorpName">{i18n.language === 'ko' ? stockInfo.korName : stockInfo.engName}</div>
                     </div>
                     <div className="StockPrice">{stockPrice}</div>
                     <div className="PriceChangeAmount">

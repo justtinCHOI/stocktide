@@ -26,7 +26,7 @@ public abstract class AbstractStockApiService {
     public abstract StockAsBi getStockAsBiFromApi(Company company);
     public abstract List<StockMin> getStockMinFromApi(Company company, String strHour);
     public abstract StockInf getStockInfFromApi(Company company, String strHour);
-    public abstract Object getStockBasicFromApi(String stockCode);
+    public abstract StockBasic getStockBasicFromApi(Company company);
     public abstract Object getStockBalanceFromApi(String stockCode);
     public abstract Object getStockIncomeFromApi(String stockCode);
     public abstract Object getStockFinancialFromApi(String stockCode);

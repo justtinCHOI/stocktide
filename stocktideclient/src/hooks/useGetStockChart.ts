@@ -6,6 +6,7 @@ import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { CompareChartData } from '@typings/stock';
 import { calculateMovingAvgLine, organizeData } from '@utils/stockUtil';
+import { useTranslation } from 'react-i18next';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -18,6 +19,8 @@ const averageLineMinute = 10;
 const averageDay = 10;
 
 const useGetStockChart = (companyId: number) => {
+    const { i18n } = useTranslation();
+
     const { stockPrice, stockPriceLoading } = useGetStockData(companyId);
     const { stockInfo, stockInfoLoading } = useGetStockInfo(companyId);
 
@@ -33,7 +36,7 @@ const useGetStockChart = (companyId: number) => {
     // 회사정보 -> 회사이름, 봉 420개 -> chartData
     useEffect(() => {
         if (stockPrice && stockInfo) {
-            setCorpName(stockInfo.korName); // 마르하벤, Marhaban, 봉쥬
+            setCorpName(i18n.language === 'ko' ? stockInfo.korName : stockInfo.engName); // 마르하벤, Marhaban, 봉쥬
             setChartData(stockPrice);
         }
     }, [stockPrice, stockInfo]);
@@ -41,7 +44,7 @@ const useGetStockChart = (companyId: number) => {
     // 비교회사정보 -> 비교회사이름
     useEffect(() => {
         if (compareInfo && compareId !== null) {
-            const compareStockName = compareInfo.korName;
+            const compareStockName = i18n.language === 'ko' ? stockInfo.korName : stockInfo.engName;
             setCompareName(compareStockName);
         }
     }, [compareId, compareInfo]);

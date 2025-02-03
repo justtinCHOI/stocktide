@@ -5,7 +5,6 @@ import {Loading} from "@router/root";
 const Chart = lazy(() => import("@pages/stock/area/detail/chart/Chart"));
 const Buy = lazy(() => import("@pages/stock/area/detail/buy/Buy"));
 const CompanyInfo = lazy(() => import("@pages/stock/area/detail/info/CompanyInfo"));
-const CompanyModify = lazy(() => import("@pages/stock/area/detail/modify/CompanyModify"));
 const News = lazy(() => import("@pages/stock/area/detail/news/News"));
 const Chat = lazy(() => import("@pages/stock/area/detail/chat/Chat"));
 
@@ -26,10 +25,6 @@ const detailRouter = () => {
         {
             path: 'info/:companyId',
             element: <Suspense fallback={Loading}><CompanyInfo/></Suspense>,
-        },
-        {
-            path: 'modify/:companyId',
-            element: <Suspense fallback={Loading}><CompanyModify/></Suspense>,
         },
         {
             path: 'news/:companyId',

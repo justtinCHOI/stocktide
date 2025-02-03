@@ -1,4 +1,4 @@
-import { OrderTypes, OrderStates, Cash } from './entity';
+import { OrderTypes, OrderStates, Cash, MarketType } from './entity';
 
 // Member DTOs
 export interface MemberDTO {
@@ -20,19 +20,14 @@ export interface MemberModifyDTO {
   password: string;
 }
 
-// Company DTOs
 export interface CompanyResponseDto {
   companyId: number;
   code: string;
+  marketType: MarketType;
   korName: string;
+  engName: string;
   stockAsBiResponseDto: StockAsBiResponseDto;
   stockInfResponseDto: StockInfResponseDto;
-}
-
-export interface CompanyModifyDTO {
-  companyId: number;
-  code: string;
-  korName: string;
 }
 
 export interface StockAsBiResponseDto {
@@ -96,7 +91,9 @@ export interface StockHoldResponseDto {
   stockHoldId: number;
   memberId: number;
   companyId: number;
+  companyMarketType: MarketType;
   companyKorName: string;
+  companyEngName: string;
   stockCount: number;
   totalPrice: number;
   percentage: number;
