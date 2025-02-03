@@ -12,8 +12,12 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -196,57 +200,63 @@ public class OverseasApiService extends AbstractStockApiService {
             log.info("---------------getStockAsBiDataFromApi  error----------------------------------------");
             return null;
         }
-
     }
 
-//    @Override
-//    public StockMinOverseasDto getStockMinDataFromApi(String stockCode, String strHour) {
-//        log.info("---------------getStockMinDataFromApi  started----------------------------------------");
-//        String token = tokenService.getAccessToken();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", "Bearer " + token);
-//        headers.add("appkey", APP_KEY);
-//        headers.add("appsecret", APP_SECRET);
-//        headers.add("tr_id", "FHKST03010200");
-//        headers.add("custtype", CUST_TYPE);
-//
-//        // AUTH: 공백
-//        // EXCD: 시장 (NAS: 나스닥)
-//        // SYMB: 종목코드
-//
-//        String uri = STOCKASBI_URL + "?" +
-//                "AUTH=" + AUTH +
-//                "&" + "EXCD=" + EXCD +
-//                "&" + "SYMB=" + stockCode;
-//
-//        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-//
-//        ResponseEntity<StockMinOverseasDto> response = restTemplate.exchange(
-//                uri,
-//                HttpMethod.GET,
-//                new HttpEntity<>(headers),
-//                StockMinOverseasDto.class
-//        );
-//
-//        if (response.getStatusCode().is2xxSuccessful()) {
-//            StockMinOverseasDto stockMinOverseasDto = response.getBody();
-//            log.info("---------------getStockMinDataFromApi  finished----------------------------------------");
-//
-//            return stockMinOverseasDto;
-//
-//        } else {
-//            log.info("error");
-//            log.info("---------------getStockMinDataFromApi  err----------------------------------------");
-//
-//            return null;
-//        }
-//
-//    }
-
     @Override
-    public String getStockMinDataFromApi(String stockCode, String strHour) {
-        return null;
+    public StockMinOverseasDto getStockMinDataFromApi(String stockCode, String strHour) {
+        log.info("---------------getStockMinDataFromApi  started----------------------------------------");
+        String token = tokenService.getAccessToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        headers.add("appkey", APP_KEY);
+        headers.add("appsecret", APP_SECRET);
+        headers.add("tr_id", "HHDFS76950200");
+        headers.add("custtype", CUST_TYPE);
+
+        // AUTH: 공백
+        // EXCD: 시장 (NAS: 나스닥)
+        // SYMB: 종목코드
+        // NMIN:
+        // PINC:
+        // NEXT:
+        // NREC:
+        // FILL:
+        // KEYB:
+
+        String uri = STOCKASBI_URL + "?" +
+                "AUTH=" + AUTH +
+                "&" + "EXCD=" + EXCD +
+                "&" + "SYMB=" + stockCode +
+                "&" + "NMIN=" + 1 +
+                "&" + "PINC=" + 1 +
+                "&" + "NEXT=" +
+                "&" + "NREC=" + 10 +
+                "&" + "FILL=" + 1 +
+                "&" + "KEYB=";
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<StockMinOverseasDto> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                StockMinOverseasDto.class
+        );
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            StockMinOverseasDto stockMinOverseasDto = response.getBody();
+            log.info("---------------getStockMinDataFromApi  finished----------------------------------------");
+
+            return stockMinOverseasDto;
+
+        } else {
+            log.info("error");
+            log.info("---------------getStockMinDataFromApi  err----------------------------------------");
+
+            return null;
+        }
+
     }
 
     @Override
@@ -382,7 +392,17 @@ public class OverseasApiService extends AbstractStockApiService {
 
     @Override
     public List<StockMin> getStockMinFromApi(Company company, String strHour) {
-        return List.of();
+        String stockCode = company.getCode();
+        LocalDateTime now = LocalDateTime.now();
+        StockMinOverseasDto stockMinOverseasDto = getStockMinDataFromApi(stockCode, strHour);
+        // dto -> entity 전환, 최신일자
+        return Arrays.stream(stockMinOverseasDto.getOutput2())
+                .map(stockMinOutput2 -> {
+                    StockMin stockMin = apiMapper.stockMinOverseasOutput2ToStockMin(stockMinOutput2);
+                    stockMin.setCompany(company);
+                    stockMin.setStockTradeTime(now);
+                    return stockMin;
+                }).sorted(Comparator.comparing(StockMin::getStockTradeTime)).collect(Collectors.toList());
     }
 
     @Override

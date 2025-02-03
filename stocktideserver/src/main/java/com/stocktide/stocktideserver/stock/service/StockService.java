@@ -46,7 +46,7 @@ public class StockService {
         return apiService.getStockInfFromApi(company, strHour);
     }
 
-    public StockBasic getStockBasicResponseFromApi(Company company) {
+    public StockBasic getStockBasicFromApi(Company company) {
         AbstractStockApiService apiService = company.getMarketType() == MarketType.DOMESTIC ?
                 domesticApiService : overseasApiService;
         return apiService.getStockBasicFromApi(company);

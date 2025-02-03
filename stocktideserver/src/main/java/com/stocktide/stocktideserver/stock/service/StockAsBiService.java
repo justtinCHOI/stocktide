@@ -2,10 +2,8 @@ package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.exception.BusinessLogicException;
 import com.stocktide.stocktideserver.exception.ExceptionCode;
-import com.stocktide.stocktideserver.stock.dto.StockasbiDataDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
-import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.stock.repository.StockAsBiRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

@@ -41,7 +41,7 @@ public class CompanyController {
                 return ResponseEntity.notFound().build();
             }
 
-            StockBasic stockBasic = stockService.getStockBasicResponseFromApi(company);
+            StockBasic stockBasic = stockService.getStockBasicFromApi(company);
             if (stockBasic == null) {
                 log.error("No response from API for stock code: {}", companyId);
                 return ResponseEntity.noContent().build();

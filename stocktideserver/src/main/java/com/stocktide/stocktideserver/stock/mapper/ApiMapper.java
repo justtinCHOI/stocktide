@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 public interface ApiMapper {
     @Mapping(target = "stockAsBiId", ignore = true) // 데이터베이스에서 생성되므로 무시
     @Mapping(target = "company", ignore = true) //  필요한 경우 적절히 처리
-    StockAsBi stockAsBiOutput1ToStockAsBi(StockasbiDataDto.StockAsBiOutput1 stock);
+    StockAsBi stockAsBiOutput1ToStockAsBi(StockAsBiDataDto.StockAsBiOutput1 stock);
     @Mapping(target = "stockInfId", ignore = true) // 데이터베이스에서 생성되므로 무시
     @Mapping(target = "company", ignore = true) // 필요시 적절히 처리
     StockInf stockMinOutput1ToStockInf(StockMinDto.StockMinOutput1 stock);
@@ -90,6 +90,18 @@ public interface ApiMapper {
     @Mapping(source = "cpta", target = "cpta")
     @Mapping(source = "papr", target = "papr")
     StockBasic stockBasicDtoToStockBasic(StockBasicDto.Output ouput);
+
+
+    @Mapping(target = "stockMinId", ignore = true)  // DB에서 자동 생성
+    @Mapping(target = "company", ignore = true)     // 외부에서 설정
+    @Mapping(target = "stockTradeTime", ignore = true) // 외부에서 계산
+    @Mapping(source = "khms", target = "stck_cntg_hour")  // 현지기준시간
+    @Mapping(source = "last", target = "stck_prpr")      // 종가 -> 현재가
+    @Mapping(source = "open", target = "stck_oprc")      // 시가
+    @Mapping(source = "high", target = "stck_hgpr")      // 고가
+    @Mapping(source = "low", target = "stck_lwpr")       // 저가
+    @Mapping(source = "evol", target = "cntg_vol")       // 체결량
+    StockMin stockMinOverseasOutput2ToStockMin(StockMinOverseasDto.Output2 output);
 
 
 }

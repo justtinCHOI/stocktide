@@ -6,7 +6,6 @@ import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.util.Time;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,7 +112,7 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockasbiDataDto getStockAsBiDataFromApi(String stockCode){
+    public StockAsBiDataDto getStockAsBiDataFromApi(String stockCode){
         log.info("---------------getStockAsBiDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
 
@@ -132,14 +131,14 @@ public class DomesticApiService extends AbstractStockApiService {
 
         log.info("---------------getStockAsBiDataFromApi  request send----------------------------------------");
 
-        ResponseEntity<StockasbiDataDto> response = restTemplate.exchange(
+        ResponseEntity<StockAsBiDataDto> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                StockasbiDataDto.class
+                StockAsBiDataDto.class
         );
         if (response.getStatusCode().is2xxSuccessful()) {
-            StockasbiDataDto stockasbiDataDto = response.getBody();
+            StockAsBiDataDto stockasbiDataDto = response.getBody();
             log.info("---------------getStockAsBiDataFromApi successfully finished getOutput1 getAskp1: {}----------------------------------------", stockasbiDataDto.getOutput1().getAskp1());
             return stockasbiDataDto;
         } else {
@@ -583,7 +582,7 @@ public class DomesticApiService extends AbstractStockApiService {
     @Override
     public StockAsBi getStockAsBiFromApi(Company company) {
         String stockCode = company.getCode();
-        StockasbiDataDto stockasbiDataDto = getStockAsBiDataFromApi(stockCode);
+        StockAsBiDataDto stockasbiDataDto = getStockAsBiDataFromApi(stockCode);
         StockAsBi stockAsBi = apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
         // 새로운 stockAsBi의 회사 등록
         stockAsBi.setCompany(company);

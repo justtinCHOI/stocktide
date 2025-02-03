@@ -1,14 +1,11 @@
 package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.stock.dto.CompanyModifyDTO;
-import com.stocktide.stocktideserver.stock.dto.StockasbiDataDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.MarketType;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.entity.StockName;
-import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
-import com.stocktide.stocktideserver.stock.repository.StockAsBiRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

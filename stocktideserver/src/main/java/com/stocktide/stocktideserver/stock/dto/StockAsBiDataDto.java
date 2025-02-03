@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Data
 @NoArgsConstructor
-public class StockasbiDataDto {
+public class StockAsBiDataDto {
 
     private StockAsBiOutput1 output1;
     private StockAsBiOutput2 output2;

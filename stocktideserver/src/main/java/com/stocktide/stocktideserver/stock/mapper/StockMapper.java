@@ -73,7 +73,6 @@ public interface StockMapper {
             stockHoldResponseDto.setPercentage(0D);
             stockHoldResponseDto.setStockReturn(0);
 
-
             stockHoldResponseDtos.add(stockHoldResponseDto);
         }
         return stockHoldResponseDtos;
@@ -100,4 +99,8 @@ public interface StockMapper {
     @Mapping(source = "cpta", target = "cpta")
     @Mapping(source = "papr", target = "papr")
     StockBasicResponseDto stockBasicToStockBasicResponseDto(StockBasic stockBasic);
+
+
+
+
 }

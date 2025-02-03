@@ -57,7 +57,8 @@ public class StockMin { // 회사 분봉 데이터
         int second = Integer.parseInt(this.stck_cntg_hour.substring(4, 6));
 
         // LocalDateTime 객체 생성
-        LocalDateTime customDateTime = LocalDateTime.of(
+
+        this.stockTradeTime = LocalDateTime.of(
                 now.getYear(),
                 now.getMonth(),
                 now.getDayOfMonth(),
@@ -65,7 +66,5 @@ public class StockMin { // 회사 분봉 데이터
                 minute,
                 second
         );
-
-        this.stockTradeTime = customDateTime;
     }
 }

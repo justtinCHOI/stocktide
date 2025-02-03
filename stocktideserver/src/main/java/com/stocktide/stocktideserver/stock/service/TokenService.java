@@ -1,11 +1,13 @@
 package com.stocktide.stocktideserver.stock.service;
 
+import com.stocktide.stocktideserver.formatter.TokenExpireFormatter;
 import com.stocktide.stocktideserver.stock.entity.Token;
 import com.stocktide.stocktideserver.stock.repository.TokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,6 +31,7 @@ public class TokenService {
 
     private final TokenRepository tokenRepository;
     private final RestTemplate restTemplate;
+    private final TokenExpireFormatter tokenExpireFormatter = new TokenExpireFormatter();
 
     public TokenService(RestTemplate restTemplate, TokenRepository tokenRepository) {
         this.restTemplate = restTemplate;
@@ -44,8 +49,6 @@ public class TokenService {
     @Getter
     @Value("${stock-url.token}")
     private String TOKEN_URL;
-
-
 
     public String getAccessToken() {
         log.info("---------------getAccessToken  started----------------------------------------");
@@ -81,7 +84,8 @@ public class TokenService {
 
                 newToken.setTokenId(1L);
                 newToken.setToken(response.getBody().get("access_token").toString());
-                newToken.setExpired(LocalDateTime.now().plusDays(1));
+                String expireTimeStr = response.getBody().get("access_token_token_expired").toString();
+                newToken.setExpired(formateTokenExpire(expireTimeStr));
 
                 tokenRepository.save(newToken);
                 log.info("--------------- isEmpty tokenRepository.save  {}----------------------------------------", newToken.getToken());
@@ -89,7 +93,8 @@ public class TokenService {
             }
             else {
                 token.get().setToken(response.getBody().get("access_token").toString());
-                token.get().setExpired(LocalDateTime.now().plusDays(1));
+                String expireTimeStr = response.getBody().get("access_token_token_expired").toString();
+                token.get().setExpired(formateTokenExpire(expireTimeStr));
 
                 tokenRepository.save(token.get());
 
@@ -108,5 +113,16 @@ public class TokenService {
 
         // 토큰이 비어있거나, 현재 시간이 토큰 유효시간보다 뒤에 있을 때(만료 됨)
         return token.isPresent() && !currentDateTime.isAfter(token.get().getExpired());
+    }
+
+
+    public LocalDateTime formateTokenExpire(String expireTimeStr) {
+        try {
+            return tokenExpireFormatter.parse(expireTimeStr, Locale.getDefault());
+        } catch (ParseException e) {
+            log.error("Failed to parse expire time: {}", expireTimeStr);
+            return LocalDateTime.now().plusDays(1);
+        }
+
     }
 }
