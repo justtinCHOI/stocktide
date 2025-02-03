@@ -105,7 +105,7 @@ public class OverseasApiService extends AbstractStockApiService {
     // private final String FID_INPUT_HOUR_1 = "153000";
     private final String FID_PW_DATA_INCU_YN = "Y";
     private final String CUST_TYPE = "P";
-    private final String PRDT_TYPE_CD= "300"; //  300: 주식, ETF, ETN, ELW, 301:선물옵션, 302 : 채권, 306 : ELS
+    private final String PRDT_TYPE_CD= "512"; //  512: 나스닥
 
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
@@ -137,8 +137,6 @@ public class OverseasApiService extends AbstractStockApiService {
                 "AUTH=" + AUTH +
                 "&" + "EXCD=" + EXCD +
                 "&" + "SYMB=" + stockCode;
-
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
         log.info("---------------getStockInfDataFromApi  request send----------------------------------------");
 
@@ -181,8 +179,6 @@ public class OverseasApiService extends AbstractStockApiService {
                 "&" + "EXCD=" + EXCD +
                 "&" + "SYMB=" + stockCode;
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-
         log.info("---------------getStockAsBiDataFromApi  request send----------------------------------------");
 
         ResponseEntity<StockAsBiOverseasDataDto> response = restTemplate.exchange(
@@ -193,7 +189,8 @@ public class OverseasApiService extends AbstractStockApiService {
         );
         if (response.getStatusCode().is2xxSuccessful()) {
             StockAsBiOverseasDataDto StockAsBiOverseasDataDto = response.getBody();
-            log.info("---------------getStockAsBiDataFromApi successfully finished----------------------------------------");
+            assert StockAsBiOverseasDataDto != null;
+            log.info("---------------getStockAsBiDataFromApi successfully finished----------------------------------------, {}", StockAsBiOverseasDataDto.getOutput2().getPbid1());
             return StockAsBiOverseasDataDto;
         } else {
             log.info("error");
@@ -231,11 +228,9 @@ public class OverseasApiService extends AbstractStockApiService {
                 "&" + "NMIN=" + 1 +
                 "&" + "PINC=" + 1 +
                 "&" + "NEXT=" +
-                "&" + "NREC=" + 10 +
+                "&" + "NREC=" + 120 +
                 "&" + "FILL=" + 1 +
                 "&" + "KEYB=";
-
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
         ResponseEntity<StockMinOverseasDto> response = restTemplate.exchange(
                 uri,
@@ -256,7 +251,6 @@ public class OverseasApiService extends AbstractStockApiService {
 
             return null;
         }
-
     }
 
     @Override
@@ -265,7 +259,8 @@ public class OverseasApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockBasicDto getStockBasicDataFromApi(String stockCode) {
+    public StockBasicOverseasDto getStockBasicDataFromApi(String stockCode) {
+        log.info("---------------getStockBasicDataFromApi  started----------------------------------------");
         try {
             String token = tokenService.getAccessToken();
 
@@ -273,30 +268,30 @@ public class OverseasApiService extends AbstractStockApiService {
             headers.add("Authorization", "Bearer " + token);
             headers.add("appkey", APP_KEY);
             headers.add("appsecret", APP_SECRET);
-            headers.add("tr_id", "CTPF1002R");
+            headers.add("tr_id", "CTPF1702R");
             headers.add("custtype", CUST_TYPE);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            String uri = STOCKBASIC_URL
-                    + "?"
-                    + "PRDT_TYPE_CD=" + PRDT_TYPE_CD
-                    + "&PDNO=" + stockCode;
+            String uri = STOCKBASIC_URL + "?" +
+                    "PRDT_TYPE_CD=" + PRDT_TYPE_CD +
+                    "&" + "PDNO=" + stockCode;
 
-            ResponseEntity<StockBasicDto> response = restTemplate.exchange(
+            ResponseEntity<StockBasicOverseasDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockBasicDto.class
+                    StockBasicOverseasDto.class
             );
-
+            log.info("---------------getStockBasicDataFromApi  finished----------------------------------------");
             return response.getBody();
         } catch (Exception e) {
-            log.error("Error fetching stock basic data: ", e);
+            log.info("---------------getStockBasicDataFromApi  err----------------------------------------");
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
 
-    public StockBasicDto getStockDetailDataFromApi(String stockCode) {
+    public StockDetailOverseasDto getStockDetailDataFromApi(String stockCode) {
+        log.info("---------------getStockDetailDataFromApi  started----------------------------------------");
         try {
             String token = tokenService.getAccessToken();
 
@@ -304,25 +299,25 @@ public class OverseasApiService extends AbstractStockApiService {
             headers.add("Authorization", "Bearer " + token);
             headers.add("appkey", APP_KEY);
             headers.add("appsecret", APP_SECRET);
-            headers.add("tr_id", "CTPF1002R");
+            headers.add("tr_id", "HHDFS76200200");
             headers.add("custtype", CUST_TYPE);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            String uri = STOCKBASIC_URL
-                    + "?"
-                    + "PRDT_TYPE_CD=" + PRDT_TYPE_CD
-                    + "&PDNO=" + stockCode;
+            String uri = STOCKDETAIL_URL + "?" +
+                    "AUTH=" + AUTH +
+                    "&" + "EXCD=" + EXCD +
+                    "&" + "SYMB=" + stockCode;
 
-            ResponseEntity<StockBasicDto> response = restTemplate.exchange(
+            ResponseEntity<StockDetailOverseasDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockBasicDto.class
+                    StockDetailOverseasDto.class
             );
-
+            log.info("---------------getStockDetailDataFromApi  finished----------------------------------------");
             return response.getBody();
         } catch (Exception e) {
-            log.error("Error fetching stock basic data: ", e);
+            log.info("---------------getStockDetailDataFromApi  err----------------------------------------");
             throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
         }
     }
@@ -374,7 +369,12 @@ public class OverseasApiService extends AbstractStockApiService {
 
     @Override
     public StockName getStockNameFromApi(Company company) {
-        return null;
+        String stockCode = company.getCode();
+        StockBasicOverseasDto stockBasicOverseasDto = getStockBasicDataFromApi(stockCode);
+        StockName stockName = new StockName();
+        stockName.setEngName(stockBasicOverseasDto.getOutput().getPrdt_eng_name());
+        stockName.setKorName(stockBasicOverseasDto.getOutput().getPrdt_name());
+        return stockName;
     }
 
     @Override
@@ -420,7 +420,19 @@ public class OverseasApiService extends AbstractStockApiService {
 
     @Override
     public StockBasic getStockBasicFromApi(Company company) {
-        return null;
+        String stockCode = company.getCode();
+        StockBasicOverseasDto stockBasicOverseasDto = getStockBasicDataFromApi(stockCode);
+        StockDetailOverseasDto stockDetailOverseasDto =  getStockDetailDataFromApi(stockCode);
+
+        StockBasic stockBasic = new StockBasic();
+        stockBasic.setPdno(stockBasicOverseasDto.getOutput().getStd_pdno());
+        stockBasic.setPrdt_abrv_name(stockBasicOverseasDto.getOutput().getPrdt_name());
+        stockBasic.setPrdt_eng_abrv_name(stockBasicOverseasDto.getOutput().getPrdt_eng_name());
+        stockBasic.setLstg_stqt(stockDetailOverseasDto.getOutput().getShar());
+        stockBasic.setCpta(stockDetailOverseasDto.getOutput().getMcap());
+        stockBasic.setPapr(stockDetailOverseasDto.getOutput().getE_parp());
+
+        return stockBasic;
     }
 
     @Override

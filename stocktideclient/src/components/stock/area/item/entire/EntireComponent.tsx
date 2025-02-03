@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import useCustomMove from "@hooks/useCustomMove";
 import { ListContainer, StockList} from "@styles/ListStyles";
 import StockItem from "./StockItem";

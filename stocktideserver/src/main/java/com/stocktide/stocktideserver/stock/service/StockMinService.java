@@ -1,12 +1,9 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.stocktide.stocktideserver.stock.dto.StockMinDto;
 import com.stocktide.stocktideserver.stock.dto.StockMinResponseDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
-import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.entity.StockInf;
 import com.stocktide.stocktideserver.stock.entity.StockMin;
-import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import com.stocktide.stocktideserver.stock.repository.StockInfRepository;
@@ -19,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,49 +27,83 @@ import java.util.stream.Collectors;
 public class StockMinService {
 
     private final CompanyService companyService;
+    private final CompanyRepository companyRepository;
     private final StockMinRepository stockMinRepository;
     private final StockMapper stockMapper;
     private final StockInfRepository stockInfRepository;
     private final StockService stockService;
 
-    // 모든 회사의 정호, 주식(StockInf, StockMin) with API -> 데이터베이스에 저장
-    public void updateStockMin() throws InterruptedException {
-        log.info("---------------updateStockMin  started----------------------------------------");
-        List<Company> companyList = companyService.findCompanies();
+    // 단일 회사의 주식 정보 업데이트 메서드
+    public boolean updateOneStockMin(String code) throws InterruptedException {
+        log.info("Updating stock info for company: {}", code);
+
+        Optional<Company> company = Optional.ofNullable(companyRepository.findByCode(code));
+
+        if(company.isEmpty()) {
+            log.error("Company not found with code: {}", code);
+            return false;
+        }
+
+        Company targetCompany = company.get();
         LocalDateTime now = LocalDateTime.now();
         String strHour = Time.strHour(now);
 
-        int count = 0;
-
-        //Company -> code + strHour -> StockMinDto ->  List<StockMinOutput2> -> List<StockMin> -> 정렬 -> 저장
-        //Company -> code + strHour -> StockMinDto ->  StockMinOutput1 -> StockInf 저장 -> Company
-        for (Company company : companyList) {
-            log.info("--------------- {}st company  started----------------------------------------", (count + 1));
-            // 분봉, 회사 정보 호출하기
-            List<StockMin> stockMinList = stockService.getStockMinFromApi(company, strHour);
+        try {
+            // 1. 분봉 데이터 가져오기
+            List<StockMin> stockMinList = stockService.getStockMinFromApi(targetCompany, strHour);
             if (stockMinList == null || stockMinList.isEmpty()) {
-                log.warn("No stock min data received for company: {}", company.getCode());
-                continue;
+                log.warn("No stock min data received for company: {}", code);
+                return false;
             }
 
-            StockInf stockInf = stockService.getStockInfFromApi(company, strHour);
+            Thread.sleep(50); // API 호출 간격 조절
+            // 2. 주식 정보 가져오기
+            StockInf stockInf = stockService.getStockInfFromApi(targetCompany, strHour);
             if (stockInf == null) {
-                log.warn("No stock info data received for company: {}", company.getCode());
-                continue;
+                log.warn("No stock info data received for company: {}", code);
+                return false;
             }
-            // 저장
-            stockMinRepository.saveAll(stockMinList);
-            stockInfRepository.save(stockInf);
-            company.setStockInf(stockInf);
-            companyService.saveCompany(company);
-            count++;
 
-            Thread.sleep(500);
+            // 3. 데이터 저장
+            saveStockData(targetCompany, stockMinList, stockInf);
+
+            Thread.sleep(50); // API 호출 간격 조절
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error updating stock info for company {}: {}", code, e.getMessage());
+            return false;
         }
-        log.info("---------------updateStockMin  finished----------------------------------------");
     }
 
-    // companyId -> List<StockMin> 
+    // 모든 회사의 주식 정보 업데이트 메서드
+    public void updateStockMin() throws InterruptedException {
+        log.info("---------------updateStockMin started----------------------------------------");
+
+        List<Company> companyList = companyService.findCompanies();
+
+        int successCount = 0;
+        int totalCount = companyList.size();
+
+        for (Company company : companyList) {
+            if (updateOneStockMin(company.getCode())) {
+                successCount++;
+            }
+        }
+
+        log.info("---------------updateStockMin finished. Success: {}/{} companies----------------------------------------",
+                successCount, totalCount);
+    }
+
+    // 데이터 저장을 위한 private 헬퍼 메서드
+    private void saveStockData(Company company, List<StockMin> stockMinList, StockInf stockInf) {
+        stockMinRepository.saveAll(stockMinList);
+        stockInfRepository.save(stockInf);
+        company.setStockInf(stockInf);
+        companyService.saveCompany(company);
+    }
+
+    // companyId -> List<StockMin>
     public List<StockMin> getChart(long companyId) {
         return stockMinRepository.findAllByCompanyCompanyId(companyId);
     }

@@ -68,8 +68,8 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
   const infoItems = [
     { label: '종목번호', value: pdno },
     { label: '상품명', value: i18n.language === 'ko' ? prdt_abrv_name : prdt_eng_abrv_name },
-    { label: '상장주식수', value: `${Number(lstg_stqt).toLocaleString()} 주` }, // 2
-    { label: '자본금', value: `${Number(cpta).toLocaleString()} 원` }, // 1
+    { label: '상장주식수', value: `${Number(lstg_stqt).toLocaleString()} 주` }, // 1, 2
+    { label: '자본금', value: `${Number(cpta).toLocaleString()} 원` }, // 2
     { label: '액면가', value: `${Number(papr).toLocaleString()} 원` }, // 1, 2
   ];
 

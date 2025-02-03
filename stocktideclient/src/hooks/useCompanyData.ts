@@ -60,6 +60,7 @@ function useCompanyData(startCompanyId: number, endCompanyId: number): CompanyDa
     return {
         data: extractedData,
         data2: extractedData2,
+        data3: data,
         isLoading,
         isError,
         refetch

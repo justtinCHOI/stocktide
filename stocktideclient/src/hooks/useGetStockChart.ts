@@ -36,7 +36,7 @@ const useGetStockChart = (companyId: number) => {
     // 회사정보 -> 회사이름, 봉 420개 -> chartData
     useEffect(() => {
         if (stockPrice && stockInfo) {
-            setCorpName(i18n.language === 'ko' ? stockInfo.korName : stockInfo.engName); // 마르하벤, Marhaban, 봉쥬
+            setCorpName(i18n.language === 'ko' ? stockInfo.korName : stockInfo.engName);
             setChartData(stockPrice);
         }
     }, [stockPrice, stockInfo]);

@@ -5,7 +5,7 @@ import SearchInputComponent from '@components/stock/area/search/SearchInputCompo
 function Search() {
     return (
       <>
-        <SearchInputComponent area={'area'}/>
+        <SearchInputComponent/>
         <IncludeInformationDiv $top={5}>
               <SearchComponent/>
         </IncludeInformationDiv>

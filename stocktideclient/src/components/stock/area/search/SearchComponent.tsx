@@ -27,15 +27,18 @@ import {
   SkeletonPriceSub
 } from '@styles/SkeletonStockItemStyles';
 import { useMediaQuery } from '@hooks/useMediaQuery';
+import { useParams } from 'react-router';
 
 function SearchComponent() {
+  const { area } = useParams();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const [showChangePrice, setShowChangePrice] = useState(false);
   const {moveToChart} = useCustomMove();
 
   const { suggestions, searchTerm} = useSelector((state: RootState) => state.searchSlice);
-  const {data: companies, isLoading, isError, refetch} = useCompanyData(1, 79);
+  const {data: companies, isLoading, isError, refetch} = area === 'domestic' ? useCompanyData(1, 79) : useCompanyData(80, 80) ;
+
   const companiesList = companies || [];
 
   const displayedCompanies = searchTerm ? suggestions : companiesList || [];

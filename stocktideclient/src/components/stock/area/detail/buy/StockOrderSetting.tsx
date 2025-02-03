@@ -1,23 +1,22 @@
 import { useSelector, useDispatch } from "react-redux";
 import { orderTypeBuying, orderTypeSelling } from "@slices/stockOrderTypeSlice"
 import styled from "styled-components";
-import useGetStockInfo from "@hooks/useGetStockInfo";
 import {useParams} from "react-router";
-
-import PriceSetting from "./PriceSetting";
 import VolumeSetting from "./VolumeSetting";
 import OrderDecisionBtn, { OrderTypeProps } from './OrderDecisionBtn';
 import { RootState } from '@/store';
+import useGetStockInfo from '@hooks/useGetStockInfo';
+import PriceSetting from '@components/stock/area/detail/buy/PriceSetting';
 
 const orderType01 = "매수";
 const orderType02 = "매도";
 
 const StockOrderSetting = () => {
   const dispatch = useDispatch();
-    const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
-    const {companyId} = useParams();
-    const companyIdNumber = Number(companyId); // 숫자로 변환
-    const { stockInfo, stockInfoLoading, stockInfoError } = useGetStockInfo(companyIdNumber);
+  const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
+  const {companyId} = useParams();
+  const companyIdNumber = Number(companyId); // 숫자로 변환
+  const { stockInfo, stockInfoLoading, stockInfoError } = useGetStockInfo(companyIdNumber);
 
   if (!stockInfo) {
     return null;
@@ -38,12 +37,12 @@ const StockOrderSetting = () => {
     return (
         <Container>
             <div className="OrderType">
-                <Buying onClick={handleSetBuying} $orderType={orderType}>
-                    {orderType01}
-                </Buying>
-                <Selling onClick={handleSetSelling} $orderType={orderType}>
-                    {orderType02}
-                </Selling>
+              <Buying onClick={handleSetBuying} $orderType={orderType}>
+                {orderType01}
+              </Buying>
+              <Selling onClick={handleSetSelling} $orderType={orderType}>
+                {orderType02}
+              </Selling>
             </div>
             <OrderTypeChangeEffectLine />
             <PriceSetting stockInfo={stockInfo.stockAsBiResponseDto} companyId={Number(companyId)} />

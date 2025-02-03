@@ -7,22 +7,17 @@ import {setSearchTerm, setSuggestions, setSearchActive} from '@slices/searchSlic
 import useCompanyData from '@hooks/useCompanyData';
 import { debounce } from 'lodash';
 import { extractedCompanyData } from '@typings/hooks';
+import { useParams } from 'react-router';
 
-interface SearchCompanyComponentProps {
-  area: string;
-}
-
-const SearchInputComponent: FC<SearchCompanyComponentProps> = ({area}) => {
-  // console.log('area',area);
+const SearchInputComponent: FC = () => {
+  const { area } = useParams();
   const dispatch = useDispatch();
   const [ searchString, setSearchString ] = useState<string>();
   // const { searchTerm, suggestions } = useSelector((state: RootState) => state.searchSlice);
   const { searchTerm } = useSelector((state: RootState) => state.searchSlice);
   const [isFocused, setIsFocused] = useState(false);
-  // const {data: companies, isLoading, isError} = useCompanyData(1, 79);
-  const {data: companies} = useCompanyData(1, 79);
+  const {data: companies} = area === 'domestic' ? useCompanyData(1, 79) : useCompanyData(80, 80) ;
   const searchInputRef = useRef<HTMLInputElement>(null);
-
 
   useEffect(() => {
     dispatch(setSearchActive(false));

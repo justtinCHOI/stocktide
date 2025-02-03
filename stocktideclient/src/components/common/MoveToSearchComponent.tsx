@@ -1,17 +1,12 @@
 import styled from "styled-components";
 import {FaSearch} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
 import { FC } from 'react';
-
-interface SearchCompanyComponentProps {
-  area: string;
-}
-
-const MoveToSearchComponent: FC<SearchCompanyComponentProps> = ({area}) => {
-    const navigate = useNavigate();
+import useCustomMove from '@hooks/useCustomMove';
+const MoveToSearchComponent: FC = () => {
+    const {moveToSearch} = useCustomMove();
 
     const handleInputFocus = () => {
-        navigate(`/stock/${area}/search`);
+      moveToSearch()
     };
     return (
         <SearchInputDiv>

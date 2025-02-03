@@ -584,15 +584,12 @@ public class DomesticApiService extends AbstractStockApiService {
         String stockCode = company.getCode();
         StockAsBiDataDto stockasbiDataDto = getStockAsBiDataFromApi(stockCode);
         StockAsBi stockAsBi = apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
-        // 새로운 stockAsBi의 회사 등록
         stockAsBi.setCompany(company);
-        // 호가 컬럼을 새로운 호가 컬럼으로 변경
         StockAsBi oldStockAsBi = company.getStockAsBi();
-        // 기존의 Id
         if(oldStockAsBi != null){
             stockAsBi.setStockAsBiId(oldStockAsBi.getStockAsBiId());
         }
-        return apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
+        return stockAsBi;
     }
 
     @Override

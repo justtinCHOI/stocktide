@@ -5,12 +5,12 @@ import MoveToSearchComponent from '@components/common/MoveToSearchComponent';
 
 const Item = () => {
 
-  const Menus = ['전체종목', '보유종목', '관심종목', '테스트', '회사정보'];
-  const Urls = ['entire', 'hold', 'watch', 'test', '/stock/area/detail/buy/2'];
+  const Menus = ['전체종목', '보유종목', '관심종목'];
+  const Urls = ['entire', 'hold', 'watch'];
 
   return (
     <>
-      <MoveToSearchComponent area={'area'}/>
+      <MoveToSearchComponent/>
       <IncludeInformationDiv $top={5}>
         <MenuComponent menus={Menus} urls={Urls}/>
         <ContentBelowMenu >

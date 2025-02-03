@@ -1,11 +1,10 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import { CustomMoveHook } from '@typings/hooks';
 import { useParams } from 'react-router';
 
 
 //파라미터 값을 통해서 각페이지로 이동하는 함수
-function useCustomMove(): CustomMoveHook {
+function useCustomMove(){
     const navigate = useNavigate()
     const {area} = useParams();
 
@@ -20,8 +19,7 @@ function useCustomMove(): CustomMoveHook {
     }
 
     const moveToModify = (num: number) => {
-        navigate({pathname:`/stock/domestic/detail/modify/${num}`})
-
+        navigate({pathname:`/stock/${area}/detail/modify/${num}`})
     }
 
     const moveToMemberModify = () => {
@@ -32,7 +30,11 @@ function useCustomMove(): CustomMoveHook {
         navigate({pathname:`/stock/${area}/detail/chart/${num}`})
     }
 
-    return {moveToList, moveToModify, moveToChart, moveToMemberModify, refresh}
+    const moveToSearch = () => {
+        navigate({pathname:`/stock/${area}/search/`})
+    }
+
+    return {moveToList, moveToModify, moveToChart, moveToMemberModify, moveToSearch, refresh}
 
 }
 

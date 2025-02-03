@@ -16,8 +16,10 @@ import {
 import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
 import { AlertTriangle } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
+import { useParams } from 'react-router';
 
 const HoldComponent = () => {
+  const { area } = useParams();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
     const [showChangePrice, setShowChangePrice] = useState(false);
@@ -30,7 +32,7 @@ const HoldComponent = () => {
     } = useGetHoldingStock();
 
     const {data: companyData, isLoading: isCompanyDataLoading, isError: isCompanyDataError, refetch
-    } = useCompanyData(1, 79);
+    } = area === 'domestic' ? useCompanyData(1, 79) : useCompanyData(80, 80) ;
 
   if (isLoading || isCompanyDataLoading) {
     return (

@@ -34,7 +34,7 @@ const useGetStockInfo = (companyId: number) => {
         }
     }, []);
 
-    const { data, isLoading, error, refetch } = useQuery({
+    const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ['stockInfo', companyId, queryKey],
         queryFn: () => getStockInfo(companyId),
         enabled: true,
@@ -42,7 +42,7 @@ const useGetStockInfo = (companyId: number) => {
         refetchInterval: autoRefetch ? 60000 * 10 : false
     });
 
-    return { stockInfo: data, stockInfoLoading: isLoading, stockInfoError: error, refetch };
+    return { stockInfo: data, stockInfoLoading: isLoading, stockInfoError: isError, refetch };
 };
 
 const getStockInfo = async (companyId: number) => {
