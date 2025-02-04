@@ -14,8 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+/**
+ * 회사 정보 관리 서비스
+ * 회사의 기본 정보 및 주식 관련 데이터를 관리합니다.
+ *
+ * @author StockTide Dev Team
+ * @version 1.0
+ * @since 2025-02-03
+ */
 @Slf4j
 @Service
 @Transactional
@@ -24,36 +33,64 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final StockService stockService;
     private final StockAsBiRepository stockAsBiRepository;
-    // code -> Company
+
+    /**
+     * 종목 코드로 회사 정보를 조회합니다.
+     *
+     * @param stockCode 종목 코드
+     * @return Company 회사 정보
+     */
     public Company findCompanyByCode(String stockCode) {
         return companyRepository.findByCode(stockCode);
     }
 
-    // autoIncrement -> Company
+    /**
+     * 회사 ID로 회사 정보를 조회합니다.
+     *
+     * @param companyId 회사 ID
+     * @return Company 회사 정보
+     */
     public Company findCompanyById(long companyId) {
         return companyRepository.findByCompanyId(companyId);
     }
 
-    // 모든 회사 리턴
+    /**
+     * 전체 회사 목록을 조회합니다.
+     *
+     * @return List<Company> 회사 목록
+     */
     public List<Company> findCompanies() {
         return companyRepository.findAll();
     }
 
-    // 특정 회사 저장
+    /**
+     * 회사 정보를 저장합니다.
+     *
+     * @param company 저장할 회사 정보
+     * @return Company 저장된 회사 정보
+     */
     public Company saveCompany(Company company) {
         return companyRepository.save(company);
     }
 
-    // 모든 회사 저장
+    /**
+     * 여러 회사 정보를 일괄 저장합니다.
+     *
+     * @param companies 저장할 회사 목록
+     * @return List<Company> 저장된 회사 목록
+     */
     public List<Company> saveCompanies(List<Company> companies) {
         return companyRepository.saveAll(companies);
     }
 
-    public void fillCompany() {
-        Company company = new Company();
-    }
-
-    // 회사들의 korName, engName, code, stockAsBi 를 채우고 데이터베이스에 저장
+    /**
+     * 회사 정보(korName, engName, code, stockAsBi)를 업데이트하고 데이터베이스에 저장합니다.
+     * API로부터 최신 회사 정보를 조회하여 기존 정보를 업데이트합니다.
+     *
+     * @param code 종목 코드 목록
+     * @param marketType 시장 구분 (국내/해외)
+     * @throws InterruptedException API 호출 중 인터럽트 발생 시
+     */
     public void fillCompanies(List<String> code, MarketType marketType) throws InterruptedException {
 
         int updatedCount = 0;
@@ -87,6 +124,14 @@ public class CompanyService {
                 addedCount, updatedCount, code.size());
     }
 
+    /**
+     * 개별 회사 정보를 저장하고 API 데이터를 업데이트합니다.
+     *
+     * @param company 저장할 회사 정보
+     * @param currentCode 종목 코드
+     * @param marketType 시장 구분
+     * @throws InterruptedException API 호출 중 인터럽트 발생 시
+     */
     public void saveCompany(Company company, String currentCode, MarketType marketType) throws InterruptedException {
         company.setCode(currentCode);
         company.setMarketType(marketType);
@@ -103,18 +148,23 @@ public class CompanyService {
         companyRepository.save(company);
     }
 
-    public void modify(CompanyModifyDTO companyModifyDTO) {
 
+    /**
+     * 회사 정보를 수정합니다.
+     *
+     * @param companyModifyDTO 수정할 회사 정보
+     * @throws NoSuchElementException 회사를 찾을 수 없는 경우
+     */
+    public void modify(CompanyModifyDTO companyModifyDTO) {
         Optional<Company> result = companyRepository.findById(companyModifyDTO.getCompanyId());
 
-        Company company = result.orElseThrow();
+        Company company = result.orElseThrow(() ->
+                new NoSuchElementException("ID가 " + companyModifyDTO.getCompanyId() + "인 회사를 찾을 수 없습니다."));
 
         company.setCode(companyModifyDTO.getCode());
         company.setKorName(companyModifyDTO.getKorName());
-//        company.setCreatedAt(companyModifyDTO.getCreatedAt());
 
         companyRepository.save(company);
-
     }
 }
 

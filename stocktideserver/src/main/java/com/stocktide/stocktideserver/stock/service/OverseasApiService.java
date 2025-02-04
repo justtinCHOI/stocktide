@@ -1,5 +1,7 @@
 package com.stocktide.stocktideserver.stock.service;
 
+import com.stocktide.stocktideserver.exception.BusinessLogicException;
+import com.stocktide.stocktideserver.exception.ExceptionCode;
 import com.stocktide.stocktideserver.stock.dto.*;
 import com.stocktide.stocktideserver.stock.entity.*;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
@@ -19,6 +21,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 해외 주식 API 서비스
+ * 한국투자증권 API를 통해 해외 주식 정보를 조회합니다.
+ * 현재는 나스닥 시장 데이터만 지원합니다.
+ *
+ * @author StockTide Dev Team
+ * @version 1.0
+ * @since 2025-02-03
+ */
 @Service
 @Transactional
 @Slf4j
@@ -95,17 +106,17 @@ public class OverseasApiService extends AbstractStockApiService {
     @Value("${stock-url.overseas.stockNews}")
     private String STOCKNEWS_URL;
 
+    /** 기본 인증 토큰 */
     private final String AUTH = "";
-    private final String EXCD = "NAS"; // 나스닥
 
+    /** 나스닥 시장 코드 */
+    private final String EXCD = "NAS";
 
-
-    private final String FID_ETC_CLS_CODE = "";
-    private final String FID_COND_MRKT_DIV_CODE = "J"; // 시장구분코드 (주식 J)
-    // private final String FID_INPUT_HOUR_1 = "153000";
-    private final String FID_PW_DATA_INCU_YN = "Y";
+    /** 사용자 타입 (P: 개인) */
     private final String CUST_TYPE = "P";
-    private final String PRDT_TYPE_CD= "512"; //  512: 나스닥
+
+    /** 입력 종목코드	(512: 나스닥) */
+    private final String PRDT_TYPE_CD= "512"; //
 
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
@@ -118,6 +129,13 @@ public class OverseasApiService extends AbstractStockApiService {
         this.apiMapper = apiMapper;
     }
 
+    /**
+     * 주식 현재가 정보를 조회합니다.
+     *
+     * @param stockCode 종목 코드
+     * @return StockInfOverseasDataDto 현재가 정보
+     * @throws RuntimeException API 호출 실패 시
+     */
     public StockInfOverseasDataDto getStockInfDataFromApi(String stockCode){
         log.info("---------------getStockInfDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
@@ -199,6 +217,14 @@ public class OverseasApiService extends AbstractStockApiService {
         }
     }
 
+    /**
+     * 해외 주식 분봉 데이터를 조회합니다.
+     *
+     * @param stockCode 종목 코드
+     * @param strHour 조회 시간 (HHMMSS 형식)
+     * @return StockMinOverseasDto 분봉 데이터
+     * @throws RuntimeException API 호출 실패 시
+     */
     @Override
     public StockMinOverseasDto getStockMinDataFromApi(String stockCode, String strHour) {
         log.info("---------------getStockMinDataFromApi  started----------------------------------------");
@@ -258,6 +284,13 @@ public class OverseasApiService extends AbstractStockApiService {
         return null;
     }
 
+    /**
+     * 해외 주식 기본 정보를 조회합니다.
+     *
+     * @param stockCode 종목 코드
+     * @return StockBasicOverseasDto 기본 정보
+     * @throws RuntimeException API 호출이나 파싱 오류 시
+     */
     @Override
     public StockBasicOverseasDto getStockBasicDataFromApi(String stockCode) {
         log.info("---------------getStockBasicDataFromApi  started----------------------------------------");
@@ -290,6 +323,13 @@ public class OverseasApiService extends AbstractStockApiService {
         }
     }
 
+    /**
+     * 해외 주식 상세 정보를 조회합니다.
+     *
+     * @param stockCode 종목 코드
+     * @return StockDetailOverseasDto 상세 정보
+     * @throws RuntimeException API 호출이나 파싱 오류 시
+     */
     public StockDetailOverseasDto getStockDetailDataFromApi(String stockCode) {
         log.info("---------------getStockDetailDataFromApi  started----------------------------------------");
         try {
@@ -367,6 +407,13 @@ public class OverseasApiService extends AbstractStockApiService {
         return null;
     }
 
+
+    /**
+     * 회사 이름 정보를 조회합니다.
+     *
+     * @param company 회사 정보
+     * @return StockName 회사 이름 정보(영문명, 한글명)
+     */
     @Override
     public StockName getStockNameFromApi(Company company) {
         String stockCode = company.getCode();
@@ -377,6 +424,12 @@ public class OverseasApiService extends AbstractStockApiService {
         return stockName;
     }
 
+    /**
+     * 해외 주식 호가 정보를 조회하여 Entity로 변환합니다.
+     *
+     * @param company 회사 정보
+     * @return StockAsBi 호가 정보 Entity
+     */
     @Override
     public StockAsBi getStockAsBiFromApi(Company company) {
         String stockCode = company.getCode();
@@ -390,6 +443,13 @@ public class OverseasApiService extends AbstractStockApiService {
         return stockAsBi;
     }
 
+    /**
+     * 분봉 데이터를 조회하여 Entity 리스트로 변환합니다.
+     *
+     * @param company 회사 정보
+     * @param strHour 조회 시간
+     * @return List<StockMin> 분봉 데이터 Entity 리스트
+     */
     @Override
     public List<StockMin> getStockMinFromApi(Company company, String strHour) {
         String stockCode = company.getCode();
@@ -405,10 +465,21 @@ public class OverseasApiService extends AbstractStockApiService {
                 }).sorted(Comparator.comparing(StockMin::getStockTradeTime)).collect(Collectors.toList());
     }
 
+    /**
+     * 현재가 정보를 조회하여 Entity로 변환합니다.
+     *
+     * @param company 회사 정보
+     * @param strHour 조회 시간
+     * @return StockInf 현재가 정보 Entity
+     * @throws BusinessLogicException STOCKINF_NOT_FOUND - 주식 현재가 정보를 찾을 수 없는 경우
+     */
     @Override
     public StockInf getStockInfFromApi(Company company, String strHour) {
         String stockCode = company.getCode();
         StockInfOverseasDataDto stockInfOverseasDataDto = getStockInfDataFromApi(stockCode);
+        if (stockInfOverseasDataDto == null || stockInfOverseasDataDto.getOutput() == null) {
+            throw new BusinessLogicException(ExceptionCode.STOCKINF_NOT_FOUND);
+        }
         StockInf stockInf = apiMapper.stockInfOverseasDtoToStockInf(stockInfOverseasDataDto.getOutput());
         stockInf.setCompany(company);
         StockInf oldStockInf = company.getStockInf();
@@ -418,6 +489,13 @@ public class OverseasApiService extends AbstractStockApiService {
         return stockInf;
     }
 
+    /**
+     * 주식 기본 정보를 조회하여 Entity로 변환합니다.
+     *
+     * @param company 회사 정보
+     * @return StockBasic 기본 정보 Entity
+     * @throws RuntimeException API 호출이나 데이터 파싱 실패 시
+     */
     @Override
     public StockBasic getStockBasicFromApi(Company company) {
         String stockCode = company.getCode();

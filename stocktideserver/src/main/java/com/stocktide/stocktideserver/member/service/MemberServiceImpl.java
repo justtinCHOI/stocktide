@@ -27,9 +27,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * 회원 관리 서비스 구현체
+ * MemberService 인터페이스의 구현을 담당합니다.
+ *
+ * @author StockTide Dev Team
+ * @version 1.0
+ * @since 2025-02-03
+ */
 @Service
 @Slf4j
-//@Transactional(readOnly = true)
 @Transactional(readOnly = false)
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -37,10 +44,16 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CashService cashService;
-//    private final CustomAuthorityUtils authorityUtils;
-//    private final StockOrderRepository stockOrderRepository;
 
-    @Override //accessToken -> 사용자 정보 -> 새로운 사용자 DTO || 기존 사용자 DTO
+    /**
+     * 카카오 OAuth를 통한 회원 정보를 조회하고 필요한 경우 신규 회원을 생성합니다.
+     * accessToken -> 사용자 정보 -> 새로운 사용자 DTO || 기존 사용자 DTO
+     *
+     * @param accessToken 카카오 액세스 토큰
+     * @return MemberDTO 회원 정보
+     * @throws RuntimeException Access Token이 null인 경우
+     */
+    @Override //
     public MemberDTO getKakaoMember(String accessToken) {
 
         String nickname = getNicknameFromKakaoAccessToken(accessToken);
@@ -60,7 +73,13 @@ public class MemberServiceImpl implements MemberService {
         return entityToDTO(socialMember);
     }
 
-    // 2차 kakao accessToken -> 사용자 정보 가져오기
+    /**
+     * 카카오 액세스 토큰으로부터 사용자 닉네임을 조회합니다.
+     *
+     * @param accessToken 카카오 액세스 토큰
+     * @return String 사용자 닉네임
+     * @throws RuntimeException API 호출 실패 시
+     */
     private String getNicknameFromKakaoAccessToken(String accessToken) {
 
         String kakaoGetUserURL = "https://kapi.kakao.com/v2/user/me";
@@ -93,7 +112,12 @@ public class MemberServiceImpl implements MemberService {
         return kakaoAccount.get("nickname");
     }
 
-    //social 로그인시 nickname ( email) 로  db에 저장할 새로운 member 생성
+    /**
+     * nickname(email)으로 소셜 로그인 회원 정보를 생성합니다.
+     *
+     * @param nickname 사용자 닉네임
+     * @return Member 생성된 회원 정보
+     */
     private Member makeSocialMember(String nickname) {
         Member member = Member.builder()
                 .password(passwordEncoder.encode(makeTempPassword()))
@@ -116,7 +140,11 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
-    //10자리의 password
+    /**
+     * 10자리의 임시 비밀번호를 생성합니다.
+     *
+     * @return String 생성된 임시 비밀번호
+     */
     private String makeTempPassword() {
 
         StringBuffer buffer = new StringBuffer();
@@ -127,6 +155,13 @@ public class MemberServiceImpl implements MemberService {
         return buffer.toString();
     }
 
+
+    /**
+     * 회원 정보를 수정합니다.
+     *
+     * @param memberModifyDTO 수정할 회원 정보
+     * @return MemberModifyDTO 수정된 회원 정보
+     */
     @Override
     public MemberModifyDTO modifyMember(MemberModifyDTO memberModifyDTO) {
 
@@ -149,6 +184,12 @@ public class MemberServiceImpl implements MemberService {
                 .password(savedMember.getPassword()).build();
     }
 
+    /**
+     * Member 엔티티를 DTO로 변환합니다.
+     *
+     * @param member 변환할 Member 엔티티
+     * @return MemberDTO 변환된 회원 정보
+     */
     @Override
     public MemberDTO entityToDTO(Member member) {
         return new MemberDTO(
@@ -163,104 +204,19 @@ public class MemberServiceImpl implements MemberService {
                         .map(Enum::name)
                         .collect(Collectors.toList()),
                 member.getMemberStatus().name()
-
         );
     }
 
+    /**
+     * 이메일 중복 여부를 확인합니다.
+     *
+     * @param email 확인할 이메일
+     * @return boolean 이메일 존재 여부
+     */
     @Override
     public boolean checkEmail(String email) {
         Optional<Member> byEmail = memberRepository.findByEmail(email);
         return byEmail.isPresent();
     }
 
-
 }
-//    public Member createMember(Member member) {
-//
-//        verifyExistsEmail(member.getEmail());
-//
-//        String password = member.getPassword();
-//        String confirmPassword = member.getConfirmPassword();
-//
-//        if (!password.equals(confirmPassword)) {
-//            throw new BusinessLogicException(ExceptionCode.INVALID_PASSWORD);
-//        }// 암호 재확인 기능
-//
-////        String encryptedPassword = passwordEncoder.encode(member.getPassword());
-////        member.setPassword(encryptedPassword);
-////
-////        List<String> roles = authorityUtils.createRoles(member.getEmail());
-////        member.setRoles(roles);
-//
-//        member.setMemberStatus(Member.MemberStatus.MEMBER_ACTIVE);
-//
-//        return memberRepository.save(member);
-//    }
-
-//    public Member updateMember(Member member) {
-//
-//
-//        Member findMember = findVerifiedMember(member.getMemberId());
-//
-//        Optional.ofNullable(member.getName())
-//                .ifPresent(name -> findMember.setName(name));
-//
-//        return memberRepository.save(findMember);
-//    }
-
-//    public  Member findMember(long memberId) {
-//
-//        Member findMember = findVerifiedMember(memberId);
-//
-//        if (findMember.getMemberId() != memberId) {
-//            throw new BusinessLogicException(ExceptionCode.INVALID_FAILED);
-//        }
-//
-//        return findVerifiedMember(findMember.getMemberId());
-//    }
-
-//    public void deleteMember(long memberId) {
-//
-//        memberRepository.deleteById(memberId);
-//
-//        List<StockOrder> orders = stockOrderRepository.findByMemberMemberId(memberId);
-//        stockOrderRepository.deleteAll(orders);
-//    }
-
-//    public Member findVerifiedMember(long memberId) {
-//
-//        Optional<Member> optionalMember =
-//                memberRepository.findByMemberId(memberId);
-//        Member findMember =
-//                optionalMember.orElseThrow(() ->
-//                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-//        return findMember;
-//    }
-
-//    public void verifyExistsEmail(String email) {
-//        Optional<Member> member = memberRepository.findByEmail(email);
-//        if (member.isPresent())
-//            throw new BusinessLogicException(ExceptionCode.EMAIL_DUPLICATION);
-//    }
-
-//    public Member findMemberByEmail(String email) {
-//        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-//
-//        return optionalUser.orElse(null);
-//    }
-
-//    public int findMemberIdByEmail(String email) {
-//        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-//
-//        if (optionalMember.isPresent()) {
-//            Member member = optionalMember.get();
-//            return (int) member.getMemberId();
-//        } else {
-//
-//            throw new  BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-//        }
-//    }
-
-//    public void deleteStockOrdersByMemberId(Long memberId) {
-//        stockOrderRepository.deleteAllByMemberId(memberId);
-//    }
