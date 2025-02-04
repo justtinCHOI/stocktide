@@ -4,6 +4,8 @@ import com.stocktide.stocktideserver.chat.entity.ChatMessage;
 import com.stocktide.stocktideserver.chat.entity.ChatRoom;
 import com.stocktide.stocktideserver.chat.entity.UserStatusMessage;
 import com.stocktide.stocktideserver.chat.service.ChatService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -17,14 +19,32 @@ import org.springframework.stereotype.Controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+/**
+ * 실시간 채팅 기능을 제공하는 컨트롤러
+ * WebSocket을 사용하여 실시간 채팅 메시지를 처리합니다.
+ *
+ * @author StockTide Dev Team
+ * @version 1.0
+ * @since 2025-02-03
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@Tag(name = "Chat", description = "실시간 채팅 API")
 public class ChatController {
     private final SimpMessageSendingOperations messagingTemplate;
     private final ChatService chatService;
 
-    // 채팅방 생성 또는 조회
+    /**
+     * 새로운 채팅방을 생성하거나 기존 채팅방에 참여합니다.
+     *
+     * @param companyId 회사 ID
+     * @param message 채팅 메시지
+     * @param headerAccessor 세션 정보
+     * @return 채팅 메시지
+     */
+    @Operation(summary = "채팅방 생성/참여", description = "새로운 채팅방 생성 또는 기존 채팅방 참여")
     @MessageMapping("/chat.createRoom/{companyId}")
     @SendTo("/topic/chat/{companyId}")
     public ChatMessage createRoom(@DestinationVariable Long companyId,
@@ -47,7 +67,14 @@ public class ChatController {
         return message;
     }
 
-    // 채팅방 참여
+    /**
+     * 채팅방에 참여합니다.
+     *
+     * @param companyId 회사 ID
+     * @param message 참여 메시지
+     * @param headerAccessor 세션 정보
+     */
+    @Operation(summary = "채팅방 참여", description = "기존 채팅방에 참여하고 히스토리를 조회합니다.")
     @MessageMapping("/chat.joinRoom/{companyId}")
     @SendTo("/topic/chat/{companyId}")
     public void joinRoom(@DestinationVariable Long companyId,
@@ -79,7 +106,14 @@ public class ChatController {
         );
     }
 
-    // 메시지 전송
+    /**
+     * 채팅 메시지를 전송합니다.
+     *
+     * @param companyId 회사 ID
+     * @param message 전송할 메시지
+     * @return 전송된 메시지
+     */
+    @Operation(summary = "메시지 전송", description = "채팅방에 메시지를 전송합니다.")
     @MessageMapping("/chat.sendMessage/{companyId}")
     @SendTo("/topic/chat/{companyId}")
     public ChatMessage sendMessage(@DestinationVariable Long companyId,
@@ -90,7 +124,15 @@ public class ChatController {
         return message;
     }
 
-    // 채팅방 나가기
+    /**
+     * 채팅방을 나갑니다.
+     *
+     * @param companyId 회사 ID
+     * @param message 퇴장 메시지
+     * @param headerAccessor 세션 정보
+     * @return 퇴장 메시지
+     */
+    @Operation(summary = "채팅방 퇴장", description = "채팅방에서 퇴장합니다.")
     @MessageMapping("/chat.leaveRoom/{companyId}")
     @SendTo("/topic/chat/{companyId}")
     public ChatMessage leaveRoom(@DestinationVariable Long companyId,

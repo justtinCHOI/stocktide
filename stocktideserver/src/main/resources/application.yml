@@ -63,3 +63,14 @@ stock-url:
     stockNews: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/news-title"
 server:
   port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json

@@ -2,6 +2,10 @@ package com.stocktide.stocktideserver.member.controller;
 
 import com.stocktide.stocktideserver.util.CustomJWTException;
 import com.stocktide.stocktideserver.util.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -10,14 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/**
+ * JWT 토큰 갱신을 담당하는 컨트롤러
+ * Access Token과 Refresh Token의 갱신을 처리합니다.
+ *
+ * @author StockTide Dev Team
+ * @version 1.0
+ * @since 2025-02-03
+ */
 @RestController
 @RequiredArgsConstructor
 @Log4j2
+@Tag(name = "Token", description = "토큰 갱신 API")
 public class APIRefreshController {
 
-    //accessToken 만료 : accessToken, refreshToken ->  새로운 accessToken
-    //refreshToken 만료 : refreshToken -> 새로운 refreshToken
-
+    /**
+     * 토큰을 갱신합니다.
+     * Access Token이 만료된 경우 새로운 Access Token을 발급합니다.
+     * Refresh Token이 만료된 경우 새로운 Refresh Token을 발급합니다.
+     *
+     * @param authHeader Authorization 헤더 (Bearer 토큰)
+     * @param refreshToken 리프레시 토큰
+     * @return 새로운 토큰 정보
+     * @throws CustomJWTException 토큰이 유효하지 않은 경우
+     */
+    @Operation(summary = "토큰 갱신", description = "Access Token과 Refresh Token을 갱신합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "토큰 갱신 성공"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
+            @ApiResponse(responseCode = "401", description = "만료된 토큰")
+    })
     @RequestMapping("/api/member/refresh")
     public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, String refreshToken) {
         // 해더 ->  accessToken 을 얻고, 매개변수 -> refreshToken

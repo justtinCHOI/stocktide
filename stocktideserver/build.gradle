@@ -19,6 +19,18 @@ plugins {
 	id 'com.github.node-gradle.node' version '7.0.0' // +
 }
 
+javadoc {
+	options.encoding = 'UTF-8'
+	options.charSet = 'UTF-8'
+	options.docEncoding = 'UTF-8'
+
+	options.memberLevel = JavadocMemberLevel.PROTECTED
+	options.author = true
+	options.version = true
+
+	options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 group = 'com.stocktide'
 version = '0.0.1-SNAPSHOT'
 
@@ -96,12 +108,19 @@ dependencies {
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1' // +
 	implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.2' // +
 
+	// Swagger UI
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 	systemProperty 'spring.profiles.active', 'test'
+}
+
+tasks.register('generateAllDocs') {
+	dependsOn 'javadoc'
+	dependsOn 'generateOpenApiDocs'
 }
 
 compileJava.dependsOn('clean') // +
