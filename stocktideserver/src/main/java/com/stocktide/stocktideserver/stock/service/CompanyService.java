@@ -1,6 +1,6 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.stocktide.stocktideserver.stock.dto.CompanyModifyDTO;
+import com.stocktide.stocktideserver.stock.dto.CompanyModifyDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.MarketType;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
@@ -155,7 +155,7 @@ public class CompanyService {
      * @param companyModifyDTO 수정할 회사 정보
      * @throws NoSuchElementException 회사를 찾을 수 없는 경우
      */
-    public void modify(CompanyModifyDTO companyModifyDTO) {
+    public void modify(CompanyModifyDto companyModifyDTO) {
         Optional<Company> result = companyRepository.findById(companyModifyDTO.getCompanyId());
 
         Company company = result.orElseThrow(() ->

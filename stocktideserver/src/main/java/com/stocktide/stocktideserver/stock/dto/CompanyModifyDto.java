@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CompanyModifyDTO extends Auditable {
+public class CompanyModifyDto extends Auditable {
     private long companyId;
 
     private String code;

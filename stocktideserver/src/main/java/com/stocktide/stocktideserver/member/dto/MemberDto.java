@@ -1,7 +1,6 @@
 package com.stocktide.stocktideserver.member.dto;
 
 import com.stocktide.stocktideserver.cash.entity.Cash;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-public class MemberDTO extends User {
+public class MemberDto extends User {
     private long memberId;
 
     private String email;
@@ -36,7 +35,7 @@ public class MemberDTO extends User {
 
     private String status;
 
-    public MemberDTO(long memberId, String email, String name, String nickname,
+    public MemberDto(long memberId, String email, String name, String nickname,
                      String password, List<Cash> cashList, boolean social, List<String> roleNames,
                      String status) {
         super(

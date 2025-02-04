@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ChatDTO {
+public class ChatDto {
     private Long id;
     private String roomId;
     private String content;

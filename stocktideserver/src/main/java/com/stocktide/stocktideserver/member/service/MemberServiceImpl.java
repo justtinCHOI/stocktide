@@ -2,9 +2,8 @@ package com.stocktide.stocktideserver.member.service;
 
 import com.stocktide.stocktideserver.cash.entity.Cash;
 import com.stocktide.stocktideserver.cash.service.CashService;
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
-import com.stocktide.stocktideserver.member.dto.MemberModifyDTO;
-import com.stocktide.stocktideserver.member.dto.MemberResponseDto;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
+import com.stocktide.stocktideserver.member.dto.MemberModifyDto;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.entity.MemberRole;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
@@ -54,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
      * @throws RuntimeException Access Token이 null인 경우
      */
     @Override //
-    public MemberDTO getKakaoMember(String accessToken) {
+    public MemberDto getKakaoMember(String accessToken) {
 
         String nickname = getNicknameFromKakaoAccessToken(accessToken);
 
@@ -163,7 +162,7 @@ public class MemberServiceImpl implements MemberService {
      * @return MemberModifyDTO 수정된 회원 정보
      */
     @Override
-    public MemberModifyDTO modifyMember(MemberModifyDTO memberModifyDTO) {
+    public MemberModifyDto modifyMember(MemberModifyDto memberModifyDTO) {
 
         Optional<Member> result = memberRepository.findById(memberModifyDTO.getMemberId());
 
@@ -177,7 +176,7 @@ public class MemberServiceImpl implements MemberService {
         Member savedMember = memberRepository.save(member);
         log.info("savedMember.getEmail() {}", savedMember.getEmail());
 
-        return MemberModifyDTO.builder()
+        return MemberModifyDto.builder()
                 .memberId(savedMember.getMemberId())
                 .name(savedMember.getName())
                 .email(savedMember.getEmail())
@@ -191,8 +190,8 @@ public class MemberServiceImpl implements MemberService {
      * @return MemberDTO 변환된 회원 정보
      */
     @Override
-    public MemberDTO entityToDTO(Member member) {
-        return new MemberDTO(
+    public MemberDto entityToDTO(Member member) {
+        return new MemberDto(
                 member.getMemberId(),
                 member.getEmail(),
                 member.getName(),

@@ -270,7 +270,7 @@ public class CompanyController {
     })
     @PutMapping("/{companyId}")
     public Map<String, String> modify(@PathVariable("companyId") Long companyId,
-                                      @RequestBody CompanyModifyDTO companyModifyDTO) {
+                                      @RequestBody CompanyModifyDto companyModifyDTO) {
         companyModifyDTO.setCompanyId(companyId);
         companyService.modify(companyModifyDTO);
         return Map.of("RESULT", "SUCCESS");

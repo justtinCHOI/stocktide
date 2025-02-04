@@ -1,7 +1,7 @@
 package com.stocktide.stocktideserver.member.service;
 
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
-import com.stocktide.stocktideserver.member.dto.MemberModifyDTO;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
+import com.stocktide.stocktideserver.member.dto.MemberModifyDto;
 import com.stocktide.stocktideserver.member.entity.Member;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +14,7 @@ public interface MemberService {
      * @param accessToken 카카오 액세스 토큰
      * @return MemberDTO 회원 정보
      */
-    MemberDTO getKakaoMember(String accessToken);
+    MemberDto getKakaoMember(String accessToken);
 
     /**
      * 회원 정보를 수정합니다.
@@ -22,7 +22,7 @@ public interface MemberService {
      * @param memberModifyDTO 수정할 회원 정보
      * @return MemberModifyDTO 수정된 회원 정보
      */
-    MemberModifyDTO modifyMember(MemberModifyDTO memberModifyDTO);
+    MemberModifyDto modifyMember(MemberModifyDto memberModifyDTO);
 
     /**
      * Member 엔티티를 DTO로 변환합니다.
@@ -30,7 +30,7 @@ public interface MemberService {
      * @param member 변환할 Member 엔티티
      * @return MemberDTO 변환된 회원 정보
      */
-    MemberDTO entityToDTO(Member member);
+    MemberDto entityToDTO(Member member);
 
     /**
      * 이메일 중복 여부를 확인합니다.

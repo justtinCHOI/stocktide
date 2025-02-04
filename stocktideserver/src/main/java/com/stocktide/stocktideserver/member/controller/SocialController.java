@@ -1,7 +1,7 @@
 package com.stocktide.stocktideserver.member.controller;
 
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
-import com.stocktide.stocktideserver.member.dto.MemberModifyDTO;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
+import com.stocktide.stocktideserver.member.dto.MemberModifyDto;
 import com.stocktide.stocktideserver.member.service.MemberService;
 import com.stocktide.stocktideserver.util.JWTUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +46,7 @@ public class SocialController {
         // 2. 새로운 MemberDTO -> claims -> accessToken, refreshToken -> claims
 
         //1.
-        MemberDTO memberDTO = memberService.getKakaoMember(accessToken);
+        MemberDto memberDTO = memberService.getKakaoMember(accessToken);
 
         //2.
         Map<String, Object> claims = memberDTO.getClaims();
@@ -73,9 +73,9 @@ public class SocialController {
             @ApiResponse(responseCode = "404", description = "회원 정보 없음")
     })
     @PutMapping("/api/member/modify")
-    public ResponseEntity<MemberModifyDTO> modify(@RequestBody MemberModifyDTO memberModifyDTO) {
+    public ResponseEntity<MemberModifyDto> modify(@RequestBody MemberModifyDto memberModifyDTO) {
 
-        MemberModifyDTO savedMemberDTO = memberService.modifyMember(memberModifyDTO);
+        MemberModifyDto savedMemberDTO = memberService.modifyMember(memberModifyDTO);
 
         return new ResponseEntity<>(savedMemberDTO, HttpStatus.OK);
 

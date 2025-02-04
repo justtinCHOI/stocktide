@@ -1,7 +1,7 @@
 package com.stocktide.stocktideserver.security.handler;
 
 import com.google.gson.Gson;
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
 import com.stocktide.stocktideserver.util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
         //authentication -> memberDTO -> claims -> (accessToken, refreshToken) -> (gson) jsonStr -> jsonStr
 
-        MemberDTO memberDTO = (MemberDTO) authentication.getPrincipal();//인증정보로부터 memberDTO 를 추출
+        MemberDto memberDTO = (MemberDto) authentication.getPrincipal();//인증정보로부터 memberDTO 를 추출
 
         Map<String, Object> claims = memberDTO.getClaims();
 

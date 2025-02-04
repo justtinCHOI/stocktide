@@ -1,6 +1,6 @@
 package com.stocktide.stocktideserver.stock.controller;
 
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
 import com.stocktide.stocktideserver.stock.dto.StockHoldResponseDto;
@@ -62,7 +62,7 @@ public class StockOrderController {
             )
     })
     @GetMapping("/stockholds")
-    public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@AuthenticationPrincipal MemberDTO memberDTO) {
+    public ResponseEntity<List<StockHoldResponseDto>> getStockHolds(@AuthenticationPrincipal MemberDto memberDTO) {
 
         List<StockHoldResponseDto> stockHoldResponseDtos = stockHoldService.findStockHolds(memberDTO.getMemberId());
 
@@ -91,7 +91,7 @@ public class StockOrderController {
     public ResponseEntity<Object> buyStocks(@RequestParam(name = "companyId") long companyId,
                                     @RequestParam(name = "price") long price,
                                     @RequestParam(name = "stockCount") int stockCount,
-                                    @AuthenticationPrincipal MemberDTO memberDTO) {
+                                    @AuthenticationPrincipal MemberDto memberDTO) {
         Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
         StockOrder stockOrder = stockOrderService.buyStocks(member.get(), companyId, price, stockCount);
         StockOrderResponseDto stockOrderResponseDto = stockMapper.stockOrderToStockOrderResponseDto(stockOrder);
@@ -118,7 +118,7 @@ public class StockOrderController {
     public ResponseEntity<Object> sellStocks(@RequestParam(name = "companyId") long companyId,
                                      @RequestParam(name = "price") long price,
                                      @RequestParam(name = "stockCount") int stockCount,
-                                     @AuthenticationPrincipal MemberDTO memberDTO) {
+                                     @AuthenticationPrincipal MemberDto memberDTO) {
         Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
         StockOrder stockOrder = stockOrderService.sellStocks(member.get(), companyId, price, stockCount);
         StockOrderResponseDto stockOrderResponseDto = stockMapper.stockOrderToStockOrderResponseDto(stockOrder);
@@ -134,7 +134,7 @@ public class StockOrderController {
      */
     @Operation(summary = "주문 내역 조회", description = "회원의 주문 내역을 조회합니다.")
     @GetMapping("/stockorders")
-    public ResponseEntity<Object> getStockOrders(@AuthenticationPrincipal MemberDTO memberDTO) {
+    public ResponseEntity<Object> getStockOrders(@AuthenticationPrincipal MemberDto memberDTO) {
         Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
         List<StockOrderResponseDto> stockOrderResponseDtos = stockOrderService.getMemberStockOrders(member.get().getMemberId());
 
@@ -150,7 +150,7 @@ public class StockOrderController {
      */
     @Operation(summary = "주문 취소", description = "미체결된 주문을 취소합니다.")
     @DeleteMapping("/stockorders")
-    public void deleteStockOrders(@AuthenticationPrincipal MemberDTO memberDTO,
+    public void deleteStockOrders(@AuthenticationPrincipal MemberDto memberDTO,
                                   @RequestParam("stockOrderId") long stockOrderId,
                                   @RequestParam("stockCount") int stockCount) {
         Optional<Member> member = memberRepository.findByMemberId(memberDTO.getMemberId());
@@ -159,7 +159,7 @@ public class StockOrderController {
 
     // 30분 마다 실행되는 예약 매도 매수기능 실행하는 api
     @GetMapping("checkOrder")
-    public ResponseEntity<Object> checkOrder(@AuthenticationPrincipal MemberDTO memberDTO) {
+    public ResponseEntity<Object> checkOrder(@AuthenticationPrincipal MemberDto memberDTO) {
         stockOrderService.checkOrder();
 
         return new ResponseEntity<>(HttpStatus.OK);

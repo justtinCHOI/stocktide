@@ -2,9 +2,7 @@ package com.stocktide.stocktideserver.security.filter;
 
 import com.google.gson.Gson;
 import com.stocktide.stocktideserver.cash.entity.Cash;
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
-import com.stocktide.stocktideserver.member.entity.Member;
-import com.stocktide.stocktideserver.member.entity.MemberStatus;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
 import com.stocktide.stocktideserver.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -72,7 +70,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             List<String> roleNames = (List<String>) claims.get("roleNames");
             String status = (String) claims.get("status");
 
-            MemberDTO memberDTO = new MemberDTO(
+            MemberDto memberDTO = new MemberDto(
                     memberId, email, name, nickname, password, cashList, social, roleNames, status
             );
 

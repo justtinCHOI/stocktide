@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor  // 기본 생성자 추가
 @AllArgsConstructor // Builder 패턴을 위한 전체 생성자
-public class MemberModifyDTO {
+public class MemberModifyDto {
 
   private long memberId;
 

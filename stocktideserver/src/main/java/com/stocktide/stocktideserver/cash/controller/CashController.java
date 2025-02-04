@@ -4,7 +4,7 @@ import com.stocktide.stocktideserver.cash.dto.CashResponseDto;
 import com.stocktide.stocktideserver.cash.entity.Cash;
 import com.stocktide.stocktideserver.cash.mapper.CashMapper;
 import com.stocktide.stocktideserver.cash.service.CashService;
-import com.stocktide.stocktideserver.member.dto.MemberDTO;
+import com.stocktide.stocktideserver.member.dto.MemberDto;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
 import com.stocktide.stocktideserver.member.service.MemberServiceImpl;
@@ -138,7 +138,7 @@ public class CashController {
      */
     @Operation(summary = "단일 계좌 조회", description = "회원의 특정 현금 계좌 정보를 조회합니다.")
     @GetMapping("/one")
-    private ResponseEntity<Object> getOneCash(@AuthenticationPrincipal MemberDTO memberDTO ) {
+    private ResponseEntity<Object> getOneCash(@AuthenticationPrincipal MemberDto memberDTO ) {
 
         Cash cash = cashService.findCash(memberDTO.getMemberId());
 
