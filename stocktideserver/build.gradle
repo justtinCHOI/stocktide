@@ -24,10 +24,14 @@ javadoc {
 	options.charSet = 'UTF-8'
 	options.docEncoding = 'UTF-8'
 
+	// 문서화 수준 설정 (protected 이상의 public 메서드 문서화)
 	options.memberLevel = JavadocMemberLevel.PROTECTED
+
+	// 작성자 및 버전 정보 표시
 	options.author = true
 	options.version = true
 
+	// 문서화 경고 무시
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
 
