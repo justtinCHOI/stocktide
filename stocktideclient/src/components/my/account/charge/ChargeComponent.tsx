@@ -3,11 +3,9 @@ import { useSelector } from "react-redux";
 import useCustomCash from "@hooks/useCustomCash"
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ContentBottom } from "@styles/content";
 import {requestPay} from "@api/paymentApi";
 import { AccountState, ChargeProps } from '@typings/account';
 import { RootState } from '@/store';
-import { toast } from 'react-toastify';
 import { Cash } from '@typings/entity';
 import { useMediaQuery } from '@hooks/useMediaQuery';
 import { RefreshCw, Wallet, AlertTriangle, ArrowLeft } from 'lucide-react';
@@ -31,6 +29,7 @@ import {
     SkeletonChargeValue,
 } from '@styles/SkeletonAccountStyles';
 import ToastManager from '@utils/toastUtil';
+import { useTranslation } from 'react-i18next';
 
 const initAccountState: AccountState = {
     cashId: 0,
@@ -40,6 +39,8 @@ const initAccountState: AccountState = {
 }
 
 const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
+    const { t } = useTranslation();
+
     const isMobile = useMediaQuery('(max-width: 768px)');
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
@@ -94,6 +95,9 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
     if (isLoading) {
         return (
           <SkeletonChargeContainer>
+              <TitleRow>
+                  <Title>{t('account.charge.title')}</Title>
+              </TitleRow>
               <SkeletonChargeSection>
                   {[...Array(5)].map((_, index) => (
                     <SkeletonChargeRow key={index}>
@@ -125,67 +129,64 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
     }
 
     return (
-      <>
-          <Section>
-              <TitleRow>
-                  <Title>계좌 충전</Title>
-                  <RefreshButton
-                    onClick={handleRefresh}
-                    disabled={isRefreshing}
-                    $isRefreshing={isRefreshing}
-                  >
-                      <RefreshCw size={16} />
-                  </RefreshButton>
-              </TitleRow>
+      <Section>
+          <TitleRow>
+              <Title>{t('account.charge.title')}</Title>
+              <RefreshButton
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                $isRefreshing={isRefreshing}
+              >
+                  <RefreshCw size={16} />
+              </RefreshButton>
+          </TitleRow>
 
-              <InfoContainer $isMobile={isMobile}>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>계좌번호</Label>
-                      <Value>{account.accountNumber}</Value>
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>현재 잔액</Label>
-                      <Value>{account.money.toLocaleString()}원</Value>
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>충전 금액</Label>
-                      <input
-                        type="number"
-                        value={chargeAmount || ''}
-                        onChange={(e) => setChargeAmount(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '8px',
-                            borderRadius: '4px',
-                            border: '1px solid #ddd'
-                        }}
-                      />
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>충전 후 잔액</Label>
-                      <Value>{calculateChargedMoney().toLocaleString()}원</Value>
-                  </InfoRow>
-              </InfoContainer>
+          <InfoContainer $isMobile={isMobile}>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>계좌번호</Label>
+                  <Value>{account.accountNumber}</Value>
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>현재 잔액</Label>
+                  <Value>{account.money.toLocaleString()}원</Value>
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>충전 금액</Label>
+                  <input
+                    type="number"
+                    value={chargeAmount || ''}
+                    onChange={(e) => setChargeAmount(e.target.value)}
+                    style={{
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ddd'
+                    }}
+                  />
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>충전 후 잔액</Label>
+                  <Value>{calculateChargedMoney().toLocaleString()}원</Value>
+              </InfoRow>
+          </InfoContainer>
 
-              <ButtonContainer>
-                  <Button
-                    $variant="secondary"
-                    onClick={() => navigate('../manage')}
-                  >
-                      <ArrowLeft size={20} />
-                      계좌 관리
-                  </Button>
-                  <Button
-                    $variant="primary"
-                    onClick={handleCharge}
-                  >
-                      <Wallet size={20} />
-                      충전하기
-                  </Button>
-              </ButtonContainer>
-          </Section>
-          <ContentBottom />
-      </>
+          <ButtonContainer>
+              <Button
+                $variant="secondary"
+                onClick={() => navigate('../manage')}
+              >
+                  <ArrowLeft size={20} />
+                  계좌 관리
+              </Button>
+              <Button
+                $variant="primary"
+                onClick={handleCharge}
+              >
+                  <Wallet size={20} />
+                  충전하기
+              </Button>
+          </ButtonContainer>
+      </Section>
     );
 };
 

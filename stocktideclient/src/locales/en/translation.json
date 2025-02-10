@@ -14,7 +14,13 @@
     "cancel": "Cancel",
     "price": "Price",
     "volume": "Quantity",
-    "stockPrice": "Stock Price",
+    "stockPrice": "Stock Price"
+  },
+  "menu": {
+    "home": "Home",
+    "domesticStocks": "Domestic Stocks",
+    "overseasStocks": "Overseas Stocks",
+    "myPage": "My Page",
     "entireStocks": "Entire List",
     "holdStocks": "Holding List",
     "watchStocks": "Watching List",
@@ -170,6 +176,72 @@
     "holdings": {
       "profit": "Profit",
       "holdings": "Holdings"
+    }
+  },
+  "settings": {
+    "language": {
+      "title": "Language Settings",
+      "korean": "Korean",
+      "english": "English",
+      "changeToKorean": "Language changed to Korean",
+      "changeToEnglish": "Language changed to English"
+    },
+    "currency": {
+      "title": "Currency Unit",
+      "krw": "Korean Won (KRW)",
+      "usd": "US Dollar (USD)"
+    },
+    "notifications": {
+      "title": "Notification Settings",
+      "realtime": "Real-time Notifications"
+    },
+    "theme": {
+      "title": "Theme Settings",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change Password"
+    }
+  },
+  "account": {
+    "manage": {
+      "title": "Account Management",
+      "refresh": "Refresh",
+      "addAccount": "Add Account",
+      "accountNumber": "Account Number",
+      "balance": {
+        "krw": "KRW Balance",
+        "usd": "USD Balance"
+      },
+      "actions": {
+        "charge": "Charge",
+        "exchange": "Exchange"
+      },
+      "empty": "No registered accounts"
+    },
+    "charge": {
+      "title": "Account Charge",
+      "currentBalance": "Current Balance",
+      "chargeAmount": "Charge Amount",
+      "afterBalance": "Balance After Charge",
+      "manageButton": "Account Management",
+      "chargeButton": "Charge"
+    },
+    "exchange": {
+      "title": "Currency Exchange",
+      "currentBalance": "Available Balance",
+      "exchangeCurrency": "Exchange Currency",
+      "exchangeDirection": {
+        "krwToUsd": "KRW ➝ USD",
+        "usdToKrw": "USD ➝ KRW"
+      },
+      "exchangeAmount": "Exchange Amount",
+      "exchangeResult": "Exchange Result",
+      "manageButton": "Account Management",
+      "exchangeButton": "Exchange"
     }
   }
 }

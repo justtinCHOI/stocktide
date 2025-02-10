@@ -3,7 +3,7 @@ import { SectionTitle, ThemeOption, ThemeSelector } from '@components/my/setting
 import { useTranslation } from 'react-i18next';
 
 const UnitSelector: FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [currencyUnit, setCurrencyUnit] = useState('krw');
 
   const handleCurrencyChange = (unit: string) => {
@@ -14,20 +14,20 @@ const UnitSelector: FC = () => {
   return (
     <>
       <SectionTitle>
-        💱 화폐 단위
+        💱 {t('settings.currency.title')}
       </SectionTitle>
       <ThemeSelector>
         <ThemeOption
           onClick={() => handleCurrencyChange('krw')}
           $isSelected={currencyUnit === 'krw'}
         >
-          한국 원 (KRW)
+          {t('settings.currency.krw')}
         </ThemeOption>
         <ThemeOption
           onClick={() => handleCurrencyChange('usd')}
           $isSelected={currencyUnit === 'usd'}
         >
-          미국 달러 (USD)
+          {t('settings.currency.usd')}
         </ThemeOption>
       </ThemeSelector>
     </>

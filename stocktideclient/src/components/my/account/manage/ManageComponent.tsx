@@ -23,9 +23,12 @@ import {
 } from '@styles/SkeletonAccountStyles';
 import { useMediaQuery } from '@hooks/useMediaQuery';
 import ToastManager from '@utils/toastUtil';
+import { useTranslation } from 'react-i18next';
 
 const ManageComponent = () => {
-    const isMobile = useMediaQuery('(max-width: 768px)');
+  const { t } = useTranslation();
+
+  const isMobile = useMediaQuery('(max-width: 768px)');
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -87,7 +90,7 @@ const ManageComponent = () => {
         return (
           <Section>
               <TitleRow>
-                  <Title>계좌 관리</Title>
+                <Title>{t('account.manage.title')}</Title>
               </TitleRow>
               <AccountList $isMobile={isMobile}>
                   {[...Array(2)].map((_, index) => (
@@ -112,7 +115,7 @@ const ManageComponent = () => {
         return (
           <Section>
               <TitleRow>
-                  <Title>계좌 관리</Title>
+                <Title>{t('account.manage.title')}</Title>
               </TitleRow>
               <ErrorContainer>
                   <AlertTriangle size={24} />
@@ -125,7 +128,7 @@ const ManageComponent = () => {
                         .finally(() => setIsLoading(false));
                   }}>
                       <RefreshCw size={16} />
-                      다시 시도
+                    {t('account.manage.refresh')}
                   </RefreshButton>
               </ErrorContainer>
           </Section>
@@ -139,10 +142,10 @@ const ManageComponent = () => {
           <Section>
               <EmptyStateContainer>
                   <Wallet2 size={48} color="#666" />
-                  <EmptyStateText>등록된 계좌가 없습니다</EmptyStateText>
+                  <EmptyStateText>{t('account.manage.empty')}</EmptyStateText>
                   <AddAccountButton onClick={handleAddAccount}>
                       <Plus size={20} />
-                      계좌 추가하기
+                    {t('account.manage.addAccount')}
                   </AddAccountButton>
               </EmptyStateContainer>
           </Section>

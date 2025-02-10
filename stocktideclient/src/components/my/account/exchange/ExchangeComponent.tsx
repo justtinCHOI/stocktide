@@ -3,10 +3,8 @@ import { useSelector } from "react-redux";
 import useCustomCash from "@hooks/useCustomCash";
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ContentBottom } from "@styles/content";
 import { RootState } from '@/store';
 import { AccountState, ExchangeProps } from '@typings/account';
-import { toast } from 'react-toastify';
 import { Cash } from '@typings/entity';
 import { RefreshCw, ArrowLeft, AlertTriangle, ArrowLeftRight } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
@@ -29,6 +27,7 @@ import {
     SkeletonExchangeValue,
 } from '@styles/SkeletonAccountStyles';
 import ToastManager from '@utils/toastUtil';
+import { useTranslation } from 'react-i18next';
 
 const exchangeRate = 1386.83; // 상수로 분리
 
@@ -40,6 +39,8 @@ const initAccountState: AccountState = {
 }
 
 const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
+    const { t } = useTranslation();
+
     const isMobile = useMediaQuery('(max-width: 768px)');
     const cashState = useSelector((state: RootState) => state.cashSlice);
     const [isLoading, setIsLoading] = useState(true);
@@ -105,7 +106,7 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
         return (
           <Section>
               <TitleRow>
-                  <Title>계좌 환전</Title>
+                  <Title>{t('account.exchange.title')}</Title>
               </TitleRow>
               <SkeletonExchangeContainer>
                   {[...Array(5)].map((_, index) => (
@@ -138,82 +139,79 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
     }
 
     return (
-      <>
-          <Section>
-              <TitleRow>
-                  <Title>계좌 환전</Title>
-                  <RefreshButton
-                    onClick={handleRefresh}
-                    disabled={isRefreshing}
-                    $isRefreshing={isRefreshing}
-                  >
-                      <RefreshCw size={16} />
-                  </RefreshButton>
-              </TitleRow>
+      <Section>
+          <TitleRow>
+              <Title>계좌 환전</Title>
+              <RefreshButton
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                $isRefreshing={isRefreshing}
+              >
+                  <RefreshCw size={16} />
+              </RefreshButton>
+          </TitleRow>
 
-              <InfoContainer $isMobile={isMobile}>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>계좌번호</Label>
-                      <Value>{account.accountNumber}</Value>
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>보유 원화</Label>
-                      <Value>{account.money.toLocaleString()}원</Value>
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>보유 달러</Label>
-                      <Value>{account.dollar.toLocaleString()}달러</Value>
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>환전 화폐</Label>
-                      <CurrencySelector
-                        value={exchangeCurrency}
-                        onChange={(e) => setExchangeCurrency(e.target.value)}
-                      >
-                          <option value="money">원화 ➝ 달러</option>
-                          <option value="dollar">달러 ➝ 원화</option>
-                      </CurrencySelector>
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>환전 금액</Label>
-                      <ExchangeInput
-                        type="number"
-                        value={exchangeAmount || ''}
-                        onChange={(e) => setExchangeAmount(Number(e.target.value))}
-                        placeholder={`${exchangeCurrency === 'money' ? '원화' : '달러'} 금액 입력`}
-                      />
-                  </InfoRow>
-                  <InfoRow $isMobile={isMobile}>
-                      <Label>환전 결과</Label>
-                      <Value>
-                          {exchangeAmount ? (
-                            exchangeCurrency === "money"
-                              ? `${(exchangeAmount / exchangeRate).toFixed(2)} 달러`
-                              : `${(exchangeAmount * exchangeRate).toLocaleString()} 원`
-                          ) : '-'}
-                      </Value>
-                  </InfoRow>
-              </InfoContainer>
+          <InfoContainer $isMobile={isMobile}>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>계좌번호</Label>
+                  <Value>{account.accountNumber}</Value>
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>보유 원화</Label>
+                  <Value>{account.money.toLocaleString()}원</Value>
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>보유 달러</Label>
+                  <Value>{account.dollar.toLocaleString()}달러</Value>
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>환전 화폐</Label>
+                  <CurrencySelector
+                    value={exchangeCurrency}
+                    onChange={(e) => setExchangeCurrency(e.target.value)}
+                  >
+                      <option value="money">원화 ➝ 달러</option>
+                      <option value="dollar">달러 ➝ 원화</option>
+                  </CurrencySelector>
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>환전 금액</Label>
+                  <ExchangeInput
+                    type="number"
+                    value={exchangeAmount || ''}
+                    onChange={(e) => setExchangeAmount(Number(e.target.value))}
+                    placeholder={`${exchangeCurrency === 'money' ? '원화' : '달러'} 금액 입력`}
+                  />
+              </InfoRow>
+              <InfoRow $isMobile={isMobile}>
+                  <Label>환전 결과</Label>
+                  <Value>
+                      {exchangeAmount ? (
+                        exchangeCurrency === "money"
+                          ? `${(exchangeAmount / exchangeRate).toFixed(2)} 달러`
+                          : `${(exchangeAmount * exchangeRate).toLocaleString()} 원`
+                      ) : '-'}
+                  </Value>
+              </InfoRow>
+          </InfoContainer>
 
-              <ButtonContainer>
-                  <Button
-                    $variant="secondary"
-                    onClick={() => navigate('../manage')}
-                  >
-                      <ArrowLeft size={20} />
-                      계좌 관리
-                  </Button>
-                  <Button
-                    $variant="primary"
-                    onClick={handleExchange}
-                  >
-                      <ArrowLeftRight size={20} />
-                      환전하기
-                  </Button>
-              </ButtonContainer>
-          </Section>
-          <ContentBottom />
-      </>
+          <ButtonContainer>
+              <Button
+                $variant="secondary"
+                onClick={() => navigate('../manage')}
+              >
+                  <ArrowLeft size={20} />
+                  계좌 관리
+              </Button>
+              <Button
+                $variant="primary"
+                onClick={handleExchange}
+              >
+                  <ArrowLeftRight size={20} />
+                  환전하기
+              </Button>
+          </ButtonContainer>
+      </Section>
     );
 };
 

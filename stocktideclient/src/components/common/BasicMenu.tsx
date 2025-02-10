@@ -1,18 +1,37 @@
 import styled from "styled-components";
 import { FC } from 'react';
 import { StyledLink } from '@styles/common';
+import { useTranslation } from 'react-i18next';
 const BasicMenu: FC = () => {
-    return (
-        <Footer>
-            <FooterHome><StyledLink to={'/welcome'}>홈</StyledLink> </FooterHome>
-            <FooterNav>
-                <FooterMenu>
-                    <FooterMenuItem><StyledLink to={'/stock/domestic/'}>국내주식</StyledLink> </FooterMenuItem>
-                    <FooterMenuItem><StyledLink to={'/stock/overseas/'}>해외주식</StyledLink></FooterMenuItem>
-                    <FooterMenuItem><StyledLink to={'/my/'}>마이페이지</StyledLink></FooterMenuItem>
-                </FooterMenu>
-            </FooterNav>
-        </Footer>
+  const { t } = useTranslation();
+
+  return (
+    <Footer>
+      <FooterHome>
+        <StyledLink to={'/welcome'}>
+          {t('menu.home')}
+        </StyledLink>
+      </FooterHome>
+      <FooterNav>
+        <FooterMenu>
+          <FooterMenuItem>
+            <StyledLink to={'/stock/domestic/'}>
+              {t('menu.domesticStocks')}
+            </StyledLink>
+          </FooterMenuItem>
+          <FooterMenuItem>
+            <StyledLink to={'/stock/overseas/'}>
+              {t('menu.overseasStocks')}
+            </StyledLink>
+          </FooterMenuItem>
+          <FooterMenuItem>
+            <StyledLink to={'/my/'}>
+              {t('menu.myPage')}
+            </StyledLink>
+          </FooterMenuItem>
+        </FooterMenu>
+      </FooterNav>
+    </Footer>
     );
 }
 export default BasicMenu;

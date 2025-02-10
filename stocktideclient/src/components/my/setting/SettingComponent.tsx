@@ -4,12 +4,15 @@ import LanguageSelector from './LanguageSelector';
 import { Bell, Moon, Shield } from 'lucide-react';
 import UnitSelector from '@components/my/setting/UnitSelector';
 import { Section, Title, TitleRow } from '@styles/CustomStockTideStyles';
+import { useTranslation } from 'react-i18next';
 
 const SettingComponent: FC = () => {
-    return (
+  const { t } = useTranslation();
+
+  return (
       <Section>
           <TitleRow>
-              <Title>설정</Title>
+            <Title>{t('menu.settings')}</Title>
           </TitleRow>
 
           <SettingSection>
@@ -23,34 +26,40 @@ const SettingComponent: FC = () => {
           <SettingSection>
               <SectionTitle>
                   <Bell size={20} />
-                  알림 설정
+                {t('settings.notifications.title')}
               </SectionTitle>
               <ToggleSwitch>
                   <input type="checkbox" id="notifications" />
                   <label htmlFor="notifications"></label>
-                  <p>실시간 알림</p>
+                <p>{t('settings.notifications.realtime')}</p>
               </ToggleSwitch>
           </SettingSection>
 
           <SettingSection>
               <SectionTitle>
                   <Moon size={20} />
-                  테마 설정
+                {t('settings.theme.title')}
               </SectionTitle>
               <ThemeSelector>
-                  <ThemeOption $isSelected={true}>라이트</ThemeOption>
-                  <ThemeOption $isSelected={false}>다크</ThemeOption>
-                  <ThemeOption $isSelected={false}>시스템</ThemeOption>
+                <ThemeOption $isSelected={true}>
+                  {t('settings.theme.light')}
+                </ThemeOption>
+                <ThemeOption $isSelected={false}>
+                  {t('settings.theme.dark')}
+                </ThemeOption>
+                <ThemeOption $isSelected={false}>
+                  {t('settings.theme.system')}
+                </ThemeOption>
               </ThemeSelector>
           </SettingSection>
 
           <SettingSection>
               <SectionTitle>
                   <Shield size={20} />
-                  보안
+                {t('settings.security.title')}
               </SectionTitle>
               <SecurityButton>
-                  비밀번호 변경
+                {t('settings.security.changePassword')}
               </SecurityButton>
           </SettingSection>
       </Section>

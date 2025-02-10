@@ -17,6 +17,10 @@
     "stockPrice": "주가"
   },
   "menu": {
+    "home": "홈",
+    "domesticStocks": "국내주식",
+    "overseasStocks": "해외주식",
+    "myPage": "마이페이지",
     "entireStocks": "전체종목",
     "holdStocks": "보유종목",
     "watchStocks": "관심종목",
@@ -174,6 +178,71 @@
       "profit": "수익",
       "holdings": "보유"
     }
+  },
+  "settings": {
+    "language": {
+      "title": "언어 설정",
+      "korean": "한국어",
+      "english": "영어",
+      "changeToKorean": "한국어로 변경되었습니다",
+      "changeToEnglish": "영어로 변경되었습니다"
+    },
+    "currency": {
+      "title": "화폐 단위",
+      "krw": "한국 원 (KRW)",
+      "usd": "미국 달러 (USD)"
+    },
+    "notifications": {
+      "title": "알림 설정",
+      "realtime": "실시간 알림"
+    },
+    "theme": {
+      "title": "테마 설정",
+      "light": "라이트",
+      "dark": "다크",
+      "system": "시스템"
+    },
+    "security": {
+      "title": "보안",
+      "changePassword": "비밀번호 변경"
+    }
+  },
+  "account": {
+    "manage": {
+      "title": "계좌 관리",
+      "refresh": "새로고침",
+      "addAccount": "계좌 추가",
+      "accountNumber": "계좌번호",
+      "balance": {
+        "krw": "원화 잔액",
+        "usd": "달러 잔액"
+      },
+      "actions": {
+        "charge": "충전",
+        "exchange": "환전"
+      },
+      "empty": "등록된 계좌가 없습니다"
+    },
+    "charge": {
+      "title": "계좌 충전",
+      "currentBalance": "현재 잔액",
+      "chargeAmount": "충전 금액",
+      "afterBalance": "충전 후 잔액",
+      "manageButton": "계좌 관리",
+      "chargeButton": "충전하기"
+    },
+    "exchange": {
+      "title": "계좌 환전",
+      "currentBalance": "보유 금액",
+      "exchangeCurrency": "환전 화폐",
+      "exchangeDirection": {
+        "krwToUsd": "원화 ➝ 달러",
+        "usdToKrw": "달러 ➝ 원화"
+      },
+      "exchangeAmount": "환전 금액",
+      "exchangeResult": "환전 결과",
+      "manageButton": "계좌 관리",
+      "exchangeButton": "환전하기"
+    }
   }
-
 }
