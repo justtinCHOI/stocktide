@@ -74,7 +74,7 @@
   "news": {
     "title": "Latest News",
     "pagination": {
-      "prev": "Previous",
+      "prev": "Prev",
       "next": "Next",
       "pageInfo": "{{current}} / {{total}}"
     },

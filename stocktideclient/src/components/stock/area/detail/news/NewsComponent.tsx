@@ -3,12 +3,14 @@ import useGetStockNews from '@hooks/useGetStockNews';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
 import { SkeletonBox } from '@styles/SkeletonStyles';
+import { useTranslation } from 'react-i18next';
 
 interface NewsComponentProps {
   companyId: number;
 }
 
 const NewsComponent: FC<NewsComponentProps> = ({companyId}) => {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(0);
   const { data, isLoading, isError, error, refetch } = useGetStockNews(companyId);
 
@@ -44,16 +46,16 @@ const NewsComponent: FC<NewsComponentProps> = ({companyId}) => {
 
   if (isError) return <ErrorContainer>
     <AlertTriangle size={24} color="red" />
-    <p>{error?.message || '뉴스를 불러올 수 없습니다.'}</p>
+    <p>{error?.message || t('news.error.loadFail')}</p>
     <RefreshButton onClick={() => refetch()}>
-      <RefreshCw size={16} /> 다시 시도
+      <RefreshCw size={16} /> {t('news.error.retry')}
     </RefreshButton>
   </ErrorContainer>;
 
   return (
     <NewsContainer>
       <NewsHeader>
-        <h2>최신 뉴스</h2>
+        <h2>{t('news.title')}</h2>
         <RefreshButton onClick={() => refetch()}>
           <RefreshCw size={16} />
         </RefreshButton>
@@ -63,10 +65,9 @@ const NewsComponent: FC<NewsComponentProps> = ({companyId}) => {
           <NewsItem key={index}>
             <NewsTitle>{news.hts_pbnt_titl_cntt}</NewsTitle>
             <NewsDetails>
-              <span></span>
-              <span></span>
               <span>{news.dorg} &nbsp;  {formatDate(news.data_dt)}</span>
               {/*<ExternalLink size={16} />*/}
+              {/*<MoreLink>{t('news.readMore')}</MoreLink>*/}
             </NewsDetails>
           </NewsItem>
         ))}
@@ -77,7 +78,7 @@ const NewsComponent: FC<NewsComponentProps> = ({companyId}) => {
           disabled={currentPage === 0}
           onClick={handlePrevPage}
         >
-          이전
+          {t('news.pagination.prev')}
         </PaginationButton>
         <PageIndicator>
           {currentPage + 1} / {totalPages}
@@ -86,7 +87,7 @@ const NewsComponent: FC<NewsComponentProps> = ({companyId}) => {
           disabled={currentPage === totalPages - 1}
           onClick={handleNextPage}
         >
-          다음
+          {t('news.pagination.next')}
         </PaginationButton>
       </PaginationContainer>
     </NewsContainer>
