@@ -2,6 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import LanguageSelector from './LanguageSelector';
 import { Settings, Bell, Moon, Shield } from 'lucide-react';
+import UnitSelector from '@components/my/setting/UnitSelector';
 
 const SettingComponent: FC = () => {
     return (
@@ -14,6 +15,10 @@ const SettingComponent: FC = () => {
           <SettingSection>
               <LanguageSelector />
           </SettingSection>
+
+        <SettingSection>
+          <UnitSelector />
+        </SettingSection>
 
           <SettingSection>
               <SectionTitle>
@@ -81,7 +86,7 @@ const SettingSection = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const SectionTitle = styled.h2`
+export const SectionTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -135,12 +140,12 @@ const ToggleSwitch = styled.div`
   }
 `;
 
-const ThemeSelector = styled.div`
+export const ThemeSelector = styled.div`
   display: flex;
   gap: 10px;
 `;
 
-const ThemeOption = styled.button<{ $isSelected: boolean }>`
+export const ThemeOption = styled.button<{ $isSelected: boolean }>`
   flex: 1;
   padding: 10px;
   border: none;

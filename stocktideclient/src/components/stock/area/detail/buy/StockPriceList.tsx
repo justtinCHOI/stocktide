@@ -23,7 +23,6 @@ const StockPriceList = () => {
     const priceChageAmountComparedYesterday = parseInt(stockInfo.stockInfResponseDto.prdy_vrss, 10); // 전날 종가대비 현재가 가격 차이
     const yesterDayStockClosingPrice = presentStockPrice - priceChageAmountComparedYesterday; // 전날종가 = 현재가 - 전날 종가대비 현재가 가격 차이
 
-
     // 1) 당일 매도/매수호가 및 거래량
     const sellingPrice = [];
     const buyingPrice = [];

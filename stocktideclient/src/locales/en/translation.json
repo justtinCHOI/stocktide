@@ -1,14 +1,41 @@
 {
   "unit": {
+    "currency": {
+      "krw": "KRW",
+      "usd": "USD"
+    },
     "shares": "shares",
-    "won": "KRW",
     "percent": "%"
+  },
+  "marketType": {
+    "DOMESTIC": "Domestic",
+    "OVERSEAS": "Overseas",
+    "kospi": "KOSPI"
   },
   "error": {
     "data": {
       "loadFail": "Unable to load data.",
-      "retry": "Retry"
+      "retry": "Retry",
+      "chart": "Retry"
+    },
+    "orderFailure": {
+      "noVolume": "No order quantity specified",
+      "invalidPrice": "The entered price is invalid",
+      "outsideTradeTime": "Trading is not available at this time"
     }
+  },
+  "order": {
+    "type": {
+      "buy": "Buy",
+      "sell": "Sell"
+    },
+    "price": "Order Price",
+    "volume": "Order Quantity",
+    "totalAmount": "Total Order Amount"
+  },
+  "trading": {
+    "priceChange": "Compared to Previous Day",
+    "volume": "Trading Volume"
   },
   "chart": {
     "tooltip": {
@@ -23,10 +50,6 @@
     "loginButton": "Sign In",
     "signupButton": "Sign Up",
     "kakaoLogin": "Login with Kakao"
-  },
-  "marketType": {
-    "DOMESTIC": "Domestic",
-    "OVERSEAS": "Overseas"
   },
   "stockBasic": {
     "title": "Company Basic Information",

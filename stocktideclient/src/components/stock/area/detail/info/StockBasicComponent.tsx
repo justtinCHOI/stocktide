@@ -80,11 +80,11 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
     },
     {
       label: t('stockBasic.capital'),
-      value: `${Number(cpta).toLocaleString()} ${t('unit.won')}`
+      value: `${Number(cpta).toLocaleString()} ${t('unit.currency.krw')}`
     },
     {
       label: t('stockBasic.faceValue'),
-      value: `${Number(papr).toLocaleString()} ${t('unit.won')}`
+      value: `${Number(papr).toLocaleString()} ${t('unit.currency.krw')}`
     }
   ];
 

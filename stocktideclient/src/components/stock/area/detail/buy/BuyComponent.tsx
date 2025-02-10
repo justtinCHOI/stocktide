@@ -18,10 +18,8 @@ interface BuyComponentProps {
     companyId: number;
 }
 
-const marketType = "코스피";
-
 const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const {
         stockInfo,
@@ -33,6 +31,7 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
         return null;
     }
 
+    const marketType = t('marketType.kospi');
     const corpName = stockInfo.korName;
     const stockCode = stockInfo.code;
     const stockPrice = parseInt(stockInfo.stockInfResponseDto.stck_prpr, 10).toLocaleString();
@@ -71,9 +70,9 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
               <div className="mainContent">
                   <ErrorContainer>
                       <AlertTriangle size={24} />
-                      <ErrorMessage>데이터를 불러올 수 없습니다.</ErrorMessage>
+                      <ErrorMessage>t('error.data.loadFail')</ErrorMessage>
                       <RefreshButton onClick={() => refetch()}>
-                          다시 시도
+                          {t('error.data.retry')}
                       </RefreshButton>
                   </ErrorContainer>
               </div>
@@ -100,7 +99,7 @@ const BuyComponent: FC<BuyComponentProps> = ({companyId}) => {
                     <div className="TransactionVolume ">
                         <div className="PriceChangeRate">{priceChangeRate}%</div>
                         <TransactionVolume>
-                            {transactionVolume}주
+                            {transactionVolume}{t('unit.shares')}
                         </TransactionVolume>
                     </div>
                 </StockName>

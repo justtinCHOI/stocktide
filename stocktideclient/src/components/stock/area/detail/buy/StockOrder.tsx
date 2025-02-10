@@ -11,6 +11,7 @@ import {dummyLogo, logoList} from "@utils/companyLogos";
 import { FC } from 'react';
 import { RootState } from '@/store';
 import { OrderTypeProps } from '@components/stock/area/detail/buy/OrderDecisionBtn';
+import { useTranslation } from 'react-i18next';
 
 const orderFailureMessage01 = "주문 실패";
 const orderFailureMessage02 = "주문 수량이 없습니다";
@@ -19,29 +20,25 @@ const orderFailureMessage04 = "주문 가능한 시간이 아닙니다";
 const openingTimeIndicator = "주문 가능 : 평일 오전 9시 ~ 오후 3시 30분";
 const orderFailureButtonText = "확인";
 
-const orderPriceText = "주문단가";
-const orderVolumeText = "주문수량";
-const totalOrderAmountText = "총 주문금액";
-const priceUnit = "원";
-const volumeUnit = "주";
 const cancelButtonText = "취소";
 const confirmButtonText = "확인";
 
 const toastText = " 요청이 완료되었습니다";
-
 
 interface StockOrderProps {
     corpName: string;
 }
 
 const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
+    const { t } = useTranslation();
+
     const dispatch = useDispatch();
     const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
     const orderVolume = useSelector((state: RootState) => state.stockOrderVolumeSlice);
     const orderPrice = useSelector((state: RootState) => state.stockOrderPriceSlice);
     const decisionWindow = useSelector((state: RootState) => state.decisionWindowSlice);
 
-    const orderTypeText = !orderType ? "매수" : "매도";
+    const orderTypeText = !orderType ? t('order.type.buy') : t('order.type.sell');
     const price = orderPrice.toLocaleString();
     const volume = orderVolume.toLocaleString();
     const totalPrice = (orderPrice * orderVolume).toLocaleString();
@@ -71,7 +68,7 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
                       <img src={companyLogo} alt="stock logo" />
                       <div className="orderInfo">
                           {corpName} {volume}
-                          {volumeUnit}
+                          {t('unit.shares')}
                       </div>
                   </div>
                   <div>
@@ -124,16 +121,16 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
                       </div>
                       <div className="OrderContent">
                           <div className="Price">
-                              <span className="text">{orderPriceText}</span>
-                              <span>{price} {priceUnit}</span>
+                              <span className="text">{t('order.price')}</span>
+                              <span>{price} {t('unit.currency.krw')}</span>
                           </div>
                           <div className="Volume">
-                              <span className="text">{orderVolumeText}</span>
-                              <span>{volume} {volumeUnit}</span>
+                              <span className="text">{t('order.volume')}</span>
+                              <span>{volume} {t('unit.shares')}</span>
                           </div>
                           <div className="TotalOrderAmout">
-                              <span className="text">{totalOrderAmountText}</span>
-                              <span>{totalPrice} {priceUnit}</span>
+                              <span className="text">{t('order.totalAmount')}</span>
+                              <span>{totalPrice} {t('unit.currency.krw')}</span>
                           </div>
                           <div className="ButtonContainer">
                               <button className="cancel" onClick={handleCloseDecisionWindow}>{cancelButtonText}</button>

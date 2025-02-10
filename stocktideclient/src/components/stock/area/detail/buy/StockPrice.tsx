@@ -17,7 +17,6 @@ interface StockPriceProps {
 }
 
 const StockPrice: FC<StockPriceProps> = ({ index, price, volume, changeRate, totalSellingVolume, totalBuyingVolume } ) => {
-// const StockPrice: FC<StockPriceProps> = ({ index, price, volume, changeRate} ) => {
 
     const dispatch = useDispatch();
     const orderPrice = useSelector((state: RootState) => state.stockOrderPriceSlice);
