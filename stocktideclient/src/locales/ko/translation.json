@@ -11,7 +11,9 @@
     "max": "최대",
     "min": "최소",
     "confirm": "확인",
-    "cancel": "취소"
+    "cancel": "취소",
+    "price": "가격",
+    "volume": "수량"
   },
   "marketType": {
     "DOMESTIC": "국내",
@@ -34,13 +36,17 @@
     },
     "price": "주문단가",
     "volume": "주문수량",
-    "totalAmount": "총 주문금액",
+    "totalAmount": "주문총액",
     "openingTimeIndicator": "주문 가능 : 평일 오전 9시 ~ 오후 3시 30분",
     "failure": {
       "basic": "주문 실패",
       "outsideTradeTime": "주문 가능한 시간이 아닙니다",
       "invalidPrice": "입력하신 가격이 올바르지 않습니다",
       "noVolume": "주문 수량이 없습니다"
+    },
+    "priceSetting": {
+      "noVolume": " [거래량 없음] 주문 시 대기 처리 됩니다",
+      "existVolume": " [거래량 있음] 주문 시 체결 처리 됩니다"
     }
   },
   "trading": {

@@ -8,12 +8,7 @@ import {
 } from "@slices/stockOrderPriceSlice";
 import { StockAsBiResponseDto } from '@typings/dto';
 import { RootState } from '@/store';
-
-const priceSettingTitle = "가격";
-const unitText = "원";
-
-const noVolumeNotification = " [거래량 없음] 주문 시 대기 처리 됩니다";
-const existVolumeNotification = " [거래량 있음] 주문 시 체결 처리 됩니다";
+import { useTranslation } from 'react-i18next';
 
 interface PriceSettingProps {
     stockInfo: StockAsBiResponseDto;
@@ -21,9 +16,12 @@ interface PriceSettingProps {
 }
 
 const PriceSetting: FC<PriceSettingProps> = ({ stockInfo, companyId } ) => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const orderPrice = useSelector((state: RootState) => state.stockOrderPriceSlice);
+
+    const unitText = t('unit.currency.krw');
 
     const [priceChangeTimer, setPriceChangeTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
@@ -116,7 +114,7 @@ const PriceSetting: FC<PriceSettingProps> = ({ stockInfo, companyId } ) => {
     return (
         <Container>
             <div className="PriceCategoryBox">
-                <div className="Title">{priceSettingTitle}</div>
+                <div className="Title">{t('dialog.price')}</div>
             </div>
             <div className="PriceSettingBox">
                 <PriceController  value={orderPrice} onChange={handleWriteOrderPrice} onKeyDown={handleInputArrowBtn} onFocus={handleCheckTradePossibility} />
@@ -131,7 +129,7 @@ const PriceSetting: FC<PriceSettingProps> = ({ stockInfo, companyId } ) => {
                 </div>
             </div>
             <CheckTradingVolume $orderPossibility={orderPossibility}>
-                <div>&#10004; {orderPossibility ? `${existVolumeNotification}` : `${noVolumeNotification}`}</div>
+                <div>&#10004; {orderPossibility ? t('order.priceSetting.existVolume') : t('order.priceSetting.noVolume')}</div>
             </CheckTradingVolume>
         </Container>
     );
@@ -143,7 +141,7 @@ const Container = styled.div`
     position: relative;
     width: 100%;
     margin-top: 21px;
-    margin-bottom: 34px;
+    margin-bottom: 56px;
 
     .PriceCategoryBox {
         display: flex;

@@ -11,18 +11,16 @@ import useGetCash from "@hooks/useGetCash";
 import useGetHoldingStock from "@hooks/useGetHoldingStock";
 import { RootState } from '@/store';
 import { OrderTypeProps } from '@components/stock/area/detail/buy/OrderDecisionBtn';
-
-const volumeSettingTitle = "수량";
-const maximumVolumeText01 = "최대";
-const volumeUnit = "주";
+import { useTranslation } from 'react-i18next';
 
 const volumePercentage01 = 10;
 const volumePercentage02 = 25;
 const volumePercentage03 = 50;
 const volumePercentage04 = 100;
-const percentageUnit = "%";
 
 const VolumeSetting = () => {
+    const { t } = useTranslation();
+
     const dispatch = useDispatch();
     const {companyId} = useParams();
     const companyIdNumber = Number(companyId);
@@ -126,16 +124,16 @@ const VolumeSetting = () => {
     return (
         <Container>
             <TitleContainer $orderType={orderType}>
-                <div className="Title">{volumeSettingTitle}</div>
+                <div className="Title">{t('dialog.volume')}</div>
                 <div className="MaximumVolumeContainer">
-                    <span>{maximumVolumeText01}</span>
+                    <span>{t('dialog.max')}</span>
                     <span className="maximumVolume">{orderType ? availableSellingStock : maximumBuyingVolume}</span>
-                    <span>{volumeUnit}</span>
+                    <span>{t('unit.shares')}</span>
                 </div>
             </TitleContainer>
             <VolumeSettingBox>
                 <VolumeController  value={orderVolume} onChange={handleWriteOrderVolume} onKeyDown={handleInputArrowBtn} />
-                <UnitContent>{volumeUnit}</UnitContent>
+                <UnitContent>{t('unit.shares')}</UnitContent>
                 <div className="DirectionContainer">
                     <button className="VolumeUp" onClick={handlePlusOrderVolume}>
                         &#8896;
@@ -148,19 +146,19 @@ const VolumeSetting = () => {
             <PercentageBox>
                 <button onClick={() => handleSetVolumePercentage(volumePercentage01)}>
                     {volumePercentage01}
-                    {percentageUnit}
+                    {t('unit.percent')}
                 </button>
                 <button onClick={() => handleSetVolumePercentage(volumePercentage02)}>
                     {volumePercentage02}
-                    {percentageUnit}
+                    {t('unit.percent')}
                 </button>
                 <button onClick={() => handleSetVolumePercentage(volumePercentage03)}>
                     {volumePercentage03}
-                    {percentageUnit}
+                    {t('unit.percent')}
                 </button>
                 <button onClick={() => handleSetVolumePercentage(volumePercentage04)}>
                     {volumePercentage04}
-                    {percentageUnit}
+                    {t('unit.percent')}
                 </button>
             </PercentageBox>
         </Container>

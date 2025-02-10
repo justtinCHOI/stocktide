@@ -11,7 +11,9 @@
     "max": "Max",
     "min": "Min",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "price": "Price",
+    "volume": "Quantity"
   },
   "marketType": {
     "DOMESTIC": "Domestic",
@@ -41,6 +43,10 @@
       "outsideTradeTime": "Trading is not available at this time",
       "invalidPrice": "The entered price is invalid",
       "noVolume": "No order quantity specified"
+    },
+    "priceSetting": {
+      "noVolume": " [No Trading Volume] Order will be placed on standby",
+      "existVolume": " [Trading Volume Available] Order will be processed immediately"
     }
   },
   "trading": {

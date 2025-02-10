@@ -7,11 +7,11 @@ import OrderDecisionBtn, { OrderTypeProps } from './OrderDecisionBtn';
 import { RootState } from '@/store';
 import useGetStockInfo from '@hooks/useGetStockInfo';
 import PriceSetting from '@components/stock/area/detail/buy/PriceSetting';
-
-const orderType01 = "매수";
-const orderType02 = "매도";
+import { useTranslation } from 'react-i18next';
 
 const StockOrderSetting = () => {
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
   const orderType = useSelector((state: RootState) => state.stockOrderTypeSlice);
   const {companyId} = useParams();
@@ -38,10 +38,10 @@ const StockOrderSetting = () => {
         <Container>
             <div className="OrderType">
               <Buying onClick={handleSetBuying} $orderType={orderType}>
-                {orderType01}
+                {t('order.type.buy')}
               </Buying>
               <Selling onClick={handleSetSelling} $orderType={orderType}>
-                {orderType02}
+                {t('order.type.sell')}
               </Selling>
             </div>
             <OrderTypeChangeEffectLine />

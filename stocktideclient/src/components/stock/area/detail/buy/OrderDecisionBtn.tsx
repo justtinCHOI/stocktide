@@ -5,15 +5,13 @@ import useGetCash from "@hooks/useGetCash";
 import {setStockOrderVolume} from "@slices/stockOrderVolumeSlice";
 import {openDecisionWindow} from "@slices/decisionWindowSlice";
 import { RootState } from '@/store';
-
-const availableMoneyText01 = "최대";
-const availableMoneyText02 = "원";
-const totalAmountText = "주문총액";
-const totalAmountUnit = "원";
+import { useTranslation } from 'react-i18next';
 
 const OrderDecisionBtn = () => {
+    const { t } = useTranslation();
 
-    let cash = '';
+    const priceUnit = t('unit.currency.krw');
+    let cash = '0';
 
     const {cashData} = useGetCash();
     if (cashData) {
@@ -26,7 +24,7 @@ const OrderDecisionBtn = () => {
     const orderVolume = useSelector((state: RootState) => state.stockOrderVolumeSlice);
     const [totalOrderAmount, setTotalOrderAmount] = useState(0);
 
-    const orderBtnText = orderType ? "매도" : "매수";
+    const orderTypeText = !orderType ? t('order.type.buy') : t('order.type.sell');
 
     const handleOpenDecisionWindow = () => {
         dispatch(openDecisionWindow());
@@ -44,17 +42,17 @@ const OrderDecisionBtn = () => {
     return (
         <div className="container">
             <AvailableMoney $orderType={orderType}>
-                <span>{availableMoneyText01}</span>
+                <span>{t('dialog.max')}</span>
                 <span className="availableMoney">{cash}</span>
-                <span>{availableMoneyText02}</span>
+                <span>{priceUnit}</span>
             </AvailableMoney>
             <TotalAmount>
-                <div className="totalAmountText">{totalAmountText}</div>
+                <div className="totalAmountText">{t('order.totalAmount')}</div>
                 <div className="totalAmount">{totalOrderAmount.toLocaleString()}</div>
-                <div>{totalAmountUnit}</div>
+                <div>{priceUnit}</div>
             </TotalAmount>
             <OrderBtn $orderType={orderType} onClick={handleOpenDecisionWindow}>
-                {orderBtnText}
+                {orderTypeText}
             </OrderBtn>
         </div>
     );
