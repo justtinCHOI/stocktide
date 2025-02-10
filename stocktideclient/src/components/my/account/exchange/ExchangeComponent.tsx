@@ -28,6 +28,7 @@ import {
     SkeletonExchangeLabel,
     SkeletonExchangeValue,
 } from '@styles/SkeletonAccountStyles';
+import ToastManager from '@utils/toastUtil';
 
 const exchangeRate = 1386.83; // 상수로 분리
 
@@ -68,7 +69,7 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
     const handleExchange = async () => {
         if (!exchangeAmount || exchangeAmount <= 0) {
-            toast.error("환전 금액을 확인해주세요");
+            ToastManager.error("환전 금액을 확인해주세요");
             return;
         }
 
@@ -77,14 +78,14 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
         if (exchangeCurrency === "money") {
             if (exchangeAmount > account.money) {
-                toast.error("보유 원화가 부족합니다");
+                ToastManager.error("보유 원화가 부족합니다");
                 return;
             }
             newMoney -= exchangeAmount;
             newDollar += exchangeAmount / exchangeRate;
         } else {
             if (exchangeAmount > account.dollar) {
-                toast.error("보유 달러가 부족합니다");
+                ToastManager.error("보유 달러가 부족합니다");
                 return;
             }
             newMoney += exchangeAmount * exchangeRate;
@@ -93,10 +94,10 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
         try {
             await doUpdateCash(cashId, Math.floor(newMoney), Math.floor(newDollar));
-            toast.success("환전이 완료되었습니다");
+            ToastManager.success("환전이 완료되었습니다");
             setExchangeAmount(0);
         } catch (error) {
-            toast.error("환전 처리 중 오류가 발생했습니다");
+            ToastManager.error("환전 처리 중 오류가 발생했습니다");
         }
     };
 

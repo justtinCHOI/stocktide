@@ -10,6 +10,7 @@ import {
 import { useDispatch } from 'react-redux';
 import useCustomMember from '@hooks/useCustomMember';
 import { toast } from 'react-toastify';
+import ToastManager from '@utils/toastUtil';
 
 
 export function useSocket(url: string, companyId: number): UseSocketReturn {
@@ -95,7 +96,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
             } catch (error) {
                 console.error('Failed to send message:', error);
                 // 추가적인 에러 처리 로직 (예: 사용자에게 알림)
-                toast.error('메시지 전송에 실패했습니다.');
+                ToastManager.error('메시지 전송에 실패했습니다.');
             }
         }
     }, [stompClient, connected, companyId]);

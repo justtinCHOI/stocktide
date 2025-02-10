@@ -3,6 +3,7 @@ import axios from 'axios';
 import { StockBalanceDto } from '@typings/company';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
+import ToastManager from '@utils/toastUtil';
 
 const fetchStockBalance = async (companyId: number): Promise<StockBalanceDto> => {
   try {
@@ -29,7 +30,7 @@ const useStockBalance = (companyId: number) => {
 
   useEffect(() => {
     if (query.error) {
-      toast.error(`데이터 로딩 실패: ${query.error.message}`);
+      ToastManager.error(`데이터 로딩 실패: ${query.error.message}`);
     }
   }, [query.error]);
 

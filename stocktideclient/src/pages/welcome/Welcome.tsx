@@ -6,6 +6,7 @@ import useCustomMember from "@hooks/useCustomMember";
 import { StyledLink } from '@styles/common';
 import { toast } from 'react-toastify';
 import { putTest1 } from '@api/testApi';
+import ToastManager from '@utils/toastUtil';
 
 const Welcome = () => {
 
@@ -13,7 +14,7 @@ const Welcome = () => {
     const {doLogout} = useCustomMember()
     const handleClickLogout = () => {
         doLogout()
-        toast.info("로그아웃되었습니다");
+      ToastManager.info("로그아웃되었습니다");
     }
 
     function handleClickTest() {

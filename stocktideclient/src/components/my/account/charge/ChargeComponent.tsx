@@ -30,6 +30,7 @@ import {
     SkeletonChargeLabel,
     SkeletonChargeValue,
 } from '@styles/SkeletonAccountStyles';
+import ToastManager from '@utils/toastUtil';
 
 const initAccountState: AccountState = {
     cashId: 0,
@@ -74,7 +75,7 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
     const handleCharge = async () => {
         const chargeAmountNumber = Number(chargeAmount);
         if (!chargeAmountNumber || chargeAmountNumber <= 0) {
-            toast.error("충전 금액을 확인해주세요");
+            ToastManager.error("충전 금액을 확인해주세요");
             return;
         }
 
@@ -82,11 +83,11 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
             const finalAmount = calculateChargedMoney();
             await requestPay(finalAmount);
             await doUpdateCash(cashId, finalAmount, 0);
-            toast.success("충전이 완료되었습니다");
+            ToastManager.success("충전이 완료되었습니다");
             setChargeAmount(''); // 초기화
         } catch (error) {
             setIsError(true);
-            toast.error("충전 처리 중 오류가 발생했습니다");
+            ToastManager.error("충전 처리 중 오류가 발생했습니다");
         }
     };
 

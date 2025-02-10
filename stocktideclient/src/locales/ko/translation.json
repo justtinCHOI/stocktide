@@ -1,4 +1,14 @@
 {
+  "unit": {
+    "shares": "주",
+    "won": "원"
+  },
+  "error": {
+    "data": {
+      "loadFail": "데이터를 불러올 수 없습니다.",
+      "retry": "다시 시도"
+    }
+  },
   "login": {
     "title": "로그인",
     "email": "이메일",
@@ -10,5 +20,13 @@
   "marketType": {
     "DOMESTIC": "국내",
     "OVERSEAS": "해외"
+  },
+  "stockBasic": {
+    "title": "기업 기본 정보",
+    "stockNumber": "종목번호",
+    "productName": "상품명",
+    "listedShares": "상장주식수",
+    "capital": "자본금",
+    "faceValue": "액면가"
   }
 }

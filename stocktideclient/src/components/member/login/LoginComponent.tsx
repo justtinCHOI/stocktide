@@ -5,6 +5,7 @@ import KakaoLoginComponent from '@components/member/kakao/KakaoLoginComponent';
 import { LoginState } from '@typings/member';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import ToastManager from '@utils/toastUtil';
 
 const initState: LoginState = {
     email: '',
@@ -26,11 +27,11 @@ const LoginComponent: FC = () => {
 
     const handleClickLogin = () => {
         if (!loginParam.email) {
-            toast.warning("이메일을 입력해주세요");
+            ToastManager.warning("이메일을 입력해주세요");
             return;
         }
         if (!loginParam.password) {
-            toast.warning("비밀번호를 입력해주세요");
+            ToastManager.warning("비밀번호를 입력해주세요");
             return;
         }
 

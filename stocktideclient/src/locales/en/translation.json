@@ -1,4 +1,14 @@
 {
+  "unit": {
+    "shares": "shares",
+    "won": "KRW"
+  },
+  "error": {
+    "data": {
+      "loadFail": "Unable to load data.",
+      "retry": "Retry"
+    }
+  },
   "login": {
     "title": "Login",
     "email": "Email",
@@ -10,5 +20,13 @@
   "marketType": {
     "DOMESTIC": "Domestic",
     "OVERSEAS": "Overseas"
+  },
+  "stockBasic": {
+    "title": "Company Basic Information",
+    "stockNumber": "Stock Number",
+    "productName": "Product Name",
+    "listedShares": "Listed Shares",
+    "capital": "Capital",
+    "faceValue": "Face Value"
   }
 }

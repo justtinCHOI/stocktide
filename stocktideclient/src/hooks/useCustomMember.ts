@@ -6,6 +6,7 @@ import { LoginParam, MemberSliceState } from '@typings/member';
 import { Member } from '@typings/entity';
 import { toast } from 'react-toastify';
 import { MemberModifyDTO } from '@typings/dto';
+import ToastManager from '@utils/toastUtil';
 
 const useCustomMember = (): {
   loginState: Member;
@@ -30,9 +31,9 @@ const useCustomMember = (): {
         if (!state.loading) {
           unsubscribe();
           if (state.error) {
-            toast.error("이메일과 비밀번호를 확인해주세요");
+            ToastManager.error("이메일과 비밀번호를 확인해주세요");
           } else if (state.member) {
-            toast.success("로그인 성공!");
+            ToastManager.success("로그인 성공!");
             moveToPath('/');
           }
           resolve(state);
@@ -53,9 +54,9 @@ const useCustomMember = (): {
         if (!state.loading) {
           unsubscribe();
           if (state.error) {
-            toast.error("회원정보 수정에 실패했습니다");
+            ToastManager.error("회원정보 수정에 실패했습니다");
           } else {
-            toast.success("회원정보가 수정되었습니다");
+            ToastManager.success("회원정보가 수정되었습니다");
             moveToPath('/my/info');
           }
           resolve(state);

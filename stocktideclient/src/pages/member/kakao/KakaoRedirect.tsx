@@ -6,6 +6,7 @@ import {getAccessToken, getMemberWithAccessToken} from "@api/kakaoApi";
 import {IncludeInformationDiv, OutletDiv} from "@styles/menu";
 import { loginSuccess } from '@slices/memberSlice';
 import { toast } from 'react-toastify';
+import ToastManager from '@utils/toastUtil';
 
 const KakaoRedirect = () => {
     const dispatch = useDispatch();
@@ -26,9 +27,9 @@ const KakaoRedirect = () => {
                     if (memberInfo) {
                         if (memberInfo.email) {
                             moveToPath("/");
-                            toast.success("카카오 로그인 성공!");
+                            ToastManager.success("카카오 로그인 성공!");
                         } else {
-                            toast.info("일반회원으로 전환이 필요합니다");
+                            ToastManager.info("일반회원으로 전환이 필요합니다");
                             if (confirm("일반회원으로 전환하시겠습니까?")) {
                                 moveToPath("/my/modify");
                             }

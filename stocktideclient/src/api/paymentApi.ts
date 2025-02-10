@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import ToastManager from '@utils/toastUtil';
 
 interface PaymentWindow {
     IMP?: any;
@@ -182,7 +182,7 @@ export function requestPay(chargedMoney: number) {
         // 나머지 기존 코드
     }).catch(error => {
         console.error('Failed to initialize IMP:', error);
-        toast.error('결제 모듈 초기화에 실패했습니다.');
+        toastManager.error('결제 모듈 초기화에 실패했습니다.');
     });
 }
 

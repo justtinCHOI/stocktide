@@ -11,7 +11,7 @@ interface StockBasicComponentProps {
 }
 
 const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -27,7 +27,7 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
     return (
       <Section>
         <TitleRow>
-          <Title>기업 기본 정보</Title>
+          <Title>{t('stockBasic.title')}</Title>
         </TitleRow>
         <InfoContainer>
           {[...Array(5)].map((_, index) => (
@@ -45,11 +45,11 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
     return (
       <ErrorContainer>
         <ErrorMessage>
-          {error?.message || '데이터를 불러올 수 없습니다.'}
+          {error?.message ||  t('error.data.loadFail')}
         </ErrorMessage>
         <RefreshButton onClick={handleRefresh}>
           <RefreshCw size={16} />
-          다시 시도
+          {t('error.data.retry')}
         </RefreshButton>
       </ErrorContainer>
     );
@@ -66,17 +66,32 @@ const StockBasicComponent: FC<StockBasicComponentProps> = ({ companyId }) => {
   } = data || {};
 
   const infoItems = [
-    { label: '종목번호', value: pdno },
-    { label: '상품명', value: i18n.language === 'ko' ? prdt_abrv_name : prdt_eng_abrv_name },
-    { label: '상장주식수', value: `${Number(lstg_stqt).toLocaleString()} 주` }, // 1, 2
-    { label: '자본금', value: `${Number(cpta).toLocaleString()} 원` }, // 2
-    { label: '액면가', value: `${Number(papr).toLocaleString()} 원` }, // 1, 2
+    {
+      label: t('stockBasic.stockNumber'),
+      value: pdno
+    },
+    {
+      label: t('stockBasic.productName'),
+      value: i18n.language === 'ko' ? prdt_abrv_name : prdt_eng_abrv_name
+    },
+    {
+      label: t('stockBasic.listedShares'),
+      value: `${Number(lstg_stqt).toLocaleString()} ${t('unit.shares')}`
+    },
+    {
+      label: t('stockBasic.capital'),
+      value: `${Number(cpta).toLocaleString()} ${t('unit.won')}`
+    },
+    {
+      label: t('stockBasic.faceValue'),
+      value: `${Number(papr).toLocaleString()} ${t('unit.won')}`
+    }
   ];
 
   return (
     <Section>
       <TitleRow>
-        <Title>기업 기본 정보</Title>
+        <Title>{t('stockBasic.title')}</Title>
         <RefreshButton
           onClick={handleRefresh}
           disabled={isRefreshing}

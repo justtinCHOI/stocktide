@@ -23,6 +23,7 @@ import {
     SkeletonButton,
 } from '@styles/SkeletonAccountStyles';
 import { useMediaQuery } from '@hooks/useMediaQuery';
+import ToastManager from '@utils/toastUtil';
 
 const ManageComponent = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -42,7 +43,7 @@ const ManageComponent = () => {
             doGetCashList(loginState.memberId)
               .catch(error => {
                   setIsError(true);
-                  toast.error("계좌 정보를 가져오는 중 오류가 발생했습니다");
+                ToastManager.error("계좌 정보를 가져오는 중 오류가 발생했습니다");
                   console.log(error);
               })
               .finally(() => {
@@ -58,9 +59,9 @@ const ManageComponent = () => {
 
     const handleDeleteeAccount = (cashId: number) => {
         doDeleteCash(cashId).then(() => {
-            toast.success("계좌가 삭제되었습니다");
+          ToastManager.success("계좌가 삭제되었습니다");
         }).catch((error) => {
-            toast.error("계좌 삭제에 실패했습니다", error);
+          ToastManager.error("계좌 삭제에 실패했습니다", error);
         });
     };
 
@@ -73,9 +74,9 @@ const ManageComponent = () => {
     const handleAddAccount = async () => {
         try {
             await doCreateCash(loginState.memberId);
-            toast.success("새 계좌가 생성되었습니다");
+          ToastManager.success("새 계좌가 생성되었습니다");
         } catch (error) {
-            toast.error("계좌 생성 중 오류가 발생했습니다");
+          ToastManager.error("계좌 생성 중 오류가 발생했습니다");
         }
     };
 

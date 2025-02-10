@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Globe } from 'lucide-react';
 import { toast } from 'react-toastify';
+import ToastManager from '@utils/toastUtil';
 
 const LanguageSelector: FC = () => {
   const { i18n } = useTranslation();
@@ -10,9 +11,9 @@ const LanguageSelector: FC = () => {
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng).then(() =>{
         if(lng === 'ko'){
-          toast.success("한국어로 변경되었습니다");
+          ToastManager.success("한국어로 변경되었습니다");
         }else{
-          toast.success("영어로 변경되었습니다.");
+          ToastManager.success("영어로 변경되었습니다.");
         }
       }
     );

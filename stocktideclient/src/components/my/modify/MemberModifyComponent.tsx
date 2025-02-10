@@ -16,6 +16,7 @@ import {
 } from "@styles/content";
 import { MemberState } from '@typings/member';
 import { toast } from 'react-toastify';
+import ToastManager from '@utils/toastUtil';
 
 const MemberModifyComponent: FC = () => {
 
@@ -82,37 +83,37 @@ const MemberModifyComponent: FC = () => {
 
     const handleClickModify = () => {
         if (!member.name) {
-            toast.error("이름을 입력해 주세요");
+            ToastManager.error("이름을 입력해 주세요");
             nameInputRef.current!.focus()
             return
         }
 
         if (!member.email) {
-            toast.error("이메일을 입력해 주세요");
+            ToastManager.error("이메일을 입력해 주세요");
             emailInputRef.current!.focus()
             return
         }
 
         if (!member.password) {
-            toast.error("비밀번호를 입력해 주세요");
+            ToastManager.error("비밀번호를 입력해 주세요");
             passwordInputRef.current!.focus()
             return
         }
 
         if (!member.confirmPassword) {
-            toast.error("재확인 비밀번호를 입력해 주세요");
+            ToastManager.error("재확인 비밀번호를 입력해 주세요");
             confirmPasswordInputRef.current!.focus()
             return
         }
 
         if (emailError) {
-            toast.error("이메일을 확인해 주세요");
+            ToastManager.error("이메일을 확인해 주세요");
             emailInputRef.current!.focus()
             return
         }
 
         if (passwordError) {
-            toast.error("비밀번호가 일치하지 않습니다");
+            ToastManager.error("비밀번호가 일치하지 않습니다");
             confirmPasswordInputRef.current!.focus()
             return
         }
@@ -125,7 +126,7 @@ const MemberModifyComponent: FC = () => {
         }
 
         doModifyMember(memberModifyDTO).catch(() => {
-            toast.error("회원 정보 수정 중 오류가 발생했습니다");
+            ToastManager.error("회원 정보 수정 중 오류가 발생했습니다");
         });
     }
 
