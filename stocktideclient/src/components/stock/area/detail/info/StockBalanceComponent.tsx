@@ -15,12 +15,15 @@ import {
   StatusBadge, LoadingContainer, NoDataMessage
 } from '@styles/CustomStockTideStyles';
 import { analyzeBalanceData, formatBalanceChartData, formatBalanceData } from '@utils/balanceAnalyzer';
+import { useTranslation } from 'react-i18next';
 
 interface StockBalanceComponentProps {
   companyId: number;
 }
 
 const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) => {
+  const { t } = useTranslation();
+
   const [isRefreshing, setIsRefreshing] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { data, isLoading, isError, error, refetch } = useGetStockBalance(companyId);
@@ -49,7 +52,7 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
     return (
       <Section>
         <TitleRow>
-          <Title>재무상태표 분석</Title>
+          <Title>{t('stockBalance.title')}</Title>
         </TitleRow>
         <LoadingContainer>
           {[...Array(4)].map((_, index) => (
@@ -65,11 +68,11 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
       <ErrorContainer>
         <AlertTriangle size={24} />
         <ErrorMessage>
-          {error?.message || '데이터를 불러올 수 없습니다.'}
+          {error?.message || t('error.data.loadFail')}
         </ErrorMessage>
         <RefreshButton onClick={handleRefresh}>
           <RefreshCw size={16} />
-          다시 시도
+          {t('error.data.retry')}
         </RefreshButton>
       </ErrorContainer>
     );
@@ -78,7 +81,7 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
   return (
     <Section>
       <TitleRow>
-        <Title>재무상태표 분석</Title>
+        <Title>{t('stockBalance.title')}</Title>
         <RefreshButton
           onClick={handleRefresh}
           disabled={isRefreshing}
@@ -101,26 +104,26 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
               <YAxis domain={[0, 'auto']} />
               <Tooltip
                 formatter={(value: number) => `${value.toFixed(2)}%`}
-                labelFormatter={(label) => `${label} 기준`}
+                labelFormatter={(label) => `${label} ${t('chart.tooltip.basis')}`}
               />
               <Legend />
               <Line
                 type="monotone"
-                dataKey="유동비율"
+                dataKey="currentRatio"
                 stroke="#8884d8"
                 dot={false}
                 strokeWidth={2}
               />
               <Line
                 type="monotone"
-                dataKey="부채비율"
+                dataKey="debtRatio"
                 stroke="#82ca9d"
                 dot={false}
                 strokeWidth={2}
               />
               <Line
                 type="monotone"
-                dataKey="자기자본비율"
+                dataKey="equityRatio"
                 stroke="#ffc658"
                 dot={false}
                 strokeWidth={2}
@@ -129,24 +132,22 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
           </ResponsiveContainer>
         </ChartContainer>
       ) : (
-      <NoDataMessage>차트 데이터가 없습니다.</NoDataMessage>
+      <NoDataMessage>{t('stockBalance.noData')}</NoDataMessage>
       )}
 
       <AnalysisContainer>
-        <AnalysisTitle>재무 분석 결과</AnalysisTitle>
+        <AnalysisTitle>{t('stockBalance.analysis.title')}</AnalysisTitle>
         <AnalysisGrid>
           <AnalysisItem>
-            <Label>재무안정성</Label>
+            <Label>{t('stockBalance.analysis.stability.label')}</Label>
             <StatusBadge $status={analysis?.stability || 'medium'}>
-              {analysis?.stability === 'high' ? '높음' :
-                analysis?.stability === 'medium' ? '보통' : '낮음'}
+              {t(`stockBalance.analysis.stability.${analysis?.stability || 'medium'}`)}
             </StatusBadge>
           </AnalysisItem>
           <AnalysisItem>
-            <Label>리스크 수준</Label>
+            <Label>{t('stockBalance.analysis.risk.label')}</Label>
             <StatusBadge $status={analysis?.riskLevel || 'moderate'}>
-              {analysis?.riskLevel === 'low' ? '낮음' :
-                analysis?.riskLevel === 'moderate' ? '보통' : '높음'}
+              {t(`stockBalance.analysis.risk.${analysis?.riskLevel || 'moderate'}`)}
             </StatusBadge>
           </AnalysisItem>
         </AnalysisGrid>
@@ -164,21 +165,21 @@ const StockBalanceComponent: FC<StockBalanceComponentProps> = ({ companyId }) =>
         {chartData.length > 0 && (
           <>
             <InfoRow $isMobile={isMobile}>
-              <Label>유동비율</Label>
+              <Label>{t('stockBalance.metrics.currentRatio')}</Label>
               <Value>
                 {((chartData[chartData.length - 1].currentAssets /
                   chartData[chartData.length - 1].currentLiabilities) * 100).toFixed(2)}%
               </Value>
             </InfoRow>
             <InfoRow $isMobile={isMobile}>
-              <Label>부채비율</Label>
+              <Label>{t('stockBalance.metrics.debtRatio')}</Label>
               <Value>
                 {((chartData[chartData.length - 1].totalLiabilities /
                   chartData[chartData.length - 1].totalCapital) * 100).toFixed(2)}%
               </Value>
             </InfoRow>
             <InfoRow $isMobile={isMobile}>
-              <Label>자기자본비율</Label>
+              <Label>{t('stockBalance.metrics.equityRatio')}</Label>
               <Value>
                 {((chartData[chartData.length - 1].totalCapital /
                   chartData[chartData.length - 1].totalAssets) * 100).toFixed(2)}%

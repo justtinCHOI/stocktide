@@ -1,12 +1,20 @@
 {
   "unit": {
     "shares": "주",
-    "won": "원"
+    "won": "원",
+    "percent": "%"
   },
   "error": {
     "data": {
       "loadFail": "데이터를 불러올 수 없습니다.",
-      "retry": "다시 시도"
+      "retry": "다시 시도",
+      "chart": "다시 시도"
+    }
+  },
+  "chart": {
+    "tooltip": {
+      "basis": "기준",
+      "value": "{{value}}%"
     }
   },
   "login": {
@@ -28,5 +36,53 @@
     "listedShares": "상장주식수",
     "capital": "자본금",
     "faceValue": "액면가"
+  },
+  "stockBalance": {
+    "title": "재무상태표 분석",
+    "analysis": {
+      "title": "재무 분석 결과",
+      "stability": {
+        "label": "재무안정성",
+        "high": "높음",
+        "medium": "보통",
+        "low": "낮음"
+      },
+      "recommendations": {
+        "strongFinancials": "재무상태가 매우 건전합니다. 현재의 재무 정책을 유지하세요.",
+        "goodLiquidity": "유동성이 양호합니다. 단기 부채 상환 능력이 충분합니다.",
+        "moderateRisk": "적절한 위험 수준을 유지하고 있습니다.",
+        "watchDebtRatio": "부채비율 관리에 주의가 필요합니다.",
+        "improveLiquidity": "유동성 개선이 필요할 수 있습니다.",
+        "reduceDebt": "부채 수준을 낮추는 것을 고려하세요.",
+        "strengthenEquity": "자기자본 확충을 고려하세요.",
+        "highRisk": "재무 위험이 높습니다. 신중한 관리가 필요합니다.",
+        "noData": "분석을 위한 재무제표 데이터가 없습니다."
+      },
+      "risk": {
+        "label": "리스크 수준",
+        "low": "낮음",
+        "moderate": "보통",
+        "high": "높음"
+      }
+    },
+    "metrics": {
+      "currentRatio": "유동비율",
+      "debtRatio": "부채비율",
+      "equityRatio": "자기자본비율"
+    },
+    "noData": "차트 데이터가 없습니다."
+  },
+  "news": {
+    "title": "최신 뉴스",
+    "pagination": {
+      "prev": "이전",
+      "next": "다음",
+      "pageInfo": "{{current}} / {{total}}"
+    },
+    "error": {
+      "loadFail": "뉴스를 불러올 수 없습니다.",
+      "retry": "다시 시도"
+    },
+    "readMore": "더보기"
   }
 }

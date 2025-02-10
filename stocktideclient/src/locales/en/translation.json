@@ -1,12 +1,19 @@
 {
   "unit": {
     "shares": "shares",
-    "won": "KRW"
+    "won": "KRW",
+    "percent": "%"
   },
   "error": {
     "data": {
       "loadFail": "Unable to load data.",
       "retry": "Retry"
+    }
+  },
+  "chart": {
+    "tooltip": {
+      "basis": "basis",
+      "value": "{{value}}%"
     }
   },
   "login": {
@@ -28,5 +35,53 @@
     "listedShares": "Listed Shares",
     "capital": "Capital",
     "faceValue": "Face Value"
+  },
+  "stockBalance": {
+    "title": "Balance Sheet Analysis",
+    "analysis": {
+      "title": "Financial Analysis Results",
+      "stability": {
+        "label": "Financial Stability",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "risk": {
+        "label": "Risk Level",
+        "low": "Low",
+        "moderate": "Moderate",
+        "high": "High"
+      },
+      "recommendations": {
+        "strongFinancials": "Financial condition is very sound. Maintain current financial policies.",
+        "goodLiquidity": "Good liquidity position. Sufficient ability to repay short-term debt.",
+        "moderateRisk": "Maintaining appropriate risk levels.",
+        "watchDebtRatio": "Debt ratio requires attention.",
+        "improveLiquidity": "Liquidity improvement may be needed.",
+        "reduceDebt": "Consider reducing debt levels.",
+        "strengthenEquity": "Consider strengthening equity capital.",
+        "highRisk": "High financial risk. Careful management required.",
+        "noData": "No financial statement data available for analysis."
+      }
+    },
+    "metrics": {
+      "currentRatio": "Current Ratio",
+      "debtRatio": "Debt Ratio",
+      "equityRatio": "Equity Ratio"
+    },
+    "noData": "No chart data available."
+  },
+  "news": {
+    "title": "Latest News",
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "pageInfo": "{{current}} / {{total}}"
+    },
+    "error": {
+      "loadFail": "Unable to load news.",
+      "retry": "Try again"
+    },
+    "readMore": "Read more"
   }
 }
