@@ -13,18 +13,6 @@ import { RootState } from '@/store';
 import { OrderTypeProps } from '@components/stock/area/detail/buy/OrderDecisionBtn';
 import { useTranslation } from 'react-i18next';
 
-const orderFailureMessage01 = "주문 실패";
-const orderFailureMessage02 = "주문 수량이 없습니다";
-const orderFailureMessage03 = "입력하신 가격이 올바르지 않습니다";
-const orderFailureMessage04 = "주문 가능한 시간이 아닙니다";
-const openingTimeIndicator = "주문 가능 : 평일 오전 9시 ~ 오후 3시 30분";
-const orderFailureButtonText = "확인";
-
-const cancelButtonText = "취소";
-const confirmButtonText = "확인";
-
-const toastText = " 요청이 완료되었습니다";
-
 interface StockOrderProps {
     corpName: string;
 }
@@ -73,7 +61,7 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
                   </div>
                   <div>
                       <span className="orderType">✓ {orderTypeText}</span>
-                      <span>{toastText}</span>
+                      <span>{t('toast.completed')}</span>
                   </div>
               </ToastMessage>,
               {
@@ -106,9 +94,19 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
             orderFailureCase01 || orderFailureCase02 ? (
               <OrderFailed>
                   <div className="Container">
-                      <div className="message01">{orderFailureCase01 ? orderFailureMessage04 : orderFailureMessage01}</div>
-                      <div className="message02">{orderFailureCase01 ? openingTimeIndicator : orderPrice !== 0 ? orderFailureMessage02 : orderFailureMessage03}</div>
-                      <button onClick={handleCloseDecisionWindow}>{orderFailureButtonText}</button>
+                      <div className="message01">
+                          {orderFailureCase01
+                            ? t('order.failure.outsideTradeTime')
+                            : t('order.failure.basic')}
+                      </div>
+                      <div className="message02">
+                          {orderFailureCase01
+                            ? t('order.openingTimeIndicator')
+                            : orderPrice !== 0
+                              ? t('order.failure.noVolume')
+                              : t('order.failure.invalidPrice')}
+                      </div>
+                      <button onClick={handleCloseDecisionWindow}>{t('dialog.confirm')}</button>
                   </div>
               </OrderFailed>
             ) : (
@@ -133,8 +131,8 @@ const StockOrder: FC<StockOrderProps> = ({ corpName }) => {
                               <span>{totalPrice} {t('unit.currency.krw')}</span>
                           </div>
                           <div className="ButtonContainer">
-                              <button className="cancel" onClick={handleCloseDecisionWindow}>{cancelButtonText}</button>
-                              <button className="confirm" onClick={handleOrderConfirm}>{confirmButtonText}</button>
+                              <button className="cancel" onClick={handleCloseDecisionWindow}>{t('dialog.cancel')}</button>
+                              <button className="confirm" onClick={handleOrderConfirm}>{t('dialog.confirm')}</button>
                           </div>
                       </div>
                   </div>

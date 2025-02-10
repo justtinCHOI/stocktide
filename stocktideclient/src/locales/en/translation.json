@@ -7,21 +7,24 @@
     "shares": "shares",
     "percent": "%"
   },
+  "dialog": {
+    "max": "Max",
+    "min": "Min",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
   "marketType": {
     "DOMESTIC": "Domestic",
     "OVERSEAS": "Overseas",
     "kospi": "KOSPI"
   },
+  "toast": {
+    "completed": " request completed"
+  },
   "error": {
     "data": {
       "loadFail": "Unable to load data.",
-      "retry": "Retry",
-      "chart": "Retry"
-    },
-    "orderFailure": {
-      "noVolume": "No order quantity specified",
-      "invalidPrice": "The entered price is invalid",
-      "outsideTradeTime": "Trading is not available at this time"
+      "retry": "Retry"
     }
   },
   "order": {
@@ -31,7 +34,14 @@
     },
     "price": "Order Price",
     "volume": "Order Quantity",
-    "totalAmount": "Total Order Amount"
+    "totalAmount": "Total Order Amount",
+    "openingTimeIndicator": "Trading hours: Weekdays 9:00 AM ~ 3:30 PM",
+    "failure": {
+      "basic": "Order Failed",
+      "outsideTradeTime": "Trading is not available at this time",
+      "invalidPrice": "The entered price is invalid",
+      "noVolume": "No order quantity specified"
+    }
   },
   "trading": {
     "priceChange": "Compared to Previous Day",
