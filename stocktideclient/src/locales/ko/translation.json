@@ -13,7 +13,8 @@
     "confirm": "확인",
     "cancel": "취소",
     "price": "가격",
-    "volume": "수량"
+    "volume": "수량",
+    "stockPrice": "주가"
   },
   "marketType": {
     "DOMESTIC": "국내",
@@ -22,6 +23,9 @@
   },
   "toast": {
     "completed": " 요청이 완료되었습니다"
+  },
+  "loading": {
+      "basic": "로딩 중 입니다..."
   },
   "error": {
     "data": {
@@ -55,9 +59,10 @@
   },
   "chart": {
     "tooltip": {
-      "basis": "기준",
-      "value": "{{value}}%"
-    }
+      "basis": "기준"
+    },
+    "movingAverage": "이동평균선 ({{minutes}}분)",
+    "volume": "거래량"
   },
   "login": {
     "title": "로그인",
@@ -123,4 +128,5 @@
     },
     "readMore": "더보기"
   }
+
 }

@@ -2,24 +2,23 @@ import { styled } from "styled-components";
 import EChartsReact from "echarts-for-react";
 import useGetStockChart from "@hooks/useGetStockChart.ts";
 import { FC } from 'react';
-
-const loadingText = "로딩 중 입니다...";
-const errorText = "화면을 불러올 수 없습니다";
+import { useTranslation } from 'react-i18next';
 
 interface ChartComponentProps {
     companyId: number;
 }
 
 const ChartComponent: FC<ChartComponentProps> = ({companyId}) => {
+    const { t } = useTranslation();
 
     const { options, chartStyle, loading } = useGetStockChart(companyId);
 
     if (loading) {
-        return <LoadingContainer>{loadingText}</LoadingContainer>;
+        return <LoadingContainer>{t('loading.basic')}</LoadingContainer>;
     }
 
     if (!options || !chartStyle) {
-        return <ErrorContainer>{errorText}</ErrorContainer>;
+        return <ErrorContainer>{t('error.data.loadFail')}</ErrorContainer>;
     }
 
     return (

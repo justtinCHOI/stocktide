@@ -19,7 +19,7 @@ const averageLineMinute = 10;
 const averageDay = 10;
 
 const useGetStockChart = (companyId: number) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const { stockPrice, stockPriceLoading } = useGetStockData(companyId);
     const { stockInfo, stockInfoLoading } = useGetStockInfo(companyId);
@@ -107,7 +107,7 @@ const useGetStockChart = (companyId: number) => {
 
         const series = [
               {
-                  name: `주가`,
+                  name: t('dialog.stockPrice'),
                   type: "candlestick",
                   data: organizedChartData.values,
                   itemStyle: {
@@ -119,7 +119,7 @@ const useGetStockChart = (companyId: number) => {
                   yAxisIndex: 0,
               },
               {
-                  name: `이동평균선 (${averageLineMinute}분)`,
+                  name: t('chart.movingAverage', { minutes: averageLineMinute }),
                   type: "line",
                   data: movingAvgLine,
                   smooth: true,
@@ -128,7 +128,7 @@ const useGetStockChart = (companyId: number) => {
                   },
               },
               {
-                  name: `거래량`,
+                  name: t('chart.volume'),
                   type: "bar",
                   xAxisIndex: 1,
                   data: organizedChartData.volumes,
@@ -153,7 +153,10 @@ const useGetStockChart = (companyId: number) => {
                 top: 10,
                 left: "left",
                 padding: [4, 0, 0, 15],
-                data: [`주가`, `거래량`, `이동평균선 (${averageLineMinute}분)`, `${compareName}`],
+                data: [ t('dialog.stockPrice'),
+                    t('chart.volume'),
+                    t('chart.movingAverage', { minutes: averageLineMinute }),
+                    `${compareName}`],
             },
             tooltip: {
                 trigger: "axis",
