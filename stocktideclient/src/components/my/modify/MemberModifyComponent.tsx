@@ -15,10 +15,11 @@ import {
     Label
 } from "@styles/content";
 import { MemberState } from '@typings/member';
-import { toast } from 'react-toastify';
 import ToastManager from '@utils/toastUtil';
+import { useTranslation } from 'react-i18next';
 
 const MemberModifyComponent: FC = () => {
+    const { t } = useTranslation();
 
     const { loginState: loginInfo, doModifyMember } = useCustomMember();
     const [member, setMember] = useState<MemberState>(loginInfo)
@@ -134,7 +135,7 @@ const MemberModifyComponent: FC = () => {
         <>
             <Container>
                 <FormRow>
-                    <Label>이름</Label>
+                    <Label>{t('profile.title')}</Label>
                     <Input
                         name="name"
                         type="text"
@@ -145,7 +146,7 @@ const MemberModifyComponent: FC = () => {
                 </FormRow>
 
                 <FormRow>
-                    <Label>이메일</Label>
+                    <Label>{t('profile.email')}</Label>
                     <Input
                         name="email"
                         type="email"
@@ -157,7 +158,7 @@ const MemberModifyComponent: FC = () => {
                 </FormRow>
 
                 <FormRow>
-                    <Label>비밀번호</Label>
+                    <Label>{t('profile.password')}</Label>
                     <InputWrapper>
                         <Input
                             name="password"
@@ -174,7 +175,7 @@ const MemberModifyComponent: FC = () => {
                 </FormRow>
 
                 <FormRow>
-                    <Label>재확인 비밀번호</Label>
+                    <Label>{t('profile.confirmPassword')}</Label>
                     <InputWrapper>
                         <Input
                             name="confirmPassword"
@@ -192,7 +193,7 @@ const MemberModifyComponent: FC = () => {
 
                 <FormRow style={{justifyContent: 'end'}}>
                     <Button type="button" onClick={handleClickModify}>
-                        Modify
+                        {t('profile.modify')}
                     </Button>
                 </FormRow>
             </Container>

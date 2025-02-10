@@ -4,24 +4,16 @@ import {useDispatch, useSelector} from "react-redux";
 import { AppDispatch, RootState, store } from '@/store';
 import { LoginParam, MemberSliceState } from '@typings/member';
 import { Member } from '@typings/entity';
-import { toast } from 'react-toastify';
 import { MemberModifyDTO } from '@typings/dto';
 import ToastManager from '@utils/toastUtil';
 
-const useCustomMember = (): {
-  loginState: Member;
-  isLogin: boolean;
-  doLogin: (loginParam: LoginParam) => Promise<unknown>;
-  doLogout: () => Promise<void>;
-  doModifyMember: (memberModifyDTO: MemberModifyDTO) => Promise<unknown>;
-  moveToPath: (path: string) => void;
-  moveToLogin: () => void
-} => {
+const useCustomMember = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const memberState = useSelector((state: RootState) => state.memberSlice) as MemberSliceState;
   const loginState = memberState.member as Member;
   const isLogin = !!memberState.member?.email;
+  const isLoading = memberState.loading;
 
   const doLogin = async (loginParam: LoginParam) => {
     dispatch(loginRequest(loginParam));
@@ -73,7 +65,7 @@ const useCustomMember = (): {
     navigate({pathname: '/member/login'}, {replace:true})
   }
 
-  return  {loginState, isLogin, doLogin, doLogout, doModifyMember, moveToPath, moveToLogin}
+  return  {loginState, isLogin, isLoading, doLogin, doLogout, doModifyMember, moveToPath, moveToLogin}
 
 }
 
