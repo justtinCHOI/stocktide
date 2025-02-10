@@ -21,6 +21,11 @@
     "OVERSEAS": "해외",
     "kospi": "코스피"
   },
+  "placeholder": {
+    "search": "검색어를 입력하세요",
+    "companySearch": "회사명 또는 종목코드 검색"
+
+  },
   "toast": {
     "completed": " 요청이 완료되었습니다"
   },
@@ -127,6 +132,25 @@
       "retry": "다시 시도"
     },
     "readMore": "더보기"
+  },
+  "chat": {
+    "title": "채팅방",
+    "participants": "참여자 {{count}}명",
+    "status": {
+      "connecting": "연결 중...",
+      "disconnected": "연결 끊김"
+    },
+    "input": {
+      "placeholder": "메시지를 입력하세요...",
+      "send": "전송"
+    },
+    "messages": {
+      "join": "{{name}}님이 입장했습니다.",
+      "leave": "{{name}}님이 퇴장했습니다."
+    },
+    "error": {
+      "sendFailed": "메시지 전송에 실패했습니다."
+    }
   }
 
 }

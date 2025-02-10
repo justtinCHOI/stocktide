@@ -9,11 +9,13 @@ import {
 } from '@slices/chatSlice';
 import { useDispatch } from 'react-redux';
 import useCustomMember from '@hooks/useCustomMember';
-import { toast } from 'react-toastify';
 import ToastManager from '@utils/toastUtil';
+import { useTranslation } from 'react-i18next';
 
 
 export function useSocket(url: string, companyId: number): UseSocketReturn {
+    const { t } = useTranslation();
+
     const dispatch = useDispatch();
     const { loginState } = useCustomMember();
 
@@ -51,7 +53,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
                         destination: `/app/chat.joinRoom/${companyId}`,
                         body: JSON.stringify({
                             type: 'JOIN',
-                            content: `${loginState.name}님이 입장했습니다.`,
+                            content: t('chat.messages.join', { name: loginState.name }),
                             sender: loginState.name,
                             time: new Date().toLocaleTimeString(),
                             room: `company-${companyId}`
@@ -96,7 +98,7 @@ export function useSocket(url: string, companyId: number): UseSocketReturn {
             } catch (error) {
                 console.error('Failed to send message:', error);
                 // 추가적인 에러 처리 로직 (예: 사용자에게 알림)
-                ToastManager.error('메시지 전송에 실패했습니다.');
+                ToastManager.error(t('chat.error.sendFailed'));
             }
         }
     }, [stompClient, connected, companyId]);

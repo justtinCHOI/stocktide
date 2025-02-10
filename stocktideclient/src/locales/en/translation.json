@@ -21,6 +21,11 @@
     "OVERSEAS": "Overseas",
     "kospi": "KOSPI"
   },
+  "placeholder": {
+    "search": "Enter search keyword",
+    "companySearch": "Search by company name or stock code"
+
+  },
   "toast": {
     "completed": " request completed"
   },
@@ -127,5 +132,24 @@
       "retry": "Try again"
     },
     "readMore": "Read more"
+  },
+  "chat": {
+    "title": "Chat Room",
+    "participants": "{{count}} Participants",
+    "status": {
+      "connecting": "Connecting...",
+      "disconnected": "Disconnected"
+    },
+    "input": {
+      "placeholder": "Type a message...",
+      "send": "Send"
+    },
+    "messages": {
+      "join": "{{name}} has joined",
+      "leave": "{{name}} has left"
+    },
+    "error": {
+      "sendFailed": "Failed to send message"
+    }
   }
 }

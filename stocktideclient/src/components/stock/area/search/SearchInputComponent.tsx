@@ -8,8 +8,11 @@ import useCompanyData from '@hooks/useCompanyData';
 import { debounce } from 'lodash';
 import { extractedCompanyData } from '@typings/hooks';
 import { useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const SearchInputComponent: FC = () => {
+  const { t } = useTranslation();
+
   const { area } = useParams();
   const dispatch = useDispatch();
   const [ searchString, setSearchString ] = useState<string>();
@@ -74,7 +77,7 @@ const SearchInputComponent: FC = () => {
         <SearchInputDiv $isFocused={isFocused}>
           <SearchInput
             ref={searchInputRef}
-            placeholder="회사명 또는 종목코드 검색"
+            placeholder={t('placeholder.companySearch')}
             onChange={handleSearchChange}
             onFocus={handleInputFocus}
             value={searchString}

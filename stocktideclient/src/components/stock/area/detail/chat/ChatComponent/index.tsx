@@ -32,7 +32,7 @@ interface ChatComponentProps {
 }
 
 const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const {stockInfo: company} = useGetStockInfo(companyId);
     const { loginState } = useCustomMember();
@@ -92,13 +92,16 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
     return (
       <Container>
           <ChatHeader>
-              <CompanyName>{i18n.language === 'ko' ? company?.korName : company?.engName} 채팅방</CompanyName>
+              <CompanyName>
+                  {i18n.language === 'ko' ? company?.korName : company?.engName}
+                  {t('chat.title')}
+              </CompanyName>
               <ParticipantCount>
-                      {connectionStatus === 'connected'
-                        ? `참여자 ${participants.length}명`
-                        : connectionStatus === 'reconnecting'
-                          ? '연결 중...'
-                          : '연결 끊김'}
+                  {connectionStatus === 'connected'
+                    ? t('chat.participants', { count: participants.length })
+                    : connectionStatus === 'reconnecting'
+                      ? t('chat.status.connecting')
+                      : t('chat.status.disconnected')}
               </ParticipantCount>
           </ChatHeader>
 
@@ -131,14 +134,14 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ companyId }) => {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="메시지를 입력하세요..."
+                placeholder={t('chat.input.placeholder')}
                 disabled={chatState.connectionStatus !== 'connected'}
               />
               <button
                 type="submit"
                 disabled={chatState.connectionStatus !== 'connected'}
               >
-                  전송
+                  {t('chat.input.send')}
               </button>
           </ChatInput>
       </Container>

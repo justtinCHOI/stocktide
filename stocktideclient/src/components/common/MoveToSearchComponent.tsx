@@ -2,15 +2,21 @@ import styled from "styled-components";
 import {FaSearch} from "react-icons/fa";
 import { FC } from 'react';
 import useCustomMove from '@hooks/useCustomMove';
+import { useTranslation } from 'react-i18next';
 const MoveToSearchComponent: FC = () => {
-    const {moveToSearch} = useCustomMove();
+  const { t } = useTranslation();
+
+  const {moveToSearch} = useCustomMove();
 
     const handleInputFocus = () => {
       moveToSearch()
     };
     return (
         <SearchInputDiv>
-            <SearchInput placeholder="검색어를 입력하세요"  onFocus={handleInputFocus}/>
+            <SearchInput
+              placeholder={t('placeholder.search')}
+              onFocus={handleInputFocus}
+            />
             <SearchIcon />
         </SearchInputDiv>
     );
