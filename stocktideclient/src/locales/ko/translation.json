@@ -208,28 +208,46 @@
     }
   },
   "account": {
+    "accountNumber": "계좌번호",
+    "balance": {
+      "krw": "원화",
+      "usd": "달러"
+    },
+    "errors": {
+      "accountGettingFailed": "계좌 정보를 가져오는 중 오류가 발생했습니다"
+    },
     "manage": {
       "title": "계좌 관리",
       "refresh": "새로고침",
       "addAccount": "계좌 추가",
-      "accountNumber": "계좌번호",
-      "balance": {
-        "krw": "원화 잔액",
-        "usd": "달러 잔액"
-      },
+
       "actions": {
         "charge": "충전",
         "exchange": "환전"
       },
-      "empty": "등록된 계좌가 없습니다"
+      "empty": "등록된 계좌가 없습니다",
+      "success": {
+        "accountCreationSuccess": "계좌가 삭제되었습니다",
+        "accountDeletionSuccess": "계좌가 삭제되었습니다"
+      },
+      "errors": {
+        "maxAccountReached": "최대 계좌 개수에 도달했습니다",
+        "accountCreationFailed": "계좌 생성에 실패했습니다",
+        "accountDeletionFailed": "계좌가 삭제되었습니다"
+      }
     },
     "charge": {
       "title": "계좌 충전",
       "currentBalance": "현재 잔액",
       "chargeAmount": "충전 금액",
       "afterBalance": "충전 후 잔액",
-      "manageButton": "계좌 관리",
-      "chargeButton": "충전하기"
+      "success": {
+        "chargingSuccess": "충전이 완료되었습니다"
+      },
+      "errors": {
+        "invalidAmount": "충전 금액을 확인해주세요",
+        "chargeFailed": "충전 처리 중 오류가 발생했습니다"
+      }
     },
     "exchange": {
       "title": "계좌 환전",
@@ -240,9 +258,17 @@
         "usdToKrw": "달러 ➝ 원화"
       },
       "exchangeAmount": "환전 금액",
+      "typeExchangeAmount": "금액 입력",
       "exchangeResult": "환전 결과",
-      "manageButton": "계좌 관리",
-      "exchangeButton": "환전하기"
+      "success": {
+        "exchangingSuccess": "환전이 완료되었습니다"
+      },
+      "errors": {
+        "recheckFunds": "환전 금액을 확인해주세요",
+        "insufficientKrw": "보유 원화가 부족합니다",
+        "insufficientDollar": "보유 달러가 부족합니다",
+        "exchangeFailed": "환전 처리 중 오류가 발생했습니다"
+      }
     }
   }
 }

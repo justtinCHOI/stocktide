@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { RootState } from '@/store';
 import { AccountState, ExchangeProps } from '@typings/account';
 import { Cash } from '@typings/entity';
-import { RefreshCw, ArrowLeft, AlertTriangle, ArrowLeftRight } from 'lucide-react';
+import { RefreshCw, ArrowLeft, AlertTriangle, ArrowLeftRight, ChevronDown } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
 import {
     Section,
@@ -52,6 +52,8 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
     const [exchangeAmount, setExchangeAmount] = useState(0);
     const navigate = useNavigate();
 
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     useEffect(() => {
         const selectedAccount = cashState.cashList.find((cash: Cash) => cash.cashId === cashId);
         if (selectedAccount) {
@@ -70,7 +72,7 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
     const handleExchange = async () => {
         if (!exchangeAmount || exchangeAmount <= 0) {
-            ToastManager.error("환전 금액을 확인해주세요");
+            ToastManager.error(t('account.exchange.errors.recheckFunds'));
             return;
         }
 
@@ -79,14 +81,15 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
         if (exchangeCurrency === "money") {
             if (exchangeAmount > account.money) {
-                ToastManager.error("보유 원화가 부족합니다");
+                ToastManager.error(t('account.exchange.errors.insufficientKrw'));
+
                 return;
             }
             newMoney -= exchangeAmount;
             newDollar += exchangeAmount / exchangeRate;
         } else {
             if (exchangeAmount > account.dollar) {
-                ToastManager.error("보유 달러가 부족합니다");
+                ToastManager.error(t('account.exchange.errors.insufficientDollar'));
                 return;
             }
             newMoney += exchangeAmount * exchangeRate;
@@ -95,12 +98,22 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
         try {
             await doUpdateCash(cashId, Math.floor(newMoney), Math.floor(newDollar));
-            ToastManager.success("환전이 완료되었습니다");
+            ToastManager.error(t('account.exchange.success.exchangingSuccess'));
             setExchangeAmount(0);
         } catch (error) {
-            ToastManager.error("환전 처리 중 오류가 발생했습니다");
+            ToastManager.error(t('account.exchange.errors.exchangeFailed'));
         }
     };
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    const handleCurrencyChange = (currency: string) => {
+        setExchangeCurrency(currency);
+        setIsDropdownOpen(false);
+    };
+
 
     if (isLoading) {
         return (
@@ -125,13 +138,12 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
           <Section>
               <ErrorContainer>
                   <AlertTriangle size={24} />
-                  <ErrorMessage>계좌 정보를 불러올 수 없습니다.</ErrorMessage>
+                  <ErrorMessage>{t('account.errors.accountGettingFailed')}</ErrorMessage>
                   <RefreshButton onClick={() => {
                       setIsError(false);
                       setIsLoading(true);
                   }}>
-                      <RefreshCw size={16} />
-                      다시 시도
+                      <RefreshCw size={16} />{t('error.retry')}
                   </RefreshButton>
               </ErrorContainer>
           </Section>
@@ -141,7 +153,7 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
     return (
       <Section>
           <TitleRow>
-              <Title>계좌 환전</Title>
+              <Title>{t('account.exchange.title')}</Title>
               <RefreshButton
                 onClick={handleRefresh}
                 disabled={isRefreshing}
@@ -153,43 +165,56 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
 
           <InfoContainer $isMobile={isMobile}>
               <InfoRow $isMobile={isMobile}>
-                  <Label>계좌번호</Label>
+                  <Label>{t('account.accountNumber')}</Label>
                   <Value>{account.accountNumber}</Value>
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>보유 원화</Label>
-                  <Value>{account.money.toLocaleString()}원</Value>
+                  <Label>{t('account.balance.krw')}</Label>
+                  <Value>{account.money.toLocaleString()}{t('unit.currency.krw')}</Value>
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>보유 달러</Label>
-                  <Value>{account.dollar.toLocaleString()}달러</Value>
+                  <Label>{t('account.balance.usd')}</Label>
+                  <Value>{account.dollar.toLocaleString()}{t('unit.currency.usd')}</Value>
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>환전 화폐</Label>
-                  <CurrencySelector
-                    value={exchangeCurrency}
-                    onChange={(e) => setExchangeCurrency(e.target.value)}
-                  >
-                      <option value="money">원화 ➝ 달러</option>
-                      <option value="dollar">달러 ➝ 원화</option>
-                  </CurrencySelector>
+                  <Label>{t('account.exchange.exchangeCurrency')}</Label>
+                  <CurrencyDropdown>
+                      <DropdownHeader onClick={toggleDropdown}>
+                          {exchangeCurrency === 'money' ? t('account.exchange.exchangeDirection.krwToUsd') : t('account.exchange.exchangeDirection.usdToKrw')}
+                          <ChevronDown size={20} />
+                      </DropdownHeader>
+                      {isDropdownOpen && (
+                        <DropdownList>
+                            <DropdownItem
+                              onClick={() => handleCurrencyChange('money')}
+                            >
+                                원화 ➝ 달러
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={() => handleCurrencyChange('dollar')}
+                            >
+                                달러 ➝ 원화
+                            </DropdownItem>
+                        </DropdownList>
+                      )}
+                  </CurrencyDropdown>
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>환전 금액</Label>
+                  <Label>{t('account.exchange.exchangeAmount')}</Label>
                   <ExchangeInput
                     type="number"
                     value={exchangeAmount || ''}
                     onChange={(e) => setExchangeAmount(Number(e.target.value))}
-                    placeholder={`${exchangeCurrency === 'money' ? '원화' : '달러'} 금액 입력`}
+                    placeholder={`${exchangeCurrency === 'money' ? t('account.balance.krw') : t('account.balance.usd')} ${t('account.exchange.typeExchangeAmount')}`}
                   />
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>환전 결과</Label>
+                  <Label>{t('account.exchange.exchangeResult')}</Label>
                   <Value>
                       {exchangeAmount ? (
                         exchangeCurrency === "money"
-                          ? `${(exchangeAmount / exchangeRate).toFixed(2)} 달러`
-                          : `${(exchangeAmount * exchangeRate).toLocaleString()} 원`
+                          ? `${(exchangeAmount / exchangeRate).toFixed(2)} ${t('unit.currency.usd')}`
+                          : `${(exchangeAmount * exchangeRate).toLocaleString()} ${t('unit.currency.krw')}`
                       ) : '-'}
                   </Value>
               </InfoRow>
@@ -201,14 +226,14 @@ const ExchangeComponent: FC<ExchangeProps> = ({ cashId }) => {
                 onClick={() => navigate('../manage')}
               >
                   <ArrowLeft size={20} />
-                  계좌 관리
+                  {t('account.manage.title')}
               </Button>
               <Button
                 $variant="primary"
                 onClick={handleExchange}
               >
                   <ArrowLeftRight size={20} />
-                  환전하기
+                  {t('account.exchange.title')}
               </Button>
           </ButtonContainer>
       </Section>
@@ -256,17 +281,45 @@ const ExchangeInput = styled.input`
     }
 `;
 
-const CurrencySelector = styled.select`
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    outline: none;
-    cursor: pointer;
+const CurrencyDropdown = styled.div`
+  position: relative;
+  width: 100%;
+`;
 
-    &:focus {
-        border-color: #4A90E2;
-        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-    }
+const DropdownHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #aaa;
+  }
+`;
+
+const DropdownList = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1;
+  overflow: hidden;
+`;
+
+const DropdownItem = styled.div`
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f5f5f5;
+  }
 `;

@@ -207,31 +207,48 @@
     }
   },
   "account": {
+    "accountNumber": "Account Number",
+    "balance": {
+      "krw": "KRW",
+      "usd": "USD"
+    },
+    "errors": {
+      "accountGettingFailed": "An error occurred while fetching account information"
+    },
     "manage": {
-      "title": "Account Management",
+      "title": "Management",
       "refresh": "Refresh",
       "addAccount": "Add Account",
-      "accountNumber": "Account Number",
-      "balance": {
-        "krw": "KRW Balance",
-        "usd": "USD Balance"
-      },
       "actions": {
         "charge": "Charge",
         "exchange": "Exchange"
       },
-      "empty": "No registered accounts"
+      "empty": "No registered accounts",
+      "success": {
+        "accountCreationSuccess": "Account has been created",
+        "accountDeletionSuccess": "Account has been deleted"
+      },
+      "errors": {
+        "maxAccountReached": "Maximum number of accounts reached",
+        "accountCreationFailed": "Failed to create account",
+        "accountDeletionFailed": "Failed to delete account"
+      }
     },
     "charge": {
-      "title": "Account Charge",
+      "title": "Charge",
       "currentBalance": "Current Balance",
       "chargeAmount": "Charge Amount",
       "afterBalance": "Balance After Charge",
-      "manageButton": "Account Management",
-      "chargeButton": "Charge"
+      "success": {
+        "chargingSuccess": "Charging completed successfully"
+      },
+      "errors": {
+        "invalidAmount": "Please check the charge amount",
+        "chargeFailed": "An error occurred during the charging process"
+      }
     },
     "exchange": {
-      "title": "Currency Exchange",
+      "title": "Exchange",
       "currentBalance": "Available Balance",
       "exchangeCurrency": "Exchange Currency",
       "exchangeDirection": {
@@ -239,9 +256,17 @@
         "usdToKrw": "USD ➝ KRW"
       },
       "exchangeAmount": "Exchange Amount",
+      "typeExchangeAmount": "Enter Amount",
       "exchangeResult": "Exchange Result",
-      "manageButton": "Account Management",
-      "exchangeButton": "Exchange"
+      "success": {
+        "exchangingSuccess": "Exchange completed successfully"
+      },
+      "errors": {
+        "recheckFunds": "Please check the exchange amount",
+        "insufficientKrw": "Insufficient KRW balance",
+        "insufficientDollar": "Insufficient USD balance",
+        "exchangeFailed": "An error occurred during the exchange process"
+      }
     }
   }
 }

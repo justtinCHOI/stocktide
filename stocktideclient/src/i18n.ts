@@ -23,6 +23,10 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    detection: {
+      order: ['navigator', 'htmlTag', 'cookie', 'localStorage', 'path', 'subdomain'],
+      caches: ['localStorage', 'cookie']
+    }
   });
 
 export default i18n;

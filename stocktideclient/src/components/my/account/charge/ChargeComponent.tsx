@@ -76,7 +76,7 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
     const handleCharge = async () => {
         const chargeAmountNumber = Number(chargeAmount);
         if (!chargeAmountNumber || chargeAmountNumber <= 0) {
-            ToastManager.error("충전 금액을 확인해주세요");
+            ToastManager.error(t('account.charge.errors.invalidAmount'));
             return;
         }
 
@@ -84,11 +84,11 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
             const finalAmount = calculateChargedMoney();
             await requestPay(finalAmount);
             await doUpdateCash(cashId, finalAmount, 0);
-            ToastManager.success("충전이 완료되었습니다");
+            ToastManager.error(t('account.charge.success.chargingSuccess'));
             setChargeAmount(''); // 초기화
         } catch (error) {
             setIsError(true);
-            ToastManager.error("충전 처리 중 오류가 발생했습니다");
+            ToastManager.error(t('account.charge.errors.chargeFailed'));
         }
     };
 
@@ -115,13 +115,12 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
           <Section>
               <ErrorContainer>
                   <AlertTriangle size={24} />
-                  <ErrorMessage>계좌 정보를 불러올 수 없습니다.</ErrorMessage>
+                  <ErrorMessage>{t('account.errors.accountGettingFailed')}</ErrorMessage>
                   <RefreshButton onClick={() => {
                       setIsError(false);
                       setIsLoading(true);
                   }}>
-                      <RefreshCw size={16} />
-                      다시 시도
+                      <RefreshCw size={16} />{t('error.retry')}
                   </RefreshButton>
               </ErrorContainer>
           </Section>
@@ -143,15 +142,15 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
 
           <InfoContainer $isMobile={isMobile}>
               <InfoRow $isMobile={isMobile}>
-                  <Label>계좌번호</Label>
+                  <Label>{t('account.accountNumber')}</Label>
                   <Value>{account.accountNumber}</Value>
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>현재 잔액</Label>
-                  <Value>{account.money.toLocaleString()}원</Value>
+                  <Label>{t('account.balance.krw')}</Label>
+                  <Value>{account.money.toLocaleString()}{t('unit.currency.krw')}</Value>
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>충전 금액</Label>
+                  <Label>{t('account.charge.chargeAmount')}</Label>
                   <input
                     type="number"
                     value={chargeAmount || ''}
@@ -165,8 +164,8 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
                   />
               </InfoRow>
               <InfoRow $isMobile={isMobile}>
-                  <Label>충전 후 잔액</Label>
-                  <Value>{calculateChargedMoney().toLocaleString()}원</Value>
+                  <Label>{t('account.charge.afterBalance')}</Label>
+                  <Value>{calculateChargedMoney().toLocaleString()}{t('unit.currency.krw')}</Value>
               </InfoRow>
           </InfoContainer>
 
@@ -176,14 +175,14 @@ const ChargeComponent: React.FC<ChargeProps> = ({ cashId }) => {
                 onClick={() => navigate('../manage')}
               >
                   <ArrowLeft size={20} />
-                  계좌 관리
+                  {t('account.manage.title')}
               </Button>
               <Button
                 $variant="primary"
                 onClick={handleCharge}
               >
                   <Wallet size={20} />
-                  충전하기
+                  {t('account.charge.title')}
               </Button>
           </ButtonContainer>
       </Section>

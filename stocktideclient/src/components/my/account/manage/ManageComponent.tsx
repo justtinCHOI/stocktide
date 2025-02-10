@@ -45,8 +45,8 @@ const ManageComponent = () => {
             doGetCashList(loginState.memberId)
               .catch(error => {
                   setIsError(true);
-                ToastManager.error("계좌 정보를 가져오는 중 오류가 발생했습니다");
-                  console.log(error);
+                ToastManager.error(t('account.errors.accountGettingFailed'));
+                console.log(error);
               })
               .finally(() => {
                   setIsLoading(false);
@@ -61,9 +61,9 @@ const ManageComponent = () => {
 
     const handleDeleteeAccount = (cashId: number) => {
         doDeleteCash(cashId).then(() => {
-          ToastManager.success("계좌가 삭제되었습니다");
+          ToastManager.error(t('account.manage.success.accountDeletionSuccess'));
         }).catch((error) => {
-          ToastManager.error("계좌 삭제에 실패했습니다", error);
+          ToastManager.error(t('account.manage.success.accountDeletionFailed', error));
         });
     };
 
@@ -76,9 +76,9 @@ const ManageComponent = () => {
     const handleAddAccount = async () => {
         try {
             await doCreateCash(loginState.memberId);
-          ToastManager.success("새 계좌가 생성되었습니다");
+          ToastManager.error(t('account.manage.success.accountCreationSuccess'));
         } catch (error) {
-          ToastManager.error("계좌 생성 중 오류가 발생했습니다");
+          ToastManager.error(t('account.manage.success.accountCreationFailed', error));
         }
     };
 
@@ -127,15 +127,12 @@ const ManageComponent = () => {
                         .catch(() => setIsError(true))
                         .finally(() => setIsLoading(false));
                   }}>
-                      <RefreshCw size={16} />
-                    {t('account.manage.refresh')}
+                      <RefreshCw size={16} />{t('error.retry')}
                   </RefreshButton>
               </ErrorContainer>
           </Section>
         );
     }
-
-
 
     if (!accounts || accounts.length === 0) {
         return (
@@ -155,7 +152,7 @@ const ManageComponent = () => {
     return (
       <Section>
           <TitleRow>
-              <Title>계좌 관리</Title>
+            <Title>{t('account.manage.title')}</Title>
               <RefreshButton
                 onClick={handleRefresh}
                 disabled={isRefreshing}
@@ -184,12 +181,12 @@ const ManageComponent = () => {
 
                     <BalanceInfo>
                         <BalanceItem>
-                            <BalanceLabel>원화</BalanceLabel>
-                            <BalanceValue>{account.money.toLocaleString()}원</BalanceValue>
+                            <BalanceLabel>{t('account.balance.krw')}</BalanceLabel>
+                            <BalanceValue>{account.money.toLocaleString()}{t('unit.currency.krw')}</BalanceValue>
                         </BalanceItem>
                         <BalanceItem>
-                            <BalanceLabel>달러</BalanceLabel>
-                            <BalanceValue>{account.dollar.toLocaleString()}달러</BalanceValue>
+                            <BalanceLabel>{t('account.balance.usd')}</BalanceLabel>
+                            <BalanceValue>{account.dollar.toLocaleString()}{t('unit.currency.usd')}</BalanceValue>
                         </BalanceItem>
                     </BalanceInfo>
 
@@ -199,14 +196,14 @@ const ManageComponent = () => {
                           $variant="primary"
                         >
                             <Wallet2 size={16} />
-                            충전
+                          {t('account.manage.actions.charge')}
                         </ActionButton>
                         <ActionButton
                           onClick={() => navigate(`../exchange/${account.cashId}`)}
                           $variant="secondary"
                         >
                             <ArrowLeftRight size={16} />
-                            환전
+                          {t('account.manage.actions.exchange')}
                         </ActionButton>
                     </AccountActions>
                 </AccountCard>
@@ -215,7 +212,7 @@ const ManageComponent = () => {
 
           <AddAccountButton onClick={handleAddAccount}>
               <Plus size={20} />
-              계좌 추가
+            {t('account.manage.addAccount')}
           </AddAccountButton>
       </Section>
     );
