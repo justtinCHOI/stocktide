@@ -72,39 +72,28 @@ export const SkeletonPriceSub = styled.div`
 `;
 
 // profit
-export const SkeletonHeader = styled.div`
-  width: 100%;
-  height: 43.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 14px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+export const SkeletonSection = styled.div`
+    padding: 20px;
+    transition: all 0.3s ease;
 `;
 
-export const SkeletonHeaderContent = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 6.5px;
+export const SkeletonEvaluationProfit = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+
+`;
+export const SkeletonProfitText = styled.div`
+    width: 150px;
+    height: 20px;
+    background: linear-gradient(to right, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: 4px;
 `;
 
-export const SkeletonHeaderText = styled.div`
-  width: 120px;
-  height: 16px;
-  background: #f8f9fa;
-  border-radius: 4px;
-`;
 
-export const SkeletonHeaderValue = styled.div`
-  width: 100px;
-  height: 16px;
-  background: #f8f9fa;
-  border-radius: 4px;
-`;
 export const SkeletonDetails = styled.div`
  display: flex;
  align-items: center;

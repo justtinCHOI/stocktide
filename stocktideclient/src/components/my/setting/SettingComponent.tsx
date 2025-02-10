@@ -1,16 +1,16 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import LanguageSelector from './LanguageSelector';
-import { Settings, Bell, Moon, Shield } from 'lucide-react';
+import { Bell, Moon, Shield } from 'lucide-react';
 import UnitSelector from '@components/my/setting/UnitSelector';
+import { Section, Title, TitleRow } from '@styles/CustomStockTideStyles';
 
 const SettingComponent: FC = () => {
     return (
-      <SettingsContainer>
-          <SettingsHeader>
-              <Settings size={24} />
-              <HeaderTitle>설정</HeaderTitle>
-          </SettingsHeader>
+      <Section>
+          <TitleRow>
+              <Title>설정</Title>
+          </TitleRow>
 
           <SettingSection>
               <LanguageSelector />
@@ -53,30 +53,9 @@ const SettingComponent: FC = () => {
                   비밀번호 변경
               </SecurityButton>
           </SettingSection>
-      </SettingsContainer>
+      </Section>
     );
 };
-
-const SettingsContainer = styled.div`
-  //max-width: 600px;
-    width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-`;
-
-const SettingsHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 30px;
-`;
-
-const HeaderTitle = styled.h1`
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-`;
 
 const SettingSection = styled.div`
   margin-bottom: 25px;

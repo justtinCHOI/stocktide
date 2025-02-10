@@ -7,7 +7,9 @@ import { MoveStockItemProps } from '@typings/stock';
 import { useTranslation } from 'react-i18next';
 
 const StockItem: FC<MoveStockItemProps> = ({ company }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
+
+    const priceUnit = t('unit.currency.krw');
 
     const isPositiveChange = parseFloat(company.stockChangeRate) > 0;
     const companyLogo = logoList[company.korName] || logo;
@@ -24,7 +26,6 @@ const StockItem: FC<MoveStockItemProps> = ({ company }) => {
 
     const price = parseInt(company.stockPrice).toLocaleString();
     const changeAmount = parseInt(company.stockChangeAmount).toLocaleString();
-    const priceUnit = "원";
 
     return (
       <StockItemWrapper

@@ -16,6 +16,20 @@
     "volume": "수량",
     "stockPrice": "주가"
   },
+  "menu": {
+    "entireStocks": "전체종목",
+    "holdStocks": "보유종목",
+    "watchStocks": "관심종목",
+    "chart": "차트",
+    "trading": "매수/매도",
+    "info": "상세정보",
+    "news": "뉴스",
+    "chat": "채팅",
+    "profit": "손익",
+    "account": "계좌",
+    "memberInfo": "회원정보",
+    "settings": "설정"
+  },
   "marketType": {
     "DOMESTIC": "국내",
     "OVERSEAS": "해외",
@@ -150,6 +164,15 @@
     },
     "error": {
       "sendFailed": "메시지 전송에 실패했습니다."
+    }
+  },
+  "profit": {
+    "evaluation": {
+      "title": "평가 수익금"
+    },
+    "holdings": {
+      "profit": "수익",
+      "holdings": "보유"
     }
   }
 

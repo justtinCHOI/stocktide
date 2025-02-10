@@ -13,7 +13,9 @@ export type ProfitStockItemProps = {
 };
 
 const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const priceUnit = t('unit.currency.krw');
+
     const company = companyData ? companyData : undefined;
     const companyLogo = company ? (logoList[company.korName] || logo) : logo;
     const {moveToChart} = useCustomMove();
@@ -66,7 +68,7 @@ const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
               </StockInfo>
               <StockPriceSection>
                   <StockPrice priceChangeAmount={priceChangeAmount}>
-                      {price.toLocaleString()} 원
+                      {price.toLocaleString()} {priceUnit}
                   </StockPrice>
                   <StockChange
                     priceChangeAmount={priceChangeAmount}
@@ -81,20 +83,20 @@ const StockItem: FC<ProfitStockItemProps> = ({ companyData, stockData }) => {
           </ItemContainer>
           <StockDetails>
               <DetailSection01>
-                  <DetailTitle>수익</DetailTitle>
-                  <DetailTitle>보유</DetailTitle>
+                  <DetailTitle>{t('profit.holdings.profit')}</DetailTitle>
+                  <DetailTitle>{t('profit.holdings.holdings')}</DetailTitle>
               </DetailSection01>
               <DetailSection02>
                   <ColoredDetailData priceChangeAmount={priceChangeAmount}>
-                      {stockReturn.toLocaleString()} 원
+                      {stockReturn.toLocaleString()} {priceUnit}
                   </ColoredDetailData>
-                  <DetailData>{totalPrice.toLocaleString()} 원</DetailData>
+                  <DetailData>{totalPrice.toLocaleString()} {priceUnit}</DetailData>
               </DetailSection02>
               <DetailSection03>
                   <ColoredDetailData priceChangeAmount={priceChangeAmount}>
                       {formattedPercentage}%
                   </ColoredDetailData>
-                  <DetailTitle>{totalStocksHeld}주</DetailTitle>
+                  <DetailTitle>{totalStocksHeld}{t('unit.shares')}</DetailTitle>
               </DetailSection03>
           </StockDetails>
       </EntireContainer>

@@ -12,28 +12,25 @@ import {
   SkeletonDetailSection01,
   SkeletonDetailSection02,
   SkeletonDetailSection03,
-  SkeletonHeader,
-  SkeletonHeaderContent,
-  SkeletonHeaderText,
-  SkeletonHeaderValue,
   SkeletonItem,
   SkeletonLogo,
   SkeletonPrice,
   SkeletonPriceMain,
   SkeletonPriceSub,
   SkeletonSubtitle,
-  SkeletonTitle,
+  SkeletonTitle, SkeletonSection, SkeletonEvaluationProfit, SkeletonProfitText,
 } from '@styles/SkeletonStockItemStyles';
 import { ContentBottom } from '@styles/content';
-import { ErrorContainer, ErrorMessage, RefreshButton } from '@styles/CustomStockTideStyles';
+import { ErrorContainer, ErrorMessage, RefreshButton, Section, Title } from '@styles/CustomStockTideStyles';
 import { AlertTriangle } from 'lucide-react';
 import { useMediaQuery } from '@hooks/useMediaQuery';
-
-const evaluationProfitText = "평가 수익금";
-const profitUnit = "원";
+import { useTranslation } from 'react-i18next';
 
 const ProfitComponent: FC =() => {
+  const { t } = useTranslation();
   const isMobile = useMediaQuery('(max-width: 768px)');
+
+  const priceUnit = t('unit.currency.krw');
 
   const {
     holdingStockData: stockHolds,
@@ -58,12 +55,12 @@ const ProfitComponent: FC =() => {
   if (isLoading || isCompanyDataLoading) {
     return (
       <ListContainer>
-        <SkeletonHeader>
-          <SkeletonHeaderContent>
-            <SkeletonHeaderText />
-            <SkeletonHeaderValue />
-          </SkeletonHeaderContent>
-        </SkeletonHeader>
+        <SkeletonSection>
+          <SkeletonEvaluationProfit>
+            <SkeletonProfitText />
+            <SkeletonProfitText />
+          </SkeletonEvaluationProfit>
+        </SkeletonSection>
         <StockList>
           {[...Array(2)].map((_, index) => (
             <EntireContainer key={index}>
@@ -119,14 +116,17 @@ const ProfitComponent: FC =() => {
 
   return (
     <ListContainer>
-      <Header2Container>
+      <Section>
         <EvaluationProfit profit={totalEvaluationProfit}>
-          <div className="profitText">{evaluationProfitText}</div>
-          <div className="profit">
-            {totalEvaluationProfit.toLocaleString()} {profitUnit}
-          </div>
+          <Title className="profitText">
+            {t('profit.evaluation.title')}
+          </Title>
+          <Title className="profit">
+            {totalEvaluationProfit.toLocaleString()} {priceUnit}
+          </Title>
         </EvaluationProfit>
-      </Header2Container>
+      </Section>
+
       <StockList>
         {
           Array.isArray(stockHolds) &&
@@ -154,36 +154,25 @@ const ProfitComponent: FC =() => {
 
 export default ProfitComponent;
 
-
-const Header2Container = styled.div`
-  width: 100%;
-  height: 43.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const EvaluationProfit = styled.div<{ profit: number }>`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: 0.95em;
-  font-weight: 570;
-  gap: 6.5px;
-  padding-left: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  font-weight: bold;
+  gap: 6px;
   text-align: center;
   color: ${(props) =>
-  props.profit === 0 ? "#000" : props.profit > 0 ? "#e22926" : "#2679ed"};
-  border-bottom: 1px solid black;
+  props.profit === 0 ? "#333" : props.profit > 0 ? "#e22926" : "#2679ed"};
 
   .profitText {
     color: black;
+      font-size: 1.2rem;
   }
 
   .profit {
     color: #2f4f4f;
+      font-size: 0.9rem;
+
   }
 `;
 

@@ -14,7 +14,19 @@
     "cancel": "Cancel",
     "price": "Price",
     "volume": "Quantity",
-    "stockPrice": "Stock Price"
+    "stockPrice": "Stock Price",
+    "entireStocks": "Entire List",
+    "holdStocks": "Holding List",
+    "watchStocks": "Watching List",
+    "chart": "Chart",
+    "trading": "Trading",
+    "info": "Information",
+    "news": "News",
+    "chat": "Chat",
+    "profit": "Profit & Loss",
+    "account": "Account",
+    "memberInfo": "Profile",
+    "settings": "Settings"
   },
   "marketType": {
     "DOMESTIC": "Domestic",
@@ -24,7 +36,6 @@
   "placeholder": {
     "search": "Enter search keyword",
     "companySearch": "Search by company name or stock code"
-
   },
   "toast": {
     "completed": " request completed"
@@ -150,6 +161,15 @@
     },
     "error": {
       "sendFailed": "Failed to send message"
+    }
+  },
+  "profit": {
+    "evaluation": {
+      "title": "Evaluation Profit"
+    },
+    "holdings": {
+      "profit": "Profit",
+      "holdings": "Holdings"
     }
   }
 }
