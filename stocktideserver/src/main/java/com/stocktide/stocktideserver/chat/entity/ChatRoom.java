@@ -29,9 +29,11 @@ public class ChatRoom {
     private Company company;
 
     @ElementCollection
+    @Builder.Default
     private Set<String> participants = new HashSet<>();
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<ChatMessage> messages = new ArrayList<>();
 
     @PrePersist

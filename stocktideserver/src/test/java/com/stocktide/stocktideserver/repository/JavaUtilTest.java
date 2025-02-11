@@ -3,11 +3,12 @@ package com.stocktide.stocktideserver.repository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @Disabled
 @SpringBootTest
 @Log4j2
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 public class JavaUtilTest {
 
 //    @Test
