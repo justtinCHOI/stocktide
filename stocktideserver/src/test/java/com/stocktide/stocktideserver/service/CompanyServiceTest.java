@@ -16,8 +16,8 @@ import java.util.List;
 
 @SpringBootTest
 @Log4j2
-//@ActiveProfiles("test")
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
+//@ActiveProfiles("dev")
 public class CompanyServiceTest {
 
     @Autowired
