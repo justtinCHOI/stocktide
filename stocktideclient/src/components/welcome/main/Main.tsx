@@ -4,7 +4,7 @@ import Quiz from './Quiz';
 import ForexStories from './ForexStories';
 import StockRanking from './StockRanking';
 import MajorIndices from './MajorIndices';
-import QuarterlyEarnings from './QuarterlyEarnings';
+// import QuarterlyEarnings from './QuarterlyEarnings';
 
 const Main = () => {
     return (
@@ -13,10 +13,10 @@ const Main = () => {
                 <CountryNews />
             </Section>
             <Divider />
-            <Section>
-                <QuarterlyEarnings />
-            </Section>
-            <Divider />
+            {/*<Section>*/}
+            {/*    <QuarterlyEarnings />*/}
+            {/*</Section>*/}
+            {/*<Divider />*/}
             <Section>
                 <Quiz />
             </Section>

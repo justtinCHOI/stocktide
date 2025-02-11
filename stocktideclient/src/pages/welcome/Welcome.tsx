@@ -4,7 +4,6 @@ import styled from "styled-components";
 import {FaSearch} from "react-icons/fa";
 import useCustomMember from "@hooks/useCustomMember";
 import { StyledLink } from '@styles/common';
-import { toast } from 'react-toastify';
 import { putTest1 } from '@api/testApi';
 import ToastManager from '@utils/toastUtil';
 
