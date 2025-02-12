@@ -14,12 +14,15 @@ const resources = {
   },
 };
 
+const isProd = import.meta.env.MODE === 'production';
+const defaultLanguage = isProd ? 'en' : 'ko';
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'ko',
+    fallbackLng: defaultLanguage,
     interpolation: {
       escapeValue: false,
     },

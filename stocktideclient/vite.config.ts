@@ -4,7 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 
 export default defineConfig({
-  // base:'', //  디폴트: '/'
+  // base:'', //  디폴트: '/' local로 build 결과물 볼 때
   plugins: [
     react(),
     visualizer({

@@ -18,8 +18,8 @@
   },
   "menu": {
     "home": "Home",
-    "domesticStocks": "Domestic Stocks",
-    "overseasStocks": "Overseas Stocks",
+    "domesticStocks": "Domestic",
+    "overseasStocks": "Overseas",
     "myPage": "My Page",
     "entireStocks": "Entire List",
     "holdStocks": "Holding List",
