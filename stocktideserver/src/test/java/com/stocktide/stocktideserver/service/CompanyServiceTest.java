@@ -18,6 +18,7 @@ import java.util.List;
 @Log4j2
 //@ActiveProfiles("test")
 //@ActiveProfiles("dev")
+//@ActiveProfiles("prod")
 public class CompanyServiceTest {
 
     @Autowired
@@ -52,58 +53,48 @@ public class CompanyServiceTest {
 
 
 
-//    @Test
-//    @Transactional
-//    public void testFillCompactDomesticCompanies() throws InterruptedException {
-//        List<String> code = List.of("005930", "005490", "068270", "086520", "247540", "013570", "192400", "323410", "069640", "001390", "051910", "005380", "066570", "000270");
-//        companyService.fillCompanies(code, MarketType.DOMESTIC);
-//    }
+
     // ------------------------------------------------------------------------------
 
-    // Update Company + StockAsBi
-    @Test
-    @Transactional
-    public void testFillDomesticCompanies() throws InterruptedException {
-        List<String> code = List.of(
-                "011200", "088350", "006800", "024110", "316140",
-                "000660", "088980", "015760", "034020", "055550",
-                "032640", "034220", "323410", "000270", "105560",
-                "047040", "003490", "005940", "138930", "030200",
-                "042660", "086790", "005380", "073240", "003530",
-                "003470", "020560", "175330", "003620", "028050",
-                "033780", "272210", "066570", "005930", "009830",
-                "085620", "010140", "047050", "139130", "415640",
-                "082640", "003550", "096770", "004020", "001740",
-                "029780", "000370", "030610", "000720", "064350",
-                "001200", "028670", "016380", "012330", "047810",
-                "005490", "000880", "078930", "094800", "036460",
-                "016360", "329180", "003540", "006360", "097230",
-                "168490", "000680", "051910", "009150", "000080",
-                "006400", "009540", "152550", "294870", "000540",
-                "000400", "071050", "030210", "012630"
-        );
-        companyService.fillCompanies(code, MarketType.DOMESTIC);
-    }
-
-    @Test
-    @Transactional
-    public void testFillOverseasCompanies() throws InterruptedException {
-        List<String> code = List.of( "TSLA");
-        companyService.fillCompanies(code, MarketType.OVERSEAS);
-    }
-
-    // update StockMin + StockInf
-    @Test
-    @Transactional
-    public void testUpdateEveryStockMin() throws InterruptedException {
-        stockMinService.updateStockMin();
-    }
-
-    @Test
+//    // Update Company + StockAsBi
+//    @Test
 //    @Transactional
-    public void updateOneStockMin() throws InterruptedException {
-        stockMinService.updateOneStockMin("TSLA");
-    }
+//    public void testFillDomesticCompanies() throws InterruptedException {
+//        List<String> code = List.of(
+//                "011200", "088350", "006800", "024110", "316140",
+//                "000660", "088980", "015760", "034020", "055550",
+//                "032640", "034220", "323410", "000270", "105560",
+//                "047040", "003490", "005940", "138930", "030200",
+//                "042660", "086790", "005380", "073240", "003530",
+//                "003470", "020560", "175330", "003620", "028050",
+//                "033780", "272210", "066570", "005930", "009830",
+//                "085620", "010140", "047050", "139130", "415640",
+//                "082640", "003550", "096770", "004020", "001740",
+//                "029780", "000370", "030610", "000720", "064350",
+//                "001200", "028670", "016380", "012330", "047810",
+//                "005490", "000880", "078930", "094800", "036460",
+//                "016360", "329180", "003540", "006360", "097230",
+//                "168490", "000680", "051910", "009150", "000080",
+//                "006400", "009540", "152550", "294870", "000540",
+//                "000400", "071050", "030210", "012630"
+//        );
+//        companyService.fillCompanies(code, MarketType.DOMESTIC);
+//    }
+//
+//    @Test
+//    @Transactional
+//    public void testFillOverseasCompanies() throws InterruptedException {
+//        List<String> code = List.of( "TSLA");
+//        companyService.fillCompanies(code, MarketType.OVERSEAS);
+//    }
+//
+//    // update StockMin + StockInf
+//    @Test
+//    @Transactional
+//    public void testUpdateEveryStockMin() throws InterruptedException {
+//        stockMinService.updateStockMin();
+//    }
+
     //------------------------------------------------------------------------------
 
 //    @Test
@@ -111,7 +102,20 @@ public class CompanyServiceTest {
 //    public void testCheckOrder() {
 //        stockOrderService.checkOrder();
 //    }
-//
+
+//    @Test
+//    @Transactional
+//    public void testFillCompactDomesticCompanies() throws InterruptedException {
+//        List<String> code = List.of("005930", "005490", "068270", "086520", "247540", "013570", "192400", "323410", "069640", "001390", "051910", "005380", "066570", "000270");
+//        companyService.fillCompanies(code, MarketType.DOMESTIC);
+//    }
+
+//    @Test
+//    @Transactional
+//    public void updateOneStockMin() throws InterruptedException {
+//        stockMinService.updateOneStockMin("TSLA");
+//    }
+
 //    @Test
 //    @Transactional
 //    public void testFindCompanies()  {
