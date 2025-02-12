@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 
 @SpringBootTest
 @Log4j2
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 //@ActiveProfiles("dev")
+//@ActiveProfiles("prod")
 public class OverseasApiServiceTest {
 
     @Autowired

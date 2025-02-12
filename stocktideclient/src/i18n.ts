@@ -16,6 +16,7 @@ const resources = {
 
 const isProd = import.meta.env.MODE === 'production';
 const defaultLanguage = isProd ? 'en' : 'ko';
+console.log('i18n language', defaultLanguage);
 
 i18n
   .use(LanguageDetector)
@@ -28,8 +29,12 @@ i18n
     },
     detection: {
       order: ['navigator', 'htmlTag', 'cookie', 'localStorage', 'path', 'subdomain'],
-      caches: ['localStorage', 'cookie']
-    }
+      lookupLocalStorage: 'i18nextLng',
+      caches: ['localStorage', 'cookie'],
+      forced: defaultLanguage,
+    },
   });
+
+i18n.changeLanguage(defaultLanguage);
 
 export default i18n;
