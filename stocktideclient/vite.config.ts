@@ -4,7 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 
 export default defineConfig({
-  base:'',
+  base:'', //  디폴트: '/'
   plugins: [
     react(),
     visualizer({
@@ -28,8 +28,6 @@ export default defineConfig({
         target: process.env.VITE_API_URL,
         changeOrigin: true,
         secure: false,
-        // ws: true,
-        // rewrite: (path) => path.replace(/^\/api/, '')
       }
     },
     cors: true,
@@ -52,33 +50,35 @@ export default defineConfig({
       '@utils': path.resolve(__dirname, './src/utils'),
     }
   },
-  build: {
-    rollupOptions: {
-      output: {
-        // 번들 크기 제한 조정
-        manualChunks(id) {
-          // node_modules 라이브러리를 vendor 청크로 분리
-          if (id.includes('node_modules')) {
-            // 주요 라이브러리별로 세부 청크 분리 가능
-            if (id.includes('react')) return 'react';
-            if (id.includes('redux')) return 'redux';
-            if (id.includes('axios')) return 'axios';
-            if (id.includes('echarts')) return 'echarts';
 
-            return 'vendor';
-          }
-
-          // 대용량 컴포넌트나 라우트는 동적 임포트 고려
-          if (id.includes('pages/')) {
-            const pageName = id.split('/').pop()?.split('.')[0];
-            return `page-${pageName}`;
-          }
-        },
-        // 청크 크기 경고 임계값 조정 (기본 500kb)
-      }
-    },
-    // 소스맵 생성 옵션
-    chunkSizeWarningLimit: 1100,
-    sourcemap: true,
-  }
+  // 번들 크기를 제한하면 문제가 빌드시 오류가 뜸
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       // 번들 크기 제한 조정
+  //       manualChunks(id) {
+  //         // node_modules 라이브러리를 vendor 청크로 분리
+  //         if (id.includes('node_modules')) {
+  //           // 주요 라이브러리별로 세부 청크 분리 가능
+  //           if (id.includes('react')) return 'react';
+  //           if (id.includes('redux')) return 'redux';
+  //           if (id.includes('axios')) return 'axios';
+  //           if (id.includes('echarts')) return 'echarts';
+  //
+  //           return 'vendor';
+  //         }
+  //
+  //         // 대용량 컴포넌트나 라우트는 동적 임포트 고려
+  //         if (id.includes('pages/')) {
+  //           const pageName = id.split('/').pop()?.split('.')[0];
+  //           return `page-${pageName}`;
+  //         }
+  //       },
+  //       // 청크 크기 경고 임계값 조정 (기본 500kb)
+  //     }
+  //   },
+  //   // 소스맵 생성 옵션
+  //   chunkSizeWarningLimit: 1100,
+  //   sourcemap: true,
+  // }
 })
