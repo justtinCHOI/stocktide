@@ -784,24 +784,27 @@ public class DomesticApiService extends AbstractStockApiService {
         return null;
     }
 
+    /**
+     * 국내 주식의 최신 뉴스 정보를 API로부터 조회합니다.
+     * 뉴스 데이터에는 뉴스 제목, 발행 일시, 출처 등이 포함됩니다.
+     *
+     * @param company 뉴스를 조회할 회사 엔티티
+     * @return List<StockNews> 해당 회사의 뉴스 목록
+     * @throws RuntimeException API 호출 실패나 데이터 파싱 오류 시
+     */
     @Override
     public List<StockNews> getStockNewsFromApi(Company company) {
-        try {
-            String stockCode = company.getCode();
-            StockNewsDomesticDto stockNewsDto = getNewsDataFromApi(stockCode);
+        String stockCode = company.getCode();
+        StockNewsDomesticDto stockNewsDto = getNewsDataFromApi(stockCode);
 
-            if (stockNewsDto == null || stockNewsDto.getOutput() == null) {
-                log.warn("No news data received for company code: {}", stockCode);
-                return Collections.emptyList();
-            }
-
-            return stockNewsDto.getOutput().stream()
-                    .map(apiMapper::newsOutputToStockNews)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error fetching news for company: {}, error: {}", company.getCode(), e.getMessage());
+        if (stockNewsDto == null || stockNewsDto.getOutput() == null) {
+            log.warn("No news data received for company code: {}", stockCode);
             return Collections.emptyList();
         }
+
+        return stockNewsDto.getOutput().stream()
+                .map(apiMapper::newsOutputToStockNews)
+                .collect(Collectors.toList());
     }
 
 }

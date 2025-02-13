@@ -2,6 +2,7 @@ package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.exception.BusinessLogicException;
 import com.stocktide.stocktideserver.exception.ExceptionCode;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockNewsDomesticDto;
 import com.stocktide.stocktideserver.stock.dto.overseas.*;
 import com.stocktide.stocktideserver.stock.entity.*;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
@@ -403,8 +404,45 @@ public class OverseasApiService extends AbstractStockApiService {
     }
 
     @Override
-    public Object getNewsDataFromApi(String stockCode) {
-        return null;
+    public StockNewsOverseasDto getNewsDataFromApi(String stockCode) {
+        try {
+            String token = tokenService.getAccessToken();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            headers.add("appkey", APP_KEY);
+            headers.add("appsecret", APP_SECRET);
+            headers.add("tr_id", "HHPSTH60100C1");
+            headers.add("custtype", CUST_TYPE);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            String uri = STOCKNEWS_URL
+                    + "?"
+                    + "INFO_GB="
+                    + "&CLASS_CD="
+                    + "&NATION_CD="
+                    + "&EXCHANGE_CD=" + "NAS"
+                    + "&SYMB="+ stockCode
+                    + "&DATA_DT="
+                    + "&DATA_TM="
+                    + "&CTS=";
+
+            ResponseEntity<StockNewsOverseasDto> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    StockNewsOverseasDto.class
+            );
+            if(response.getBody() != null) {
+                log.info("response.getBody().getRt_cd(): {}", response.getBody().getRt_cd());
+                log.info("response.getBody().getMsg_cd(): {}", response.getBody().getMsg_cd());
+                log.info("response.getBody().getMsg1(): {}", response.getBody().getMsg1());
+            }
+            return response.getBody();
+        } catch (Exception e) {
+            log.error("Error fetching news: ", e);
+            throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
+        }
     }
 
 
@@ -553,8 +591,26 @@ public class OverseasApiService extends AbstractStockApiService {
         return null;
     }
 
+    /**
+     * 해외 주식의 최신 뉴스 정보를 API로부터 조회합니다.
+     * 뉴스 데이터에는 뉴스 제목, 발행 일시, 출처 등이 포함됩니다.
+     *
+     * @param company 뉴스를 조회할 회사 엔티티
+     * @return List<StockNews> 해당 회사의 뉴스 목록
+     * @throws RuntimeException API 호출 실패나 데이터 파싱 오류 시
+     */
     @Override
     public List<StockNews> getStockNewsFromApi(Company company) {
-        return null;
+        String stockCode = company.getCode();
+        StockNewsOverseasDto stockNewsDto = getNewsDataFromApi(stockCode);
+
+        if (stockNewsDto == null || stockNewsDto.getOutblock1() == null) {
+            log.warn("No news data received for company code: {}", stockCode);
+            return Collections.emptyList();
+        }
+
+        return stockNewsDto.getOutblock1().stream()
+                .map(apiMapper::newsOutblock1ToStockNews)
+                .collect(Collectors.toList());
     }
 }

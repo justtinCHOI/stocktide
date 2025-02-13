@@ -7,6 +7,7 @@ import com.stocktide.stocktideserver.stock.dto.domestic.StockNewsDomesticDto;
 import com.stocktide.stocktideserver.stock.dto.overseas.StockAsBiOverseasDto;
 import com.stocktide.stocktideserver.stock.dto.overseas.StockInfOverseasDto;
 import com.stocktide.stocktideserver.stock.dto.overseas.StockMinOverseasDto;
+import com.stocktide.stocktideserver.stock.dto.overseas.StockNewsOverseasDto;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.entity.StockBasic;
 import com.stocktide.stocktideserver.stock.entity.StockInf;
@@ -111,5 +112,11 @@ public interface ApiMapper {
     StockMin stockMinOverseasOutput2ToStockMin(StockMinOverseasDto.Output2 output);
 
     StockNews newsOutputToStockNews(StockNewsDomesticDto.NewsOutput newsOutput);
+
+    @Mapping(source = "data_dt", target = "data_dt")
+    @Mapping(source = "data_tm", target = "data_tm")
+    @Mapping(source = "title", target = "hts_pbnt_titl_cntt")
+    @Mapping(source = "source", target = "dorg")
+    StockNews newsOutblock1ToStockNews(StockNewsOverseasDto.Outblock1 newsOutput);
 
 }
