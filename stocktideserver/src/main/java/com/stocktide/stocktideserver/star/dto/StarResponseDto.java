@@ -1,6 +1,6 @@
 package com.stocktide.stocktideserver.star.dto;
 
-import com.stocktide.stocktideserver.stock.dto.CompanyResponseDto;
+import com.stocktide.stocktideserver.stock.dto.common.CompanyResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 

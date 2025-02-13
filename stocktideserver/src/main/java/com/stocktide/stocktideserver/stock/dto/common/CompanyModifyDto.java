@@ -1,4 +1,4 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.common;
 
 import com.stocktide.stocktideserver.audit.Auditable;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;

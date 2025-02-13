@@ -1,4 +1,4 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.overseas;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StockAsBiOverseasDataDto {
+public class StockAsBiOverseasDto {
     private Output1 output1;
     private Output2 output2;
     private Output3 output3;

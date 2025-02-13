@@ -1,15 +1,14 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.domestic;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class StockProfitDto {
+public class StockProfitDomesticDto {
     private List<ProfitOutput> output;
     private String rt_cd;
     private String msg_cd;

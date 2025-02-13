@@ -2,7 +2,7 @@ package com.stocktide.stocktideserver.stock.mapper;
 
 import com.stocktide.stocktideserver.star.dto.StarResponseDto;
 import com.stocktide.stocktideserver.star.entity.Star;
-import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.dto.common.*;
 import com.stocktide.stocktideserver.stock.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

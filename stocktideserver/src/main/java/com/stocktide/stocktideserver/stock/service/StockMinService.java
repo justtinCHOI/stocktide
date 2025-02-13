@@ -1,6 +1,6 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.stocktide.stocktideserver.stock.dto.StockMinResponseDto;
+import com.stocktide.stocktideserver.stock.dto.common.StockMinResponseDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockInf;
 import com.stocktide.stocktideserver.stock.entity.StockMin;

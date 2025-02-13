@@ -1,6 +1,6 @@
 package com.stocktide.stocktideserver.stock.service;
 
-import com.stocktide.stocktideserver.stock.dto.CompanyModifyDto;
+import com.stocktide.stocktideserver.stock.dto.common.CompanyModifyDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.MarketType;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;

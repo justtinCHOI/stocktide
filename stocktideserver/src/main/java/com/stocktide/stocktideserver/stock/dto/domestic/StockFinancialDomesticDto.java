@@ -1,15 +1,14 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.domestic;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.util.List;
-import java.util.Comparator;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class StockFinancialDto {
+public class StockFinancialDomesticDto {
     private List<FinancialOutput> output;
     private String rt_cd;
     private String msg_cd;

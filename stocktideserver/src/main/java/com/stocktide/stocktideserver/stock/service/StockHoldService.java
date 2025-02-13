@@ -3,7 +3,7 @@ package com.stocktide.stocktideserver.stock.service;
 import com.stocktide.stocktideserver.exception.BusinessLogicException;
 import com.stocktide.stocktideserver.exception.ExceptionCode;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
-import com.stocktide.stocktideserver.stock.dto.StockHoldResponseDto;
+import com.stocktide.stocktideserver.stock.dto.common.StockHoldResponseDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockHold;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;

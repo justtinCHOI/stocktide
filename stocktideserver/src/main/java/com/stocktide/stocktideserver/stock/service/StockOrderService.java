@@ -7,7 +7,7 @@ import com.stocktide.stocktideserver.exception.ExceptionCode;
 import com.stocktide.stocktideserver.member.entity.Member;
 import com.stocktide.stocktideserver.member.repository.MemberRepository;
 import com.stocktide.stocktideserver.stock.controller.LongPollingController;
-import com.stocktide.stocktideserver.stock.dto.StockOrderResponseDto;
+import com.stocktide.stocktideserver.stock.dto.common.StockOrderResponseDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.entity.StockHold;

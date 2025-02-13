@@ -2,7 +2,7 @@ package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.exception.BusinessLogicException;
 import com.stocktide.stocktideserver.exception.ExceptionCode;
-import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.dto.overseas.*;
 import com.stocktide.stocktideserver.stock.entity.*;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import jakarta.transaction.Transactional;
@@ -136,7 +136,7 @@ public class OverseasApiService extends AbstractStockApiService {
      * @return StockInfOverseasDataDto 현재가 정보
      * @throws RuntimeException API 호출 실패 시
      */
-    public StockInfOverseasDataDto getStockInfDataFromApi(String stockCode){
+    public StockInfOverseasDto getStockInfDataFromApi(String stockCode){
         log.info("---------------getStockInfDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
 
@@ -158,14 +158,14 @@ public class OverseasApiService extends AbstractStockApiService {
 
         log.info("---------------getStockInfDataFromApi  request send----------------------------------------");
 
-        ResponseEntity<StockInfOverseasDataDto> response = restTemplate.exchange(
+        ResponseEntity<StockInfOverseasDto> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                StockInfOverseasDataDto.class
+                StockInfOverseasDto.class
         );
         if (response.getStatusCode().is2xxSuccessful()) {
-            StockInfOverseasDataDto stockInfOverseasDataDto = response.getBody();
+            StockInfOverseasDto stockInfOverseasDataDto = response.getBody();
             log.info("---------------getStockInfDataFromApi successfully finished----------------------------------------");
             return stockInfOverseasDataDto;
         } else {
@@ -177,7 +177,7 @@ public class OverseasApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockAsBiOverseasDataDto getStockAsBiDataFromApi(String stockCode){
+    public StockAsBiOverseasDto getStockAsBiDataFromApi(String stockCode){
         log.info("---------------getStockAsBiDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
 
@@ -199,14 +199,14 @@ public class OverseasApiService extends AbstractStockApiService {
 
         log.info("---------------getStockAsBiDataFromApi  request send----------------------------------------");
 
-        ResponseEntity<StockAsBiOverseasDataDto> response = restTemplate.exchange(
+        ResponseEntity<StockAsBiOverseasDto> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                StockAsBiOverseasDataDto.class
+                StockAsBiOverseasDto.class
         );
         if (response.getStatusCode().is2xxSuccessful()) {
-            StockAsBiOverseasDataDto StockAsBiOverseasDataDto = response.getBody();
+            StockAsBiOverseasDto StockAsBiOverseasDataDto = response.getBody();
             assert StockAsBiOverseasDataDto != null;
             log.info("---------------getStockAsBiDataFromApi successfully finished----------------------------------------, {}", StockAsBiOverseasDataDto.getOutput2().getPbid1());
             return StockAsBiOverseasDataDto;
@@ -433,7 +433,7 @@ public class OverseasApiService extends AbstractStockApiService {
     @Override
     public StockAsBi getStockAsBiFromApi(Company company) {
         String stockCode = company.getCode();
-        StockAsBiOverseasDataDto stockAsBiOverseasDataDto = getStockAsBiDataFromApi(stockCode);
+        StockAsBiOverseasDto stockAsBiOverseasDataDto = getStockAsBiDataFromApi(stockCode);
         StockAsBi stockAsBi = apiMapper.stockAsBiOverseasDtoToStockAsBi(stockAsBiOverseasDataDto.getOutput2());
         stockAsBi.setCompany(company);
         StockAsBi oldStockAsBi = company.getStockAsBi();
@@ -476,7 +476,7 @@ public class OverseasApiService extends AbstractStockApiService {
     @Override
     public StockInf getStockInfFromApi(Company company, String strHour) {
         String stockCode = company.getCode();
-        StockInfOverseasDataDto stockInfOverseasDataDto = getStockInfDataFromApi(stockCode);
+        StockInfOverseasDto stockInfOverseasDataDto = getStockInfDataFromApi(stockCode);
         if (stockInfOverseasDataDto == null || stockInfOverseasDataDto.getOutput() == null) {
             throw new BusinessLogicException(ExceptionCode.STOCKINF_NOT_FOUND);
         }

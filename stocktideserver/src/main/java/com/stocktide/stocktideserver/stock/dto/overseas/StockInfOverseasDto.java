@@ -1,4 +1,4 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.overseas;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StockInfOverseasDataDto {
+public class StockInfOverseasDto {
     private Output output;
     private String rt_cd;    // 응답 코드
     private String msg_cd;   // 메시지 코드

@@ -1,4 +1,4 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.common;
 
 import lombok.Getter;
 import lombok.Setter;

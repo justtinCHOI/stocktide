@@ -1,7 +1,7 @@
 package com.stocktide.stocktideserver.stock.controller;
 
 import com.stocktide.stocktideserver.member.entity.Member;
-import com.stocktide.stocktideserver.stock.dto.StockOrderResponseDto;
+import com.stocktide.stocktideserver.stock.dto.common.StockOrderResponseDto;
 import com.stocktide.stocktideserver.stock.entity.StockOrder;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import io.swagger.v3.oas.annotations.Operation;

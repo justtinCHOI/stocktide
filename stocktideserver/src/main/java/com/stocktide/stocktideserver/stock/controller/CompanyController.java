@@ -1,6 +1,7 @@
 package com.stocktide.stocktideserver.stock.controller;
 
-import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.dto.common.*;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockBalanceDomesticDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockBasic;
 import com.stocktide.stocktideserver.stock.entity.StockNews;
@@ -83,7 +84,7 @@ public class CompanyController {
      */
     @Operation(summary = "재무상태표 조회", description = "회사의 재무상태표 정보를 조회합니다.")
     @GetMapping("/balance/{companyId}")
-    public ResponseEntity<StockBalanceDto> getStockBalance(@PathVariable Long companyId) {
+    public ResponseEntity<StockBalanceDomesticDto> getStockBalance(@PathVariable Long companyId) {
         try {
             Company company = companyService.findCompanyById(companyId);
             if (company == null) {
@@ -97,7 +98,7 @@ public class CompanyController {
                 return ResponseEntity.badRequest().build();
             }
 
-            StockBalanceDto response = apiCallService.getStockBalanceDataFromApi(stockCode);
+            StockBalanceDomesticDto response = apiCallService.getStockBalanceDataFromApi(stockCode);
             if (response == null) {
                 log.error("No response from API for stock code: {}", stockCode);
                 return ResponseEntity.noContent().build();

@@ -1,7 +1,8 @@
 package com.stocktide.stocktideserver.stock.service;
 
 import com.stocktide.stocktideserver.exception.BusinessLogicException;
-import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.dto.common.StockListResponseDto;
+import com.stocktide.stocktideserver.stock.dto.domestic.*;
 import com.stocktide.stocktideserver.stock.entity.*;
 import com.stocktide.stocktideserver.stock.mapper.ApiMapper;
 import com.stocktide.stocktideserver.util.Time;
@@ -147,7 +148,7 @@ public class DomesticApiService extends AbstractStockApiService {
      * @throws RuntimeException API 호출 실패 시
      */
     @Override
-    public StockAsBiDataDto getStockAsBiDataFromApi(String stockCode){
+    public StockAsBiDomesticDto getStockAsBiDataFromApi(String stockCode){
         log.info("---------------getStockAsBiDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
 
@@ -166,14 +167,14 @@ public class DomesticApiService extends AbstractStockApiService {
 
         log.info("---------------getStockAsBiDataFromApi  request send----------------------------------------");
 
-        ResponseEntity<StockAsBiDataDto> response = restTemplate.exchange(
+        ResponseEntity<StockAsBiDomesticDto> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                StockAsBiDataDto.class
+                StockAsBiDomesticDto.class
         );
         if (response.getStatusCode().is2xxSuccessful()) {
-            StockAsBiDataDto stockasbiDataDto = response.getBody();
+            StockAsBiDomesticDto stockasbiDataDto = response.getBody();
             log.info("---------------getStockAsBiDataFromApi successfully finished getOutput1 getAskp1: {}----------------------------------------", stockasbiDataDto.getOutput1().getAskp1());
             return stockasbiDataDto;
         } else {
@@ -194,7 +195,7 @@ public class DomesticApiService extends AbstractStockApiService {
      * @throws RuntimeException API 호출 실패 시
      */
     @Override
-    public StockMinDto getStockMinDataFromApi(String stockCode, String strHour) {
+    public StockMinDomesticDto getStockMinDataFromApi(String stockCode, String strHour) {
         log.info("---------------getStockMinDataFromApi  started----------------------------------------");
         String token = tokenService.getAccessToken();
 
@@ -215,15 +216,15 @@ public class DomesticApiService extends AbstractStockApiService {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        ResponseEntity<StockMinDto> response = restTemplate.exchange(
+        ResponseEntity<StockMinDomesticDto> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                StockMinDto.class
+                StockMinDomesticDto.class
         );
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            StockMinDto stockMinDto = response.getBody();
+            StockMinDomesticDto stockMinDto = response.getBody();
             log.info("---------------getStockMinDataFromApi  finished----------------------------------------");
 
             return stockMinDto;
@@ -287,7 +288,7 @@ public class DomesticApiService extends AbstractStockApiService {
      * @throws RuntimeException API 호출 실패나 파싱 오류 시
      */
     @Override
-    public StockBasicDto getStockBasicDataFromApi(String stockCode) {
+    public StockBasicDomesticDto getStockBasicDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -304,11 +305,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "PRDT_TYPE_CD=" + PRDT_TYPE_CD
                     + "&PDNO=" + stockCode;
 
-            ResponseEntity<StockBasicDto> response = restTemplate.exchange(
+            ResponseEntity<StockBasicDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockBasicDto.class
+                    StockBasicDomesticDto.class
             );
 
             return response.getBody();
@@ -326,7 +327,7 @@ public class DomesticApiService extends AbstractStockApiService {
      * @throws RuntimeException API 호출 실패나 파싱 오류 시
      */
     @Override
-    public StockBalanceDto getStockBalanceDataFromApi(String stockCode) {
+    public StockBalanceDomesticDto getStockBalanceDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -344,11 +345,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE
                     + "&fid_input_iscd=" + stockCode;
 
-            ResponseEntity<StockBalanceDto> response = restTemplate.exchange(
+            ResponseEntity<StockBalanceDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockBalanceDto.class
+                    StockBalanceDomesticDto.class
             );
 
             return response.getBody();
@@ -406,7 +407,7 @@ public class DomesticApiService extends AbstractStockApiService {
      * @throws RuntimeException API 호출 실패나 파싱 오류 시
      */
     @Override
-    public StockFinancialDto getStockFinancialDataFromApi(String stockCode) {
+    public StockFinancialDomesticDto getStockFinancialDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -424,11 +425,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE
                     + "&fid_input_iscd=" + stockCode;
 
-            ResponseEntity<StockFinancialDto> response = restTemplate.exchange(
+            ResponseEntity<StockFinancialDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockFinancialDto.class
+                    StockFinancialDomesticDto.class
             );
 
             return response.getBody();
@@ -439,7 +440,7 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockProfitDto getStockProfitDataFromApi(String stockCode) {
+    public StockProfitDomesticDto getStockProfitDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -457,11 +458,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE
                     + "&fid_input_iscd=" + stockCode;
 
-            ResponseEntity<StockProfitDto> response = restTemplate.exchange(
+            ResponseEntity<StockProfitDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockProfitDto.class
+                    StockProfitDomesticDto.class
             );
 
             return response.getBody();
@@ -472,7 +473,7 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockOtherDto getStockOtherDataFromApi(String stockCode) {
+    public StockOtherDomesticDto getStockOtherDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -490,11 +491,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE
                     + "&fid_input_iscd=" + stockCode;
 
-            ResponseEntity<StockOtherDto> response = restTemplate.exchange(
+            ResponseEntity<StockOtherDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockOtherDto.class
+                    StockOtherDomesticDto.class
             );
 
             return response.getBody();
@@ -505,7 +506,7 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockStabilityDto getStockStabilityDataFromApi(String stockCode) {
+    public StockStabilityDomesticDto getStockStabilityDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -523,11 +524,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE
                     + "&fid_input_iscd=" + stockCode;
 
-            ResponseEntity<StockStabilityDto> response = restTemplate.exchange(
+            ResponseEntity<StockStabilityDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockStabilityDto.class
+                    StockStabilityDomesticDto.class
             );
 
             return response.getBody();
@@ -538,7 +539,7 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockGrowthDto getStockGrowthDataFromApi(String stockCode) {
+    public StockGrowthDomesticDto getStockGrowthDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -556,11 +557,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&fid_cond_mrkt_div_code=" + FID_COND_MRKT_DIV_CODE
                     + "&fid_input_iscd=" + stockCode;
 
-            ResponseEntity<StockGrowthDto> response = restTemplate.exchange(
+            ResponseEntity<StockGrowthDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockGrowthDto.class
+                    StockGrowthDomesticDto.class
             );
 
             return response.getBody();
@@ -606,7 +607,7 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public StockNewsDto getNewsDataFromApi(String stockCode) {
+    public StockNewsDomesticDto getNewsDataFromApi(String stockCode) {
         try {
             String token = tokenService.getAccessToken();
 
@@ -629,11 +630,11 @@ public class DomesticApiService extends AbstractStockApiService {
                     + "&FID_RANK_SORT_CLS_CODE="
                     + "&FID_INPUT_SRNO=";
 
-            ResponseEntity<StockNewsDto> response = restTemplate.exchange(
+            ResponseEntity<StockNewsDomesticDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    StockNewsDto.class
+                    StockNewsDomesticDto.class
             );
             if(response.getBody() != null) {
                 log.info("response.getBody().getRt_cd(): {}", response.getBody().getRt_cd());
@@ -656,7 +657,7 @@ public class DomesticApiService extends AbstractStockApiService {
     @Override
     public StockName getStockNameFromApi(Company company) {
         String stockCode = company.getCode();
-        StockBasicDto stockBasicDto = getStockBasicDataFromApi(stockCode);
+        StockBasicDomesticDto stockBasicDto = getStockBasicDataFromApi(stockCode);
         StockName stockName = new StockName();
         stockName.setEngName(stockBasicDto.getOutput().getPrdt_eng_abrv_name());
         stockName.setKorName(stockBasicDto.getOutput().getPrdt_abrv_name());
@@ -672,7 +673,7 @@ public class DomesticApiService extends AbstractStockApiService {
     @Override
     public StockAsBi getStockAsBiFromApi(Company company) {
         String stockCode = company.getCode();
-        StockAsBiDataDto stockasbiDataDto = getStockAsBiDataFromApi(stockCode);
+        StockAsBiDomesticDto stockasbiDataDto = getStockAsBiDataFromApi(stockCode);
         StockAsBi stockAsBi = apiMapper.stockAsBiOutput1ToStockAsBi(stockasbiDataDto.getOutput1());
         stockAsBi.setCompany(company);
         StockAsBi oldStockAsBi = company.getStockAsBi();
@@ -693,7 +694,7 @@ public class DomesticApiService extends AbstractStockApiService {
     public List<StockMin> getStockMinFromApi(Company company, String strHour) {
         String stockCode = company.getCode();
         LocalDateTime now = LocalDateTime.now();
-        StockMinDto stockMinDto = getStockMinDataFromApi(stockCode, strHour);
+        StockMinDomesticDto stockMinDto = getStockMinDataFromApi(stockCode, strHour);
         // dto -> entity 전환, 최신일자
         return stockMinDto.getOutput2().stream()
                 .map(stockMinOutput2 -> {
@@ -715,7 +716,7 @@ public class DomesticApiService extends AbstractStockApiService {
     @Override
     public StockInf getStockInfFromApi(Company company, String strHour) {
         String stockCode = company.getCode();
-        StockMinDto stockMinDto = getStockMinDataFromApi(stockCode, strHour);
+        StockMinDomesticDto stockMinDto = getStockMinDataFromApi(stockCode, strHour);
         if (stockMinDto == null || stockMinDto.getOutput1() == null) {
             throw new BusinessLogicException(ExceptionCode.STOCKINF_NOT_FOUND);
         }
@@ -739,7 +740,7 @@ public class DomesticApiService extends AbstractStockApiService {
     @Override
     public StockBasic getStockBasicFromApi(Company company) {
         String stockCode = company.getCode();
-        StockBasicDto stockBasicDto = getStockBasicDataFromApi(stockCode);
+        StockBasicDomesticDto stockBasicDto = getStockBasicDataFromApi(stockCode);
         return apiMapper.stockBasicDtoToStockBasic(stockBasicDto.getOutput());
     }
 
@@ -787,7 +788,7 @@ public class DomesticApiService extends AbstractStockApiService {
     public List<StockNews> getStockNewsFromApi(Company company) {
         try {
             String stockCode = company.getCode();
-            StockNewsDto stockNewsDto = getNewsDataFromApi(stockCode);
+            StockNewsDomesticDto stockNewsDto = getNewsDataFromApi(stockCode);
 
             if (stockNewsDto == null || stockNewsDto.getOutput() == null) {
                 log.warn("No news data received for company code: {}", stockCode);

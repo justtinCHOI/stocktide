@@ -1,6 +1,12 @@
 package com.stocktide.stocktideserver.stock.mapper;
 
-import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockAsBiDomesticDto;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockBasicDomesticDto;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockMinDomesticDto;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockNewsDomesticDto;
+import com.stocktide.stocktideserver.stock.dto.overseas.StockAsBiOverseasDto;
+import com.stocktide.stocktideserver.stock.dto.overseas.StockInfOverseasDto;
+import com.stocktide.stocktideserver.stock.dto.overseas.StockMinOverseasDto;
 import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.entity.StockBasic;
 import com.stocktide.stocktideserver.stock.entity.StockInf;
@@ -13,14 +19,14 @@ import org.mapstruct.Mapping;
 public interface ApiMapper {
     @Mapping(target = "stockAsBiId", ignore = true) // 데이터베이스에서 생성되므로 무시
     @Mapping(target = "company", ignore = true) //  필요한 경우 적절히 처리
-    StockAsBi stockAsBiOutput1ToStockAsBi(StockAsBiDataDto.StockAsBiOutput1 stock);
+    StockAsBi stockAsBiOutput1ToStockAsBi(StockAsBiDomesticDto.StockAsBiOutput1 stock);
     @Mapping(target = "stockInfId", ignore = true) // 데이터베이스에서 생성되므로 무시
     @Mapping(target = "company", ignore = true) // 필요시 적절히 처리
-    StockInf stockMinOutput1ToStockInf(StockMinDto.StockMinOutput1 stock);
+    StockInf stockMinOutput1ToStockInf(StockMinDomesticDto.StockMinOutput1 stock);
     @Mapping(target = "stockMinId", ignore = true) // 데이터베이스에서 생성되므로 무시
     @Mapping(target = "company", ignore = true) // 필요시 적절히 처리
     @Mapping(target = "stockTradeTime", ignore = true) // 필요시 적절히 처리
-    StockMin stockMinOutput2ToStockMin(StockMinDto.StockMinOutput2 stock);
+    StockMin stockMinOutput2ToStockMin(StockMinDomesticDto.StockMinOutput2 stock);
 
 
     @Mapping(target = "stockAsBiId", ignore = true)  // DB에서 자동생성되므로 무시
@@ -73,7 +79,7 @@ public interface ApiMapper {
     @Mapping(source = "vbid8", target = "bidp_rsqn8")
     @Mapping(source = "vbid9", target = "bidp_rsqn9")
     @Mapping(source = "vbid10", target = "bidp_rsqn10")
-    StockAsBi stockAsBiOverseasDtoToStockAsBi(StockAsBiOverseasDataDto.Output2 output2);
+    StockAsBi stockAsBiOverseasDtoToStockAsBi(StockAsBiOverseasDto.Output2 output2);
 
     @Mapping(target = "stockInfId", ignore = true)   // DB에서 자동생성되므로 무시
     @Mapping(target = "company", ignore = true)      // company는 별도로 설정하므로 무시
@@ -82,7 +88,7 @@ public interface ApiMapper {
     @Mapping(source = "rate", target = "prdy_ctrt")    // 전일대비율
     @Mapping(source = "tvol", target = "acml_vol")       // 누적거래량
     @Mapping(source = "tamt", target = "acml_tr_pbmn")   // 누적거래대금
-    StockInf stockInfOverseasDtoToStockInf(StockInfOverseasDataDto.Output output);
+    StockInf stockInfOverseasDtoToStockInf(StockInfOverseasDto.Output output);
 
     @Mapping(source = "pdno", target = "pdno")
     @Mapping(source = "prdt_abrv_name", target = "prdt_abrv_name")
@@ -90,7 +96,7 @@ public interface ApiMapper {
     @Mapping(source = "lstg_stqt", target = "lstg_stqt")
     @Mapping(source = "cpta", target = "cpta")
     @Mapping(source = "papr", target = "papr")
-    StockBasic stockBasicDtoToStockBasic(StockBasicDto.Output ouput);
+    StockBasic stockBasicDtoToStockBasic(StockBasicDomesticDto.Output ouput);
 
 
     @Mapping(target = "stockMinId", ignore = true)  // DB에서 자동 생성
@@ -104,6 +110,6 @@ public interface ApiMapper {
     @Mapping(source = "evol", target = "cntg_vol")       // 체결량
     StockMin stockMinOverseasOutput2ToStockMin(StockMinOverseasDto.Output2 output);
 
-    StockNews newsOutputToStockNews(StockNewsDto.NewsOutput newsOutput);
+    StockNews newsOutputToStockNews(StockNewsDomesticDto.NewsOutput newsOutput);
 
 }

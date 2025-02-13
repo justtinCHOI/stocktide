@@ -1,4 +1,4 @@
-package com.stocktide.stocktideserver.stock.dto;
+package com.stocktide.stocktideserver.stock.dto.domestic;
 
 import lombok.Data;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Data
 @NoArgsConstructor
-public class StockAsBiDataDto {
+public class StockAsBiDomesticDto {
 
     private StockAsBiOutput1 output1;
     private StockAsBiOutput2 output2;

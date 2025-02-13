@@ -1,19 +1,17 @@
 package com.stocktide.stocktideserver.service;
 
-import com.stocktide.stocktideserver.stock.dto.StockNewsDto;
-import com.stocktide.stocktideserver.stock.dto.StockNewsResponseDto;
+import com.stocktide.stocktideserver.stock.dto.domestic.StockNewsDomesticDto;
+import com.stocktide.stocktideserver.stock.dto.common.StockNewsResponseDto;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockNews;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.service.CompanyService;
 import com.stocktide.stocktideserver.stock.service.DomesticApiService;
-import com.stocktide.stocktideserver.stock.service.OverseasApiService;
 import com.stocktide.stocktideserver.stock.service.StockService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -72,7 +70,7 @@ public class DemesticApiServiceTest {
 
     @Test
     public void testGetStockNewsDataFromApi() {
-        StockNewsDto stockNewsDto = domesticApiService.getNewsDataFromApi("011200");
+        StockNewsDomesticDto stockNewsDto = domesticApiService.getNewsDataFromApi("011200");
 
         log.info("-------- StockNews size : {}  ", stockNewsDto.getOutput().size());
     }
