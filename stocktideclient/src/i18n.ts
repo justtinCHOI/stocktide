@@ -16,7 +16,6 @@ const resources = {
 
 const isProd = import.meta.env.MODE === 'production';
 const defaultLanguage = isProd ? 'en' : 'ko';
-console.log('i18n language', defaultLanguage);
 
 i18n
   .use(LanguageDetector)

@@ -3,6 +3,7 @@ package com.stocktide.stocktideserver.stock.controller;
 import com.stocktide.stocktideserver.stock.dto.*;
 import com.stocktide.stocktideserver.stock.entity.Company;
 import com.stocktide.stocktideserver.stock.entity.StockBasic;
+import com.stocktide.stocktideserver.stock.entity.StockNews;
 import com.stocktide.stocktideserver.stock.mapper.StockMapper;
 import com.stocktide.stocktideserver.stock.repository.CompanyRepository;
 import com.stocktide.stocktideserver.stock.service.DomesticApiService;
@@ -84,21 +85,18 @@ public class CompanyController {
     @GetMapping("/balance/{companyId}")
     public ResponseEntity<StockBalanceDto> getStockBalance(@PathVariable Long companyId) {
         try {
-            // 1. companyId로 Company 엔티티 조회
             Company company = companyService.findCompanyById(companyId);
             if (company == null) {
                 log.error("Company not found with id: {}", companyId);
                 return ResponseEntity.notFound().build();
             }
 
-            // 2. Company 엔티티에서 stockCode 추출
             String stockCode = company.getCode();
             if (stockCode == null || stockCode.isEmpty()) {
                 log.error("Stock code is null or empty for company id: {}", companyId);
                 return ResponseEntity.badRequest().build();
             }
 
-            // 3. stockCode를 사용하여 API 호출
             StockBalanceDto response = apiCallService.getStockBalanceDataFromApi(stockCode);
             if (response == null) {
                 log.error("No response from API for stock code: {}", stockCode);
@@ -120,28 +118,27 @@ public class CompanyController {
      * @return 회사 관련 뉴스
      */
     @Operation(summary = "회사 뉴스 조회", description = "회사 관련 뉴스를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "404", description = "회사를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @GetMapping("/news/{companyId}")
-    public ResponseEntity<StockNewsDto> getStockNews(@PathVariable Long companyId) {
+    public ResponseEntity<StockNewsResponseDto> getStockNews(@PathVariable Long companyId) {
         try {
             Company company = companyService.findCompanyById(companyId);
-
             if (company == null) {
                 return ResponseEntity.notFound().build();
             }
-            log.info("Company code: {}", company.getCode());
 
-            StockNewsDto response = apiCallService.getNewsDataFromApi(company.getCode());
-            if (response == null) {
-                return ResponseEntity.noContent().build();
-            }
+            List<StockNews> stockNewsList = stockService.getStockNewsFromApi(company);
+            StockNewsResponseDto response = stockMapper.stockNewsListToStockNewsResponseDto(stockNewsList);
 
-//            log.info("News from API for news size: {}", response.getOutput().size());
-
-            return ResponseEntity.ok(response);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
-            log.error("Error fetching stock news for company id: {}, error: {}", companyId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            log.error("Error fetching news: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

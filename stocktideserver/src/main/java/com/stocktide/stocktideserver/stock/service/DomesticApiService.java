@@ -784,8 +784,23 @@ public class DomesticApiService extends AbstractStockApiService {
     }
 
     @Override
-    public Object getNewsFromApi(String stockCode) {
-        return null;
+    public List<StockNews> getStockNewsFromApi(Company company) {
+        try {
+            String stockCode = company.getCode();
+            StockNewsDto stockNewsDto = getNewsDataFromApi(stockCode);
+
+            if (stockNewsDto == null || stockNewsDto.getOutput() == null) {
+                log.warn("No news data received for company code: {}", stockCode);
+                return Collections.emptyList();
+            }
+
+            return stockNewsDto.getOutput().stream()
+                    .map(apiMapper::newsOutputToStockNews)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error fetching news for company: {}, error: {}", company.getCode(), e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
 }

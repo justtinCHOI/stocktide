@@ -133,6 +133,13 @@ export interface StockOrder extends BaseEntity {
   price: number;
 }
 
+export interface StockNews {
+  data_dt: string;     // 뉴스 날짜
+  data_tm: string;     // 뉴스 시간
+  hts_pbnt_titl_cntt: string;   // 뉴스 제목
+  dorg: string;  // 언론사
+}
+
 // Token Entity 인터페이스
 export interface Token {
   tokenId: number;

@@ -554,7 +554,7 @@ public class OverseasApiService extends AbstractStockApiService {
     }
 
     @Override
-    public Object getNewsFromApi(String stockCode) {
+    public List<StockNews> getStockNewsFromApi(Company company) {
         return null;
     }
 }

@@ -100,7 +100,12 @@ public interface StockMapper {
     @Mapping(source = "papr", target = "papr")
     StockBasicResponseDto stockBasicToStockBasicResponseDto(StockBasic stockBasic);
 
-
+    default StockNewsResponseDto stockNewsListToStockNewsResponseDto(List<StockNews> newsList) {
+        StockNewsResponseDto dto = new StockNewsResponseDto();
+        dto.setOutput(newsList);
+        dto.setStatus("SUCCESS");
+        return dto;
+    }
 
 
 }

@@ -4,6 +4,7 @@ import { RefreshCw, AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
 import { SkeletonBox } from '@styles/SkeletonStyles';
 import { useTranslation } from 'react-i18next';
+import { StockNews } from '@typings/entity';
 
 interface NewsComponentProps {
   companyId: number;
@@ -61,7 +62,7 @@ const NewsComponent: FC<NewsComponentProps> = ({companyId}) => {
         </RefreshButton>
       </NewsHeader>
       <ScrollContainer>
-        {paginatedNews.map((news, index) => (
+        {paginatedNews.map((news: StockNews, index: number) => (
           <NewsItem key={index}>
             <NewsTitle>{news.hts_pbnt_titl_cntt}</NewsTitle>
             <NewsDetails>

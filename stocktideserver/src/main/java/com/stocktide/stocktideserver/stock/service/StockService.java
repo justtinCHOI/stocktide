@@ -118,5 +118,18 @@ public class StockService {
         return apiService.getStockBasicFromApi(company);
     }
 
+    /**
+     * 회사의 주식 관련 뉴스를 API로부터 조회합니다.
+     * 회사의 시장 유형(국내/해외)에 따라 적절한 API 서비스를 선택하여 뉴스 데이터를 가져옵니다.
+     *
+     * @param company 뉴스를 조회할 회사 엔티티
+     * @return List<StockNews> 주식 뉴스 데이터 엔티티 목록
+     * @since 1.0
+     */
+    public List<StockNews> getStockNewsFromApi(Company company) {
+        AbstractStockApiService apiService = company.getMarketType() == MarketType.DOMESTIC ?
+                domesticApiService : overseasApiService;
+        return apiService.getStockNewsFromApi(company);
+    }
 
 }

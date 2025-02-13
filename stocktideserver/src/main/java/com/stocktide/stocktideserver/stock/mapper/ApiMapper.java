@@ -5,6 +5,7 @@ import com.stocktide.stocktideserver.stock.entity.StockAsBi;
 import com.stocktide.stocktideserver.stock.entity.StockBasic;
 import com.stocktide.stocktideserver.stock.entity.StockInf;
 import com.stocktide.stocktideserver.stock.entity.StockMin;
+import com.stocktide.stocktideserver.stock.entity.StockNews;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -103,5 +104,6 @@ public interface ApiMapper {
     @Mapping(source = "evol", target = "cntg_vol")       // 체결량
     StockMin stockMinOverseasOutput2ToStockMin(StockMinOverseasDto.Output2 output);
 
+    StockNews newsOutputToStockNews(StockNewsDto.NewsOutput newsOutput);
 
 }

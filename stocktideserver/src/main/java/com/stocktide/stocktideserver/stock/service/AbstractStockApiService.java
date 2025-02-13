@@ -134,6 +134,6 @@ public abstract class AbstractStockApiService {
     public abstract Object getStockStabilityFromApi(String stockCode);
     public abstract Object getStockGrowthFromApi(String stockCode);
     public abstract Object getCodesFromApi();
-    public abstract Object getNewsFromApi(String stockCode);
+    public abstract List<StockNews> getStockNewsFromApi(Company company);
 
 }
