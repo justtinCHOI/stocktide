@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @Log4j2
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public class CompanyRepositoryTests {
 
     @Autowired

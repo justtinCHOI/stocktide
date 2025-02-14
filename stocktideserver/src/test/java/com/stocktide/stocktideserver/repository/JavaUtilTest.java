@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Disabled
 @SpringBootTest
 @Log4j2
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public class JavaUtilTest {
 
 //    @Test

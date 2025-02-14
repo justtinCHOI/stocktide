@@ -1,6 +1,6 @@
 package com.stocktide.stocktideserver.service;
 
-import com.stocktide.stocktideserver.stock.dto.*;
+import com.stocktide.stocktideserver.stock.dto.overseas.*;
 import com.stocktide.stocktideserver.stock.service.OverseasApiService;
 import com.stocktide.stocktideserver.util.Time;
 import lombok.extern.log4j.Log4j2;
@@ -25,14 +25,14 @@ public class OverseasApiServiceTest {
 //    @Test
 //    @Transactional
 //    public void testGetStockInfDataFromApi() {
-//        StockInfOverseasDataDto stockInfOverseasDataDto = overseasApiService.getStockInfDataFromApi("TSLA");
+//        StockAsBiOverseasDto stockInfOverseasDataDto = overseasApiService.getStockInfDataFromApi("TSLA");
 //        log.info("-------- 현재가 : {} ", stockInfOverseasDataDto.getOutput().getLast());
 //    }
 //
 //    @Test
 //    @Transactional
 //    public void testGetStockAsBiDataFromApi() {
-//        StockAsBiOverseasDataDto stockAsBiOverseasDataDto = overseasApiService.getStockAsBiDataFromApi("TSLA");
+//        StockAsBiOverseasDto stockAsBiOverseasDataDto = overseasApiService.getStockAsBiDataFromApi("TSLA");
 //        log.info("-------- 매수호가가격  : {}", stockAsBiOverseasDataDto.getOutput2().getPbid1());
 //    }
 //
