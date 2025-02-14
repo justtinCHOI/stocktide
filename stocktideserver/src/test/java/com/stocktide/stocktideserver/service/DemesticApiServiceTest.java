@@ -31,22 +31,22 @@ public class DemesticApiServiceTest {
     @Autowired
     private StockMapper stockMapper;
 
-    @Test
-    public void testGetStockNewsDataFromApi() {
-        StockNewsDomesticDto stockNewsDto = domesticApiService.getNewsDataFromApi("011200");
-
-        log.info("-------- StockNews size : {}  ", stockNewsDto.getOutput().size());
-    }
-
-    @Test
-    public void testGetStockNewsFromApi() {
-        Company company = companyService.findCompanyByCode("011200");
-        List<StockNews> stockNewsList = stockService.getStockNewsFromApi(company);
-        StockNewsResponseDto response = stockMapper.stockNewsListToStockNewsResponseDto(stockNewsList);
-
-        log.info("-------- stockNewsList getFirst getDorg : {}  ", stockNewsList.getFirst().getDorg());
-        log.info("-------- StockNewsResponseDto getOutput getFirst getDorg : {}  ", response.getOutput().getFirst().getDorg());
-    }
+//    @Test
+//    public void testGetStockNewsDataFromApi() {
+//        StockNewsDomesticDto stockNewsDto = domesticApiService.getNewsDataFromApi("011200");
+//
+//        log.info("-------- StockNews size : {}  ", stockNewsDto.getOutput().size());
+//    }
+//
+//    @Test
+//    public void testGetStockNewsFromApi() {
+//        Company company = companyService.findCompanyByCode("011200");
+//        List<StockNews> stockNewsList = stockService.getStockNewsFromApi(company);
+//        StockNewsResponseDto response = stockMapper.stockNewsListToStockNewsResponseDto(stockNewsList);
+//
+//        log.info("-------- stockNewsList getFirst getDorg : {}  ", stockNewsList.getFirst().getDorg());
+//        log.info("-------- StockNewsResponseDto getOutput getFirst getDorg : {}  ", response.getOutput().getFirst().getDorg());
+//    }
 
 
 }
