@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.models.servers.Server;
+
+import java.util.List;
 
 @Configuration
 @SecurityScheme(
@@ -30,6 +33,11 @@ public class SwaggerConfig {
                                 .url("http://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
                         .description("JavaDoc 문서 보기")
-                        .url("/javadoc/index.html"));
+                        .url("/javadoc/index.html"))
+                .servers(List.of(
+                        new Server().url("https://www.stocktide.store"),
+                        new Server().url("http://localhost:8080")
+                ));
+
     }
 }
