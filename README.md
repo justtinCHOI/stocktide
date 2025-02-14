@@ -1,7 +1,5 @@
 # StockTide
 
-![StockTide Logo](logo.png)
-
 💰 [www.stocktide.store](https://www.stocktide.store)
 
 모바일에 최적화된 실시간 주식 트레이딩 플랫폼입니다. 국내외 주식 거래, 실시간 차트 분석, AI 기반 투자 추천 등 다양한 금융 서비스를 제공합니다.
@@ -51,6 +49,7 @@
 ## 시스템 아키텍처
 
 ```mermaid
+graph TD
     Client[Client] --> LB[Load Balancer]
     LB --> FE1[Frontend Server 1]
     LB --> FE2[Frontend Server 2]

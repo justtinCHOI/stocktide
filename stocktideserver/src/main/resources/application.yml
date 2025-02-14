@@ -51,6 +51,7 @@ stock-url:
     kospi: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-indexchartprice"
     stockBasic: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/search-info"
     stockDetail: "https://openapivts.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/price-detail"
+    stockNews: "https://openapivts.koreainvestment.com:9443/uapi//uapi/overseas-price/v1/quotations/news-title"
 
     stockBalance: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/balance-sheet"
     stockIncome: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/income-statement"
@@ -60,7 +61,6 @@ stock-url:
     stockStability: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/stability-ratio"
     stockGrowth: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/finance/growth-ratio"
     stockCredit: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/credit-by-company"
-    stockNews: "https://openapivts.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/news-title"
 server:
   port: 8080
 

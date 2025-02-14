@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Footer = () => {
     return (
         <FooterContainer>
-            <p>&copy; 2024 Stock Project</p>
+            <p>&copy; 2025 Stock Project</p>
         </FooterContainer>
     );
 };
