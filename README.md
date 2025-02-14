@@ -6,7 +6,8 @@
 
 ## 🌐 Website
 - **메인 사이트**: [www.stocktide.store](https://www.stocktide.store)
-- **API 문서**: [www.stocktide.store/swagger-ui.html](https://www.stocktide.store/swagger-ui.html)
+
+[//]: # (- **API 문서**: [www.stocktide.store/swagger-ui.html]&#40;https://www.stocktide.store/swagger-ui.html&#41;)
 
 ## 주요 기능
 
@@ -103,9 +104,9 @@ cd stocktide/stocktideserver
 java -jar build/libs/stocktideserver-0.0.1-SNAPSHOT.jar
 ```
 
-## API 문서
-
-Swagger UI: https://www.stocktide.store/swagger-ui.html
+[//]: # (## API 문서)
+[//]: # ()
+[//]: # (Swagger UI: https://www.stocktide.store/swagger-ui.html)
 
 ## 라이선스
 이 프로젝트는 MIT 라이선스를 따릅니다.
