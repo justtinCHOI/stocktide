@@ -39,12 +39,48 @@ public class CustomSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         // Swagger UI 경로 허용 추가
-        http.authorizeHttpRequests(auth -> auth
+        http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/api/**"
                 ).permitAll()
+
+//                // Swagger UI 관련
+//                .requestMatchers(
+//                        "/v3/api-docs/**",
+//                        "/swagger-ui/**",
+//                        "/swagger-ui.html"
+//                ).permitAll()
+//
+//                // 회원 관련 API
+//                .requestMatchers("/api/member/**").permitAll()
+//
+//                // 주식 관련 Public API
+//                .requestMatchers(
+//                        "/api/company/**",
+//                        "/api/stock/**",
+//                        "/api/kospi/**"
+//                ).permitAll()
+//
+//                // WebSocket 엔드포인트
+//                .requestMatchers(
+//                        "/ws-stocktide/**",
+//                        "/topic/**",
+//                        "/app/**"
+//                ).permitAll()
+//
+//                // JWT 인증이 필요한 API
+//                .requestMatchers(
+//                        "/api/cash/**",         // 계좌 관련
+//                        "/api/my/**",           // 마이페이지 관련
+//                        "/api/stockorder/**",   // 주문 관련
+//                        "/api/long-polling/**",    //
+//                        "/api/stockholds/**"    // 보유주식 관련
+//                ).authenticated()
+
+                // 기본 설정
                 .anyRequest().authenticated()
         );
 
@@ -56,9 +92,13 @@ public class CustomSecurityConfig {
             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         });
         http.formLogin(config -> {
-            config.loginPage("/api/member/login");
-            config.successHandler(new APILoginSuccessHandler());
-            config.failureHandler(new APILoginFailHandler());
+//            config.loginPage("/api/member/login");
+//            config.successHandler(new APILoginSuccessHandler());
+//            config.failureHandler(new APILoginFailHandler());
+            config.loginProcessingUrl("/api/member/login") // 벡엔드 로그인 처리 URL
+                    .loginPage("/member/login") // 프론트엔드 로그인 페이지 경로
+                    .successHandler(new APILoginSuccessHandler())
+                    .failureHandler(new APILoginFailHandler());
         });
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling(config -> {

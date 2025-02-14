@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly PROD: boolean;
   readonly SSR: boolean;
   readonly VITE_DEFAULT_LANGUAGE?: string;
+  readonly VITE_REST_API_KEY: string;
 }
 
 interface ImportMeta {
