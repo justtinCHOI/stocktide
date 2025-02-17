@@ -17,9 +17,11 @@ const useLiamaQuery = () => {
         query,
         role: 'user'
       });
+      console.log('Liama API response:', response);  // 추가
       setResult(response.data);
       ToastManager.success(t('liama.querySuccess'));
     } catch (err) {
+      console.error('Liama API error:', err);  // 추가
       const errorMessage = err instanceof Error ? err.message : t('liama.unknownError');
       setError(errorMessage);
       ToastManager.error(errorMessage);
