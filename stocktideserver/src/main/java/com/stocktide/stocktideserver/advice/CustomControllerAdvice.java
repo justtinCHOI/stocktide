@@ -34,6 +34,14 @@ public class CustomControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("msg", e.getMessage()));
     }
 
+    // Liama API 호출 관련 예외 처리
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleLiamaApiExceptions(RuntimeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Liama AI 서비스 호출 중 오류가 발생했습니다: " + ex.getMessage());
+    }
+
     // 비즈니스 로직 예외 처리
 //    @ExceptionHandler(BusinessLogicException.class)
 //    public ResponseEntity<?> handleBusinessLogicException(BusinessLogicException e) {

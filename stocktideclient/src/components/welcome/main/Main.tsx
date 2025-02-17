@@ -4,11 +4,15 @@ import Quiz from './Quiz';
 import ForexStories from './ForexStories';
 import StockRanking from './StockRanking';
 import MajorIndices from './MajorIndices';
+import LiamaComponent from '@components/welcome/main/LiamaComponent';
 // import QuarterlyEarnings from './QuarterlyEarnings';
 
 const Main = () => {
     return (
         <MainContainer>
+            <Section>
+                <LiamaComponent />
+            </Section>
             <Section>
                 <CountryNews />
             </Section>

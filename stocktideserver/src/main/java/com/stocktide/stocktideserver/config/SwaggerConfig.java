@@ -24,20 +24,21 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI stockTideOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("StockTide API Documentation")
-                        .description("StockTide 서비스의 API 문서")
-                        .version("1.0.0")
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("http://springdoc.org")))
-                .externalDocs(new ExternalDocumentation()
-                        .description("JavaDoc 문서 보기")
-                        .url("/javadoc/index.html"))
-                .servers(List.of(
-                        new Server().url("https://www.stocktide.store"),
-                        new Server().url("http://localhost:8080")
-                ));
-
-    }
+            .info(new Info()
+                    .title("StockTide API Documentation")
+                    .description("StockTide 서비스의 API 문서")
+                    .version("1.0.0")
+                    .license(new License()
+                            .name("Apache 2.0")
+                            .url("http://springdoc.org")))
+            .externalDocs(new ExternalDocumentation()
+                    .description("JavaDoc 문서 보기")
+                    .url("/javadoc/index.html"))
+            .servers(List.of(
+                    new Server().url("https://www.stocktide.store"),
+                    new Server().url("http://localhost:8080")
+            )).tags(List.of(
+                    new io.swagger.v3.oas.models.tags.Tag().name("Liama AI").description("Liama AI 질의 서비스")
+            ));
+}
 }

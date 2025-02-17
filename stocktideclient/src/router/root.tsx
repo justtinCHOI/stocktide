@@ -73,14 +73,14 @@ const root = createBrowserRouter([
                 ),
                 children: memberRouter()
             },
-            {
-              path: 'swagger-ui',
-              element: <div>Swagger UI Redirect</div>, // 또는 외부 링크로 리다이렉트
-            },
-            {
-              path: 'v3/api-docs',
-              element: <div>API Docs</div>, // 또는 외부 링크로 리다이렉트
-            },
+            // {
+            //   path: 'swagger-ui',
+            //   element: <div>Swagger UI Redirect</div>, // 또는 외부 링크로 리다이렉트
+            // },
+            // {
+            //   path: 'v3/api-docs',
+            //   element: <div>API Docs</div>, // 또는 외부 링크로 리다이렉트
+            // },
             {
                 path: '*',
                 element: (
