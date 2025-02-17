@@ -74,3 +74,7 @@ springdoc:
   show-actuator: true
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+liama:
+  api:
+    url: http://localhost:8300  # Liama 서비스의 로컬 호스트 URL
+    timeout: 10000  # API 요청 타임아웃 (선택적)

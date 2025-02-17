@@ -43,4 +43,11 @@ public class LiamaService {
             return "죄송합니다. 현재 AI 서비스를 이용할 수 없습니다.";
         }
     }
+
+    public LiamaResult saveLiamaResult(String query, String result) {
+        LiamaResult liamaResult = new LiamaResult();
+        liamaResult.setQuery(query);
+        liamaResult.setMarkdown(result);
+        return liamaResultRepository.save(liamaResult);
+    }
 }
